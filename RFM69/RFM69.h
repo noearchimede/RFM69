@@ -13,8 +13,7 @@ per l'inserimento della documentazione di questa classe in quella di un intero p
 
 /*! @class    RFM69
     @brief    Driver per i moduli radio %RFM69
-    @author   Noè Archimede Pezzoli (noearchimede@gmail.com)
-    @date     Febbraio 2018
+
 
 
 @cond DOC_RFM69
@@ -27,6 +26,10 @@ per l'inserimento della documentazione di questa classe in quella di un intero p
 
 @endcond
 
+@b Autore:   Noè Archimede Pezzoli (noearchimede@gmail.com) \n
+@b Data:  Febbraio 2018 \n
+\n
+\n
 La classe RFM69 permette di collegare due microcontrollori tramite moduli radio
 della famiglia %RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW
 (http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html). Non ho eseguito
@@ -35,7 +38,9 @@ alcun test sugli altri moduli.
 Alla fine di questo testo si trova un esempio dell'utilizzo di questa classe.
 
 
+---
 @par Caratteristiche del modulo radio
+---
 
 Caratteristiche principali dei moduli radio RFM69HCW:
     - frequenza: 315, 433, 868 oppure 915 MHz (esistono quattro versioni per adattarsi
@@ -65,7 +70,9 @@ Corrente di alimentazione richiesta (a 3.3V), per modalità:
     - Tx:         16 - 130 mA a seconda della potenza di trasmissione
 
 
+---
 @par Protocollo di comunicazione
+---
 
 Il protocollo di comunicazione alla base di questa classe presuppone che in una
 stessa banda di frequenza siano presenti esattamente due radio che condividono
@@ -115,7 +122,9 @@ mod             rx        |       stby      |       def
 - `RF`: presenza di segnali radio e loro direzione
 
 
+---
 @par Collisioni
+---
 
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei
 messaggi contemporaneamente. Questo problema deve essere gestito come possibile
@@ -168,8 +177,9 @@ stato tx            |######## 2 #######|
     3. i messaggi inviati qui saranno persi. È un difetto dei messaggi senza ACK.
 
 
-
+---
 @par Hardware
+---
 
 Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW
 di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono,
@@ -200,7 +210,9 @@ per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V
     e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.
 
 
+---
 @par Struttura messaggi
+---
 
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente
 struttura:

@@ -1,10 +1,15 @@
+{\bfseries Autore\+:} Noè Archimede Pezzoli ({\tt noearchimede@gmail.\+com}) ~\newline
+{\bfseries Data\+:} Febbraio 2018 ~\newline
+~\newline
+~\newline
 La classe \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} permette di collegare due microcontrollori tramite moduli radio della famiglia R\+F\+M69 di Hope\+RF, e in particolare tramite il modulo R\+F\+M69\+H\+CW ({\tt http\+://www.\+hoperf.\+com/rf\+\_\+transceiver/modules/\+R\+F\+M69\+H\+C\+W.\+html}). Non ho eseguito alcun test sugli altri moduli.
 
 Alla fine di questo testo si trova un esempio dell\textquotesingle{}utilizzo di questa classe.
 
-\begin{DoxyParagraph}{Caratteristiche del modulo radio}
 
-\end{DoxyParagraph}
+
+ \subsection*{Caratteristiche del modulo radio }
+
 Caratteristiche principali dei moduli radio R\+F\+M69\+H\+CW\+:
 \begin{DoxyItemize}
 \item frequenza\+: 315, 433, 868 oppure 915 M\+Hz (esistono quattro versioni per adattarsi alle bande utilizzabili senza licenza in diversi paesi)
@@ -24,9 +29,10 @@ Corrente di alimentazione richiesta (a 3.\+3V), per modalità\+:
 \item Tx\+: 16 -\/ 130 mA a seconda della potenza di trasmissione
 \end{DoxyItemize}
 
-\begin{DoxyParagraph}{Protocollo di comunicazione}
 
-\end{DoxyParagraph}
+
+ \subsection*{Protocollo di comunicazione }
+
 Il protocollo di comunicazione alla base di questa classe presuppone che in una stessa banda di frequenza siano presenti esattamente due radio che condividono la stessa sync word. La stessa frequenza può quindi essere utilizzata anche da altri dispositivi; naturalmente, però, se dispositivi trasmittenti sulla stessa frequenza trasmettono dati nell stesso momento nessuno di essi riceverà un mesaggio valido (a meno che la differenza nella potenza trasmessa sia abbastanza grande da permettere al segnale più forte di \char`\"{}coprire\char`\"{} il più debole, in tal caso solo il dispositivo ricevente il più forte otterrà un messaggio).
 
 Alla lettura di ogni messaggio la radio ricevente può trasmettere automaticamente un segnale di A\+CK se la radio trasmittente lo ha richiesto. In questo modo se l\textquotesingle{}utente deve essere certo che un messaggio trasmesso sia stato ricevuto e letto (quindi certamente anche utilizzato, visto che la lettura avviene solo su richiesta dell\textquotesingle{}utente e non automaticamente come la ricezione) non deve né implementare un sistema di A\+CK né modificare il codice ricevente, e il segnale di A\+CK sarà il meno dispendioso possibile in termini di tempo del programma.
@@ -62,9 +68,10 @@ mod             rx        |       stby      |       def
 \item {\ttfamily RF}\+: presenza di segnali radio e loro direzione
 \end{DoxyItemize}
 
-\begin{DoxyParagraph}{Collisioni}
 
-\end{DoxyParagraph}
+
+ \subsection*{Collisioni }
+
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei messaggi contemporaneamente. Questo problema deve essere gestito come possibile dal codice dell\textquotesingle{}utente. Tuttavia le funzioni della classe in caso di conflitto impediscono la perdita di entrambi i messaggi (cosa che potrebbe portare a un blocco senza uscita se entrambi i programmi cercassero di reinviare subito il proprio messaggio). Dà quindi la priorità ai messaggi già arrivati a scapito di quelli in uscita, che potrebbero perdersi.
 
 Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di A\+CK, il secondo a quelli senza. 
@@ -98,9 +105,10 @@ stato tx            |######## 2 #######|
 \end{DoxyEnumerate}
 \end{DoxyItemize}
 
-\begin{DoxyParagraph}{Hardware}
 
-\end{DoxyParagraph}
+
+ \subsection*{Hardware }
+
 Come già detto ho scritto questa classe in particolare per il modulo R\+F\+M69\+H\+CW di Hope\+RF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.\+3V (ad es. Adafruit vende {\tt https\+://www.\+adafruit.\+com/product/3071} per la maggior parte dei paesi, tra cui tutti quelli europei, e {\tt https\+://www.\+adafruit.\+com/product/3070} per gli U\+SA e pochi altri).
 
 Il modulo comunica con il microcontrollore tramite S\+PI, deve poter chiamare un\textquotesingle{}interrupt su quest\textquotesingle{}ultimo e può \char`\"{}affidargli\char`\"{} il proprio pin di reset (non veramente sfruttato da questa classe, ma se è già connesso deve essere gestito per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.\+3V.
@@ -129,9 +137,10 @@ D\+I\+O0 &I\+NT $\ast$$\ast$ \\\cline{1-2}
 \item $\ast$$\ast$\+: I\+NT è un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino U\+NO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell\textquotesingle{}ambiete di programmazione Arduino.
 \end{DoxyItemize}
 
-\begin{DoxyParagraph}{Struttura messaggi}
 
-\end{DoxyParagraph}
+
+ \subsection*{Struttura messaggi }
+
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura\+:
 
 \tabulinesep=1mm

@@ -42,9 +42,14 @@ $(function() {
 <div class="title">Driver per i moduli radio RFM69 </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>La classe <a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a> permette di collegare due microcontrollori tramite moduli radio della famiglia RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW (<a href="http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html">http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html</a>). Non ho eseguito alcun test sugli altri moduli.</p>
+<div class="textblock"><p><b>Autore:</b> Noè Archimede Pezzoli (<a href="#" onclick="location.href='mai'+'lto:'+'noe'+'ar'+'chi'+'me'+'de@'+'gm'+'ail'+'.c'+'om'; return false;">noear<span style="display: none;">.nosp@m.</span>chim<span style="display: none;">.nosp@m.</span>ede@g<span style="display: none;">.nosp@m.</span>mail<span style="display: none;">.nosp@m.</span>.com</a>) <br />
+<b>Data:</b> Febbraio 2018 <br />
+<br />
+<br />
+La classe <a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a> permette di collegare due microcontrollori tramite moduli radio della famiglia RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW (<a href="http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html">http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html</a>). Non ho eseguito alcun test sugli altri moduli.</p>
 <p>Alla fine di questo testo si trova un esempio dell'utilizzo di questa classe.</p>
-<dl class="section user"><dt>Caratteristiche del modulo radio</dt><dd></dd></dl>
+<hr/>
+ <h2>Caratteristiche del modulo radio </h2>
 <p>Caratteristiche principali dei moduli radio RFM69HCW:</p><ul>
 <li>frequenza: 315, 433, 868 oppure 915 MHz (esistono quattro versioni per adattarsi alle bande utilizzabili senza licenza in diversi paesi)</li>
 <li>potenza di emissione: da -18dBm a +20dBm (100mW)</li>
@@ -59,7 +64,8 @@ $(function() {
 <li>Rx: 16 mA</li>
 <li>Tx: 16 - 130 mA a seconda della potenza di trasmissione</li>
 </ul>
-<dl class="section user"><dt>Protocollo di comunicazione</dt><dd></dd></dl>
+<hr/>
+ <h2>Protocollo di comunicazione </h2>
 <p>Il protocollo di comunicazione alla base di questa classe presuppone che in una stessa banda di frequenza siano presenti esattamente due radio che condividono la stessa sync word. La stessa frequenza può quindi essere utilizzata anche da altri dispositivi; naturalmente, però, se dispositivi trasmittenti sulla stessa frequenza trasmettono dati nell stesso momento nessuno di essi riceverà un mesaggio valido (a meno che la differenza nella potenza trasmessa sia abbastanza grande da permettere al segnale più forte di "coprire" il più debole, in tal caso solo il dispositivo ricevente il più forte otterrà un messaggio).</p>
 <p>Alla lettura di ogni messaggio la radio ricevente può trasmettere automaticamente un segnale di ACK se la radio trasmittente lo ha richiesto. In questo modo se l'utente deve essere certo che un messaggio trasmesso sia stato ricevuto e letto (quindi certamente anche utilizzato, visto che la lettura avviene solo su richiesta dell'utente e non automaticamente come la ricezione) non deve né implementare un sistema di ACK né modificare il codice ricevente, e il segnale di ACK sarà il meno dispendioso possibile in termini di tempo del programma.</p>
 <p>Gli schemi sottostanti illustrano la trasmissione di un mesasggio. Nel primo caso si tratta di un messaaggio con richiesta di ACK, nel secondo no. </p><div class="fragment"><div class="line">mod       ?   |    tx    |            rx             |        def</div><div class="line">fz          INVIA       ISR                         ISR</div><div class="line">A       ------|----------|---------------------------|--------------------&gt;</div><div class="line">RF             |||MESS|||                    ^^^^^^^</div><div class="line">|              vvvvvvvv                      ||ACK||</div><div class="line">B       ------------------|-----------------|-------|---------------------&gt;</div><div class="line">fz                       ISR              LEGGI    ISR</div><div class="line">mod             rx        |       stby      |  tx   |          def</div></div><!-- fragment --><p> <br />
@@ -69,7 +75,8 @@ $(function() {
 <li><code>mod</code>: modalità della radio. <code>tx</code> = trasmissione, <code>rx</code> = ricezione, <code>stby</code> = standby, <code>def</code>: la modalità che l'utente ha scelto come default per quella radio</li>
 <li><code>RF</code>: presenza di segnali radio e loro direzione</li>
 </ul>
-<dl class="section user"><dt>Collisioni</dt><dd></dd></dl>
+<hr/>
+ <h2>Collisioni </h2>
 <p>Le funzioni di questa classe non impediscono che le due radio trasmettano dei messaggi contemporaneamente. Questo problema deve essere gestito come possibile dal codice dell'utente. Tuttavia le funzioni della classe in caso di conflitto impediscono la perdita di entrambi i messaggi (cosa che potrebbe portare a un blocco senza uscita se entrambi i programmi cercassero di reinviare subito il proprio messaggio). Dà quindi la priorità ai messaggi già arrivati a scapito di quelli in uscita, che potrebbero perdersi.</p>
 <p>Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di ACK, il secondo a quelli senza. </p><div class="fragment"><div class="line">stato tx                    |*********|############ 1 ############|</div><div class="line">A           ----------------|---------|---------------------------|----------&gt;</div><div class="line">|                         INVIA      ISR                         ISR</div><div class="line">|                                    ISR              LEGGI    ISR</div><div class="line">B           ---------------------------|-----------------|-------|-----------&gt;</div><div class="line">stato tx            |####### 2 ########|                 |*******|</div></div><!-- fragment --><p> <br />
 </p><div class="fragment"><div class="line">stato tx                    |*********|######## 3 #######|</div><div class="line">A           ----------------|---------|-----------------------------&gt;</div><div class="line">|                         INVIA      ISR</div><div class="line">|                                    ISR              LEGGI</div><div class="line">B           ---------------------------|-----------------|-----------&gt;</div><div class="line">stato tx            |######## 2 #######|</div></div><!-- fragment --><ul>
@@ -82,7 +89,8 @@ $(function() {
 </ol>
 </li>
 </ul>
-<dl class="section user"><dt>Hardware</dt><dd></dd></dl>
+<hr/>
+ <h2>Hardware </h2>
 <p>Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.3V (ad es. Adafruit vende <a href="https://www.adafruit.com/product/3071">https://www.adafruit.com/product/3071</a> per la maggior parte dei paesi, tra cui tutti quelli europei, e <a href="https://www.adafruit.com/product/3070">https://www.adafruit.com/product/3070</a> per gli USA e pochi altri).</p>
 <p>Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'interrupt su quest'ultimo e può "affidargli" il proprio pin di reset (non veramente sfruttato da questa classe, ma se è già connesso deve essere gestito per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V.</p>
 <table class="doxtable">
@@ -106,7 +114,8 @@ $(function() {
 <li>*: OUT è qualsiasi pin di input/output (sarà configurato come output dalla classe)</li>
 <li>**: INT è un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.</li>
 </ul>
-<dl class="section user"><dt>Struttura messaggi</dt><dd></dd></dl>
+<hr/>
+ <h2>Struttura messaggi </h2>
 <p>Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura:</p>
 <table class="doxtable">
 <tr>
