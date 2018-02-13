@@ -32,14 +32,13 @@ per l'inserimento della documentazione di questa classe in quella di un intero p
 \n
 La classe RFM69 permette di collegare due microcontrollori tramite moduli radio
 della famiglia %RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW
-(http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html). Non ho eseguito
-alcun test sugli altri moduli.
+(http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html).
 
-Alla fine di questo testo si trova un esempio dell'utilizzo di questa classe.
+\n
 
 
 ---
-@par Caratteristiche del modulo radio
+Caratteristiche del modulo radio
 ---
 
 Caratteristiche principali dei moduli radio RFM69HCW:
@@ -71,7 +70,7 @@ Corrente di alimentazione richiesta (a 3.3V), per modalità:
 
 
 ---
-@par Protocollo di comunicazione
+Protocollo di comunicazione
 ---
 
 Il protocollo di comunicazione alla base di questa classe presuppone che in una
@@ -123,7 +122,7 @@ mod             rx        |       stby      |       def
 
 
 ---
-@par Collisioni
+Collisioni
 ---
 
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei
@@ -178,7 +177,7 @@ stato tx            |######## 2 #######|
 
 
 ---
-@par Hardware
+Hardware
 ---
 
 Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW
@@ -211,7 +210,7 @@ per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V
 
 
 ---
-@par Struttura messaggi
+Struttura messaggi
 ---
 
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente
@@ -239,7 +238,7 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 
 
 \n\n
-@par Esempio di utilizzo
+Esempio di utilizzo
 \n
 @code {.cpp}
 
