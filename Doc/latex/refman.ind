@@ -1,0 +1,135 @@
+\begin{theindex}
+
+  \item {$\sim$\+R\+F\+M69}
+    \subitem {R\+F\+M69}, 16
+
+  \indexspace
+
+  \item {aspetta\+Ack}
+    \subitem {R\+F\+M69}, 21
+
+  \indexspace
+
+  \item {dimensione\+Messaggio}
+    \subitem {R\+F\+M69}, 21
+
+  \indexspace
+
+  \item {imposta\+Timeout\+Ack}
+    \subitem {R\+F\+M69}, 24
+  \item {inizia\+Ricezione}
+    \subitem {R\+F\+M69}, 20
+  \item {inizializza}
+    \subitem {R\+F\+M69}, 16
+  \item {invia}
+    \subitem {R\+F\+M69}, 17
+  \item {invia\+Con\+Ack}
+    \subitem {R\+F\+M69}, 19
+  \item {invia\+Fino\+Ack}
+    \subitem {R\+F\+M69}, 19
+
+  \indexspace
+
+  \item {leggi}
+    \subitem {R\+F\+M69}, 20
+  \item {Lista\+Errori}
+    \subitem {R\+F\+M69\+::\+Errore}, 11
+  \item {listen}
+    \subitem {R\+F\+M69}, 23
+  \item {listen\+Default}
+    \subitem {R\+F\+M69}, 24
+
+  \indexspace
+
+  \item {nr\+Messaggi\+Inviati}
+    \subitem {R\+F\+M69}, 25
+  \item {nr\+Messaggi\+Ricevuti}
+    \subitem {R\+F\+M69}, 25
+  \item {nuovo\+Messaggio}
+    \subitem {R\+F\+M69}, 21
+
+  \indexspace
+
+  \item {operator=}
+    \subitem {R\+F\+M69}, 27
+
+  \indexspace
+
+  \item {R\+F\+M69}, 13
+    \subitem {$\sim$\+R\+F\+M69}, 16
+    \subitem {aspetta\+Ack}, 21
+    \subitem {dimensione\+Messaggio}, 21
+    \subitem {imposta\+Timeout\+Ack}, 24
+    \subitem {inizia\+Ricezione}, 20
+    \subitem {inizializza}, 16
+    \subitem {invia}, 17
+    \subitem {invia\+Con\+Ack}, 19
+    \subitem {invia\+Fino\+Ack}, 19
+    \subitem {leggi}, 20
+    \subitem {listen}, 23
+    \subitem {listen\+Default}, 24
+    \subitem {nr\+Messaggi\+Inviati}, 25
+    \subitem {nr\+Messaggi\+Ricevuti}, 25
+    \subitem {nuovo\+Messaggio}, 21
+    \subitem {operator=}, 27
+    \subitem {R\+F\+M69}, 15, 16
+    \subitem {ricevuto\+Ack}, 22
+    \subitem {rinuncia\+Ack}, 22
+    \subitem {rssi}, 25
+    \subitem {rx\+Default}, 24
+    \subitem {sleep}, 23
+    \subitem {sleep\+Default}, 24
+    \subitem {stampa\+Errore\+Serial}, 26
+    \subitem {stampa\+Registri\+Serial}, 26
+    \subitem {standby}, 23
+    \subitem {standby\+Default}, 24
+    \subitem {tempo\+Ricezione}, 25
+    \subitem {valore\+Registro}, 26
+  \item {R\+F\+M69/\+R\+F\+M69.\+h}, 29
+  \item {R\+F\+M69/\+R\+F\+M69\+\_\+\+S\+P\+I.\+cpp}, 34
+  \item {R\+F\+M69/\+R\+F\+M69\+\_\+comunicazione.\+cpp}, 29
+  \item {R\+F\+M69/\+R\+F\+M69\+\_\+costanti\+\_\+impostazione.\+h}, 30
+  \item {R\+F\+M69/\+R\+F\+M69\+\_\+impostazioni.\+h}, 30
+  \item {R\+F\+M69/\+R\+F\+M69\+\_\+inizializzazione.\+cpp}, 31
+  \item {R\+F\+M69/\+R\+F\+M69\+\_\+registri.\+h}, 31
+  \item {R\+F\+M69\+::\+Errore}, 11
+    \subitem {Lista\+Errori}, 11
+  \item {R\+F\+M69\+\_\+\+R\+E\+S\+E\+R\+V\+ED}
+    \subitem {R\+F\+M69\+\_\+registri.\+h}, 33
+  \item {R\+F\+M69\+\_\+registri.\+h}
+    \subitem {R\+F\+M69\+\_\+\+R\+E\+S\+E\+R\+V\+ED}, 33
+  \item {ricevuto\+Ack}
+    \subitem {R\+F\+M69}, 22
+  \item {rinuncia\+Ack}
+    \subitem {R\+F\+M69}, 22
+  \item {rssi}
+    \subitem {R\+F\+M69}, 25
+  \item {rx\+Default}
+    \subitem {R\+F\+M69}, 24
+
+  \indexspace
+
+  \item {sleep}
+    \subitem {R\+F\+M69}, 23
+  \item {sleep\+Default}
+    \subitem {R\+F\+M69}, 24
+  \item {stampa\+Errore\+Serial}
+    \subitem {R\+F\+M69}, 26
+  \item {stampa\+Registri\+Serial}
+    \subitem {R\+F\+M69}, 26
+  \item {standby}
+    \subitem {R\+F\+M69}, 23
+  \item {standby\+Default}
+    \subitem {R\+F\+M69}, 24
+
+  \indexspace
+
+  \item {tempo\+Ricezione}
+    \subitem {R\+F\+M69}, 25
+
+  \indexspace
+
+  \item {valore\+Registro}
+    \subitem {R\+F\+M69}, 26
+
+\end{theindex}

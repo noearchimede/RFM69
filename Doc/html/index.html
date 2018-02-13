@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RFM69: Driver per i moduli radio RFM69</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">RFM69
+   </div>
+   <div id="projectbrief">Driver per i moduli radio RFM69</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','Cerca');
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Driver per i moduli radio RFM69 </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p>La classe <a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a> permette di collegare due microcontrollori tramite moduli radio della famiglia RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW (<a href="http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html">http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html</a>). Non ho eseguito alcun test sugli altri moduli.</p>
+<p>Alla fine di questo testo si trova un esempio dell'utilizzo di questa classe.</p>
+<dl class="section user"><dt>Caratteristiche del modulo radio</dt><dd></dd></dl>
+<p>Caratteristiche principali dei moduli radio RFM69HCW:</p><ul>
+<li>frequenza: 315, 433, 868 oppure 915 MHz (esistono quattro versioni per adattarsi alle bande utilizzabili senza licenza in diversi paesi)</li>
+<li>potenza di emissione: da -18dBm a +20dBm (100mW)</li>
+<li>sensdibilità: fino a -120dBm (con bassa bitrate)</li>
+<li>bitrate fino a 300'000 Baud</li>
+<li>modulazioni: FSK, GFSK, MSK, GMSK, OOK</li>
+</ul>
+<p>I messaggi possono includere un controllo CRC16 di due bytes che riduce drasticamente la probabilità di errore durante la trasmissione. Possono inoltre essere criptati secondo l'algoritmo Avanced Encryption Standard AES-128 con una chiave di 16 bytes per impedirne la lettura da parte di eventuali terze radio. La possibilità offerta dal modulo di assegnare ad ogni modulo un indirizzo unico in modo da creare una rete con fino a 255 dispositivi nonb è sfruttata, ma un risultato simile è ottenibile creando una rete in cui ogni radio ha una sync word unica che può sostituire temporaneamente con quella di un'altra radio (ottenuta da una tabella pubblica) per inviare un messaggio a quella radio. Questo permette di creare una rete di dimensione arbitraria (è possibile impostare fino a 8 byte di sync word, per un totale di 2^64 indirizzi possibili) ma non di inviare messaggi broadcast, come invece il sistema di addressing incluso nel modulo permetterebbe.</p>
+<p>Corrente di alimentazione richiesta (a 3.3V), per modalità:</p><ul>
+<li>Sleep: 0.0001 mA</li>
+<li>Standby: 1.25 mA</li>
+<li>Rx: 16 mA</li>
+<li>Tx: 16 - 130 mA a seconda della potenza di trasmissione</li>
+</ul>
+<dl class="section user"><dt>Protocollo di comunicazione</dt><dd></dd></dl>
+<p>Il protocollo di comunicazione alla base di questa classe presuppone che in una stessa banda di frequenza siano presenti esattamente due radio che condividono la stessa sync word. La stessa frequenza può quindi essere utilizzata anche da altri dispositivi; naturalmente, però, se dispositivi trasmittenti sulla stessa frequenza trasmettono dati nell stesso momento nessuno di essi riceverà un mesaggio valido (a meno che la differenza nella potenza trasmessa sia abbastanza grande da permettere al segnale più forte di "coprire" il più debole, in tal caso solo il dispositivo ricevente il più forte otterrà un messaggio).</p>
+<p>Alla lettura di ogni messaggio la radio ricevente può trasmettere automaticamente un segnale di ACK se la radio trasmittente lo ha richiesto. In questo modo se l'utente deve essere certo che un messaggio trasmesso sia stato ricevuto e letto (quindi certamente anche utilizzato, visto che la lettura avviene solo su richiesta dell'utente e non automaticamente come la ricezione) non deve né implementare un sistema di ACK né modificare il codice ricevente, e il segnale di ACK sarà il meno dispendioso possibile in termini di tempo del programma.</p>
+<p>Gli schemi sottostanti illustrano la trasmissione di un mesasggio. Nel primo caso si tratta di un messaaggio con richiesta di ACK, nel secondo no. </p><div class="fragment"><div class="line">mod       ?   |    tx    |            rx             |        def</div><div class="line">fz          INVIA       ISR                         ISR</div><div class="line">A       ------|----------|---------------------------|--------------------&gt;</div><div class="line">RF             |||MESS|||                    ^^^^^^^</div><div class="line">|              vvvvvvvv                      ||ACK||</div><div class="line">B       ------------------|-----------------|-------|---------------------&gt;</div><div class="line">fz                       ISR              LEGGI    ISR</div><div class="line">mod             rx        |       stby      |  tx   |          def</div></div><!-- fragment --><p> <br />
+</p><div class="fragment"><div class="line">mod       ?   |    tx    |              def</div><div class="line">fz          INVIA       ISR</div><div class="line">A       ------|----------|---------------------------------&gt;</div><div class="line">RF             |||MESS|||</div><div class="line">|              vvvvvvvvv</div><div class="line">B       ------------------|-----------------|---------------&gt;</div><div class="line">fz                       ISR              LEGGI</div><div class="line">mod             rx        |       stby      |       def</div></div><!-- fragment --><ul>
+<li><code>A, B</code>: Programma delle stazioni radio, evoluzione nel tempo</li>
+<li><code>fz</code>: funzioni chiamate. <code>invia()</code> e <code>leggi()</code> sono chiamate dall'utente, <code>isr()</code> è l'interrupt service routine della classe</li>
+<li><code>mod</code>: modalità della radio. <code>tx</code> = trasmissione, <code>rx</code> = ricezione, <code>stby</code> = standby, <code>def</code>: la modalità che l'utente ha scelto come default per quella radio</li>
+<li><code>RF</code>: presenza di segnali radio e loro direzione</li>
+</ul>
+<dl class="section user"><dt>Collisioni</dt><dd></dd></dl>
+<p>Le funzioni di questa classe non impediscono che le due radio trasmettano dei messaggi contemporaneamente. Questo problema deve essere gestito come possibile dal codice dell'utente. Tuttavia le funzioni della classe in caso di conflitto impediscono la perdita di entrambi i messaggi (cosa che potrebbe portare a un blocco senza uscita se entrambi i programmi cercassero di reinviare subito il proprio messaggio). Dà quindi la priorità ai messaggi già arrivati a scapito di quelli in uscita, che potrebbero perdersi.</p>
+<p>Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di ACK, il secondo a quelli senza. </p><div class="fragment"><div class="line">stato tx                    |*********|############ 1 ############|</div><div class="line">A           ----------------|---------|---------------------------|----------&gt;</div><div class="line">|                         INVIA      ISR                         ISR</div><div class="line">|                                    ISR              LEGGI    ISR</div><div class="line">B           ---------------------------|-----------------|-------|-----------&gt;</div><div class="line">stato tx            |####### 2 ########|                 |*******|</div></div><!-- fragment --><p> <br />
+</p><div class="fragment"><div class="line">stato tx                    |*********|######## 3 #######|</div><div class="line">A           ----------------|---------|-----------------------------&gt;</div><div class="line">|                         INVIA      ISR</div><div class="line">|                                    ISR              LEGGI</div><div class="line">B           ---------------------------|-----------------|-----------&gt;</div><div class="line">stato tx            |######## 2 #######|</div></div><!-- fragment --><ul>
+<li>[ ]: nessuna restrizione, è il momento giusto per trasmettere un messaggio</li>
+<li>[***]: impossibile trasmettere, invia() aspetta che sia di nuovo possibile (ma al massimo 50 ms)</li>
+<li>[###]: la funzione invia() non dovrebbe mai essere chiamata qui:<ol type="1">
+<li>CHIAMATA AD <code>invia()</code> QUI &ndash;&gt; PROBLEMA NEL CODICE DELL'UTENTE In teoria non bisognerebbe trasmettere (l'altra radio non è in modalità rx), ma in realtà se l'utente chiama invia() mentre la classe aspetta un ack per il messaggio precedente significa che l'utente ha rinunciato a controllare quell'ack. In tal caso invia() si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andrà perso, ma il compito della funzione invia() non è aspettare l'ack precedente (quello è compito dell'utente, anche se lo aspettasse per un certo tempo invia() non potrebbe segnalare se è arrivato o no). La sequenza corretta sarebbe: invia() con richiesta ack -&gt; aspettaAck(), che contiene un timeout -&gt; ackRicevuto()? -&gt; invia() prossimo messaggio, oppure invia() -&gt; delay(x) -&gt; ackRicevuto()? -&gt; rinunciaAck() invia()</li>
+<li>momento critico: se si chiama invia() qui ci sarà una collisione con l'invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all'utente impedire queste collisioni o saperle gestire.</li>
+<li>i messaggi inviati qui saranno persi. È un difetto dei messaggi senza ACK.</li>
+</ol>
+</li>
+</ul>
+<dl class="section user"><dt>Hardware</dt><dd></dd></dl>
+<p>Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.3V (ad es. Adafruit vende <a href="https://www.adafruit.com/product/3071">https://www.adafruit.com/product/3071</a> per la maggior parte dei paesi, tra cui tutti quelli europei, e <a href="https://www.adafruit.com/product/3070">https://www.adafruit.com/product/3070</a> per gli USA e pochi altri).</p>
+<p>Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'interrupt su quest'ultimo e può "affidargli" il proprio pin di reset (non veramente sfruttato da questa classe, ma se è già connesso deve essere gestito per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V.</p>
+<table class="doxtable">
+<tr>
+<th>RFM69 </th><th>uC  </th></tr>
+<tr>
+<td>MISO </td><td>MISO </td></tr>
+<tr>
+<td>MOSI </td><td>MOSI </td></tr>
+<tr>
+<td>SCK </td><td>SCK </td></tr>
+<tr>
+<td>NSS </td><td>I/O * </td></tr>
+<tr>
+<td>DIO0 </td><td>INT ** </td></tr>
+<tr>
+<td><em>RESET &amp;</em> </td><td><em>I/O *</em> </td></tr>
+</table>
+<ul>
+<li>&amp;: Opzionale</li>
+<li>*: OUT è qualsiasi pin di input/output (sarà configurato come output dalla classe)</li>
+<li>**: INT è un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.</li>
+</ul>
+<dl class="section user"><dt>Struttura messaggi</dt><dd></dd></dl>
+<p>Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura:</p>
+<table class="doxtable">
+<tr>
+<th>Preamble </th><th>Sync word </th><th>Lunghezza </th><th>Intestazione </th><th>Contenuto </th><th>CRC  </th></tr>
+<tr>
+<td>PREAMBLE_SIZE </td><td>SYNC_SIZE </td><td>1 </td><td>1 </td><td>lunghezza </td><td>2 </td></tr>
+<tr>
+<td>01010101... </td><td>SYNC_VAL </td><td>lunghezza </td><td>intestazione </td><td>messaggio </td><td>crc </td></tr>
+</table>
+<p>La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo contenuto.</p>
+<ul>
+<li><code>PREAMBLE_SIZE</code>, <code>SYNC_SIZE</code> e <code>SYNC_VAL</code> sono costanti definite nel file "RFM69_impostazioni.h".</li>
+<li><code>lunghezza</code> e <code>messaggio</code> sono gli argomenti della funzione <code>invia()</code>.</li>
+<li><code>intestazione</code> è un byte generato dalle funzioni di invio e letto da quelle di ricezione, inaccessibile all'utente.</li>
+<li><code>crc</code> è un Cyclic Redundancy Checksum generato dalla radio.</li>
+</ul>
+<p><br />
+<b>Documentazione dettagliata dei membri della classe: <a class="el" href="class_r_f_m69.html">RFM69</a> </b></p>
+<p><br />
+<br />
+</p><dl class="section user"><dt>Esempio di utilizzo</dt><dd><br />
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;Arduino.h&gt;</span></div><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="_r_f_m69_8h.html">RFM69.h</a>&quot;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// #define MODULO_r o MODULO_t per compilare rispettivamente il programma per la</span></div><div class="line"><span class="comment">// radio ricevente o per quella trasmittente.</span></div><div class="line"><span class="comment">//------------------------------------------------------------------------------</span></div><div class="line"><span class="preprocessor">#define MODULO_r</span></div><div class="line"><span class="comment">// #define MODULO_t</span></div><div class="line"><span class="comment">//------------------------------------------------------------------------------</span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// telecomando</span></div><div class="line"><span class="preprocessor">#ifdef MODULO_r</span></div><div class="line"><span class="comment">// Pin SS, pin Interrupt, (eventualmente pin Reset)</span></div><div class="line"><a class="code" href="class_r_f_m69.html">RFM69</a> radio(2, 3);</div><div class="line"><span class="comment">// Un LED, 0 per non usarlo</span></div><div class="line"><span class="preprocessor">#define LED 4</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"><span class="comment">// quadricotetro</span></div><div class="line"><span class="preprocessor">#ifdef MODULO_t</span></div><div class="line"><span class="comment">// Pin SS, pin Interrupt, (eventualmente pin Reset)</span></div><div class="line"><a class="code" href="class_r_f_m69.html">RFM69</a> radio(A2, 3, A3);</div><div class="line"><span class="comment">// Un LED, 0 per non usarlo</span></div><div class="line"><span class="preprocessor">#define LED 7</span></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> setup() {</div><div class="line"></div><div class="line">    Serial.begin(115200);</div><div class="line">    <span class="keywordflow">if</span>(LED) pinMode(LED, OUTPUT);</div><div class="line"></div><div class="line">    <span class="comment">// Inizializza la radio. Deve essere chiamato una volta all&#39;inizio del programma.</span></div><div class="line">    <span class="comment">// Restituisce 0</span></div><div class="line">    <span class="keywordtype">int</span> initFallita = radio.inizializza(4);</div><div class="line">    <span class="keywordflow">if</span>(initFallita) {</div><div class="line">        <span class="comment">// Stampa l&#39;errore riscontrato (questa funzione pesa quasi 0.5 kB)</span></div><div class="line">        radio.stampaErroreSerial(Serial, initFallita);</div><div class="line">        <span class="comment">// Inizializzazione fallita, blocca il progrmma</span></div><div class="line">        <span class="keywordflow">while</span>(<span class="keyword">true</span>);</div><div class="line">    }</div><div class="line">}</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="preprocessor">#ifdef MODULO_t</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> loop(){</div><div class="line"></div><div class="line">    <span class="comment">// crea un messaggio</span></div><div class="line">    uint8_t lung = 4;</div><div class="line">    uint8_t mess[lung] = {0,0x13, 0x05, 0x98};</div><div class="line"></div><div class="line">    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t;</div><div class="line">    <span class="keywordtype">bool</span> ok;</div><div class="line"></div><div class="line">    <span class="keywordflow">while</span>(<span class="keyword">true</span>) {</div><div class="line"></div><div class="line">        <span class="comment">// Aggiorna messaggio</span></div><div class="line">        mess[0] = (uint8_t)radio.nrMessaggiInviati();</div><div class="line"></div><div class="line">        Serial.print(<span class="stringliteral">&quot;Invio...&quot;</span>);</div><div class="line">        <span class="keywordflow">if</span>(LED) digitalWrite(LED, HIGH);</div><div class="line"></div><div class="line">        <span class="comment">// Registra tempo di invio</span></div><div class="line">        t = millis();</div><div class="line"></div><div class="line">        <span class="comment">// Invia</span></div><div class="line">        radio.inviaConAck(mess, lung);</div><div class="line">        <span class="comment">// Aspetta fino alla ricezione di un ack o al timeout impostato nella classe</span></div><div class="line">        <span class="keywordflow">while</span>(radio.aspettaAck());</div><div class="line">        <span class="comment">// Controlla se è arrivato un Ack (l&#39;attesa può finire anche senza ack, per timeout)</span></div><div class="line">        <span class="keywordflow">if</span>(radio.ricevutoAck()) ok = <span class="keyword">true</span>;  <span class="keywordflow">else</span> ok = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">        <span class="comment">// calcola il tempo trascorso dall&#39;invio</span></div><div class="line">        t = millis() - t;</div><div class="line"></div><div class="line">        <span class="keywordflow">if</span>(LED) digitalWrite(LED, LOW);</div><div class="line"></div><div class="line">        <span class="keywordflow">if</span>(ok) {</div><div class="line">            Serial.print(<span class="stringliteral">&quot; mess #&quot;</span>);</div><div class="line">            Serial.print(radio.nrMessaggiInviati());</div><div class="line">            Serial.print(<span class="stringliteral">&quot; trasmesso in &quot;</span>);</div><div class="line">            Serial.print(t);</div><div class="line">            Serial.print(<span class="stringliteral">&quot; ms&quot;</span>);</div><div class="line">        }</div><div class="line">        <span class="keywordflow">else</span> {</div><div class="line">            Serial.print(<span class="stringliteral">&quot; messaggio #&quot;</span>);</div><div class="line">            Serial.print(radio.nrMessaggiInviati());</div><div class="line">            Serial.print(<span class="stringliteral">&quot; perso&quot;</span>);</div><div class="line">        }</div><div class="line">        Serial.println();</div><div class="line"></div><div class="line">        delay(1000);</div><div class="line">    }</div><div class="line">}</div><div class="line"></div><div class="line"><span class="preprocessor">#endif</span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="preprocessor">#ifdef MODULO_r</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> loop(){</div><div class="line"></div><div class="line">    <span class="comment">// metti la radio in modalità ricezione</span></div><div class="line">    radio.iniziaRicezione();</div><div class="line"></div><div class="line">    <span class="comment">// aspetta un messaggio</span></div><div class="line">    <span class="keywordflow">while</span>(!radio.nuovoMessaggio());</div><div class="line"></div><div class="line">    <span class="keywordflow">if</span>(LED) digitalWrite(LED, HIGH);</div><div class="line"></div><div class="line">    <span class="comment">// ottieni la dimensione del messaggio ricevuto</span></div><div class="line">    uint8_t lung = radio.dimensioneMessaggio();</div><div class="line">    <span class="comment">// crea un&#39;array in cui copiarlo</span></div><div class="line">    uint8_t mess[lung];</div><div class="line">    <span class="comment">// leggi il messaggio</span></div><div class="line">    <span class="keywordtype">int</span> erroreLettura = radio.leggi(mess, lung);</div><div class="line">    <span class="comment">// ora `mess` contiene il messaggio e `lung` corrisponde alla lunghezza del</span></div><div class="line">    <span class="comment">// messaggio (in questo caso corrispondeve anche prima, ma avrebbe anche</span></div><div class="line">    <span class="comment">// potuto essere più grande, ad. es. se mess. fosse stato un buffer generico</span></div><div class="line">    <span class="comment">// già allocato alla dimensione del messaggio più lungo possibile)</span></div><div class="line"></div><div class="line">    <span class="keywordflow">if</span> (erroreLettura) {</div><div class="line">        Serial.print(<span class="stringliteral">&quot;Errore lettura&quot;</span>);</div><div class="line">    }</div><div class="line">    <span class="keywordflow">else</span> {</div><div class="line">        Serial.print(<span class="stringliteral">&quot;Messaggio (&quot;</span>);</div><div class="line">        Serial.print(lung);</div><div class="line">        Serial.print(<span class="stringliteral">&quot; bytes): &quot;</span>);</div><div class="line">        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; lung; i++) {</div><div class="line">            Serial.print(<span class="stringliteral">&quot; 0x&quot;</span>);</div><div class="line">            Serial.print(mess[i], HEX);</div><div class="line">        }</div><div class="line">        Serial.print(<span class="stringliteral">&quot;  rssi: &quot;</span>);</div><div class="line"></div><div class="line">        <span class="comment">// Ottieni il valore RSSI del segnale che ha portato questo messaggio</span></div><div class="line">        Serial.print(radio.rssi());</div><div class="line">    }</div><div class="line">    Serial.println();</div><div class="line"></div><div class="line">    delay(50);</div><div class="line">    <span class="keywordflow">if</span>(LED) digitalWrite(LED, LOW);</div><div class="line"></div><div class="line">}</div><div class="line"><span class="preprocessor">#endif</span></div></div><!-- fragment --> </dd></dl>
+</div></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generato da &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

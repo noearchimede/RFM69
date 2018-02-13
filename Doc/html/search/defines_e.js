@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['sensivity_5fmode',['SENSIVITY_MODE',['../_r_f_m69__impostazioni_8h.html#a67c475676d82b560477858b1071b3b91',1,'RFM69_impostazioni.h']]],
+  ['sensivity_5fmode_5fhigh',['SENSIVITY_MODE_HIGH',['../_r_f_m69__costanti__impostazione_8h.html#aab76e8558dcb9e0f4208a7d96d0ef997',1,'RFM69_costanti_impostazione.h']]],
+  ['sensivity_5fmode_5fnormal',['SENSIVITY_MODE_NORMAL',['../_r_f_m69__costanti__impostazione_8h.html#a1d030e6c84e7c959c1c1d04f8d45561d',1,'RFM69_costanti_impostazione.h']]],
+  ['shaping',['SHAPING',['../_r_f_m69__impostazioni_8h.html#af1c931e7089a083d5312e9fd45df7afb',1,'RFM69_impostazioni.h']]],
+  ['shaping_5ffsk_5fgauss_5f0_5f3',['SHAPING_FSK_GAUSS_0_3',['../_r_f_m69__costanti__impostazione_8h.html#a5873c16388cada8fcd6f4ad6d7e8e6f5',1,'RFM69_costanti_impostazione.h']]],
+  ['shaping_5ffsk_5fgauss_5f0_5f5',['SHAPING_FSK_GAUSS_0_5',['../_r_f_m69__costanti__impostazione_8h.html#aa31bd544ae6f5bb42cf052408c016832',1,'RFM69_costanti_impostazione.h']]],
+  ['shaping_5ffsk_5fgauss_5f1_5f0',['SHAPING_FSK_GAUSS_1_0',['../_r_f_m69__costanti__impostazione_8h.html#ab0a514d74f064a3767cc162122bfa7ae',1,'RFM69_costanti_impostazione.h']]],
+  ['shaping_5fnone',['SHAPING_NONE',['../_r_f_m69__costanti__impostazione_8h.html#ac7bfa21e77834ae5ed869368b6ff9d46',1,'RFM69_costanti_impostazione.h']]],
+  ['shaping_5fook_5ffcutoff_5f2br',['SHAPING_OOK_FCUTOFF_2BR',['../_r_f_m69__costanti__impostazione_8h.html#aee2f30ec580d75f39feaa6b56b9a1e79',1,'RFM69_costanti_impostazione.h']]],
+  ['shaping_5fook_5ffcutoff_5fbr',['SHAPING_OOK_FCUTOFF_BR',['../_r_f_m69__costanti__impostazione_8h.html#af45bf88ad6ed7f7163ca4202b57d2820',1,'RFM69_costanti_impostazione.h']]],
+  ['standard',['STANDARD',['../_r_f_m69__impostazioni_8h.html#a0b8ca8ad62b88c01b639bad62eafcbf1',1,'RFM69_impostazioni.h']]],
+  ['sync_5fen',['SYNC_EN',['../_r_f_m69__impostazioni_8h.html#a1f2618e2a0900243f4b83f13e7c40a9e',1,'RFM69_impostazioni.h']]],
+  ['sync_5fsize',['SYNC_SIZE',['../_r_f_m69__impostazioni_8h.html#a144b9b310fc9e30ae35ddba77fa828a9',1,'RFM69_impostazioni.h']]],
+  ['sync_5fsize_5fval',['SYNC_SIZE_VAL',['../_r_f_m69__costanti__impostazione_8h.html#a0cfa1ff34cce5007fd08bf92b54580d0',1,'RFM69_costanti_impostazione.h']]],
+  ['sync_5ftol',['SYNC_TOL',['../_r_f_m69__impostazioni_8h.html#a3694943a9ba5cb804315f83981af04d3',1,'RFM69_impostazioni.h']]],
+  ['sync_5fval',['SYNC_VAL',['../_r_f_m69__impostazioni_8h.html#a835e583129e4d8dd400c8dcd0ff2ebea',1,'RFM69_impostazioni.h']]]
+];

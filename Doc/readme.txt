@@ -1,0 +1,1 @@
+Documentazione creata da Doxygen con il file di configurazione presente in questa cartella.
