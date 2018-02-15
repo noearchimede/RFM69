@@ -1,30 +1,47 @@
 Driver Arduino per i moduli radio RFM69
 =======================================
-
+-
 **Autore**:   Noè Archimede Pezzoli (noearchimede@gmail.com)<br>
 **Data**:  Febbraio 2018<br>
 
-La libreria RFM69 permette di collegare due microcontrollori tramite moduli radio
-della famiglia RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW.
-(http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html).
+-
 
+### Introduzione ###
 
-Indice
-------
-[Caratteristiche del modulo radio](#id-section1)
+La libreria RFM69 permette di collegare due microcontrollori tramite una coppia di moduli radio
+della famiglia RFM69 di HopeRF, in particolare del modello
+[RFM69HCW](http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html).
 
-<br>
-<div id='id-section1'/>
-Caratteristiche del modulo radio
---------------------------------
+Il codice della libreria è ampiamente commentato in italiano. I commenti normali (`// ...`), presenti soprattutto nei files di implementazione (`.cpp`), forniscono dettagli sull'implementazione. I commenti "speciali" (`//! ...` o `/*! ... */`) sono concentrati nel file header e costituiscono una documentazione per l'utilizzatore della libreria che non desidera conoscere i dettagli del suo funzionamento. Questa documentazione può essere riunita da Doxygen in un unico file o pagina html; la versione html più recente è consultabile [qui](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html).
+
+-
+
+### Indice ###
+
+[1. Caratteristiche del modulo radio](#1)<br>
+[2. Protocollo di comunicazione](#2)<br>
+[3. Collisioni](#3)<br>
+[4. Hardware](#4)<br>
+[5. Struttura dei messaggi](#5)<br>
+[6. Esempio di utilizzo](#6)<br>
+	
+[Documentazione](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html)
+
+-
+<br><div id='id-section1'/>
+
+1. Caratteristiche del modulo radio
+-----------------------------------
 
 Caratteristiche principali dei moduli radio RFM69HCW:
-    - frequenza: 315, 433, 868 oppure 915 MHz (esistono quattro versioni per adattarsi
-    alle bande utilizzabili senza licenza in diversi paesi)
-    - potenza di emissione: da -18dBm a +20dBm (100mW)
-    - sensdibilità: fino a -120dBm (con bassa bitrate)
-    - bitrate fino a 300'000 Baud
-    - modulazioni: FSK, GFSK, MSK, GMSK, OOK
+
+- frequenza: 315, 433, 868 oppure 915 MHz (esistono quattro versioni per adattarsi
+alle bande utilizzabili senza licenza in diversi paesi)
+- potenza di emissione: da -18dBm a +20dBm (100mW)
+- sensdibilità: fino a -120dBm (con bassa bitrate)
+- bitrate fino a 300'000 Baud
+- modulazioni: FSK, GFSK, MSK, GMSK, OOK
+  
 
 I messaggi possono includere un controllo CRC16 di due bytes che riduce drasticamente
 la probabilità di errore durante la trasmissione. Possono inoltre essere criptati
@@ -39,16 +56,19 @@ dimensione arbitraria (è possibile impostare fino a 8 byte di sync word, per un
 totale di 2^64 indirizzi possibili) ma non di inviare messaggi broadcast, come
 invece il sistema di addressing incluso nel modulo permetterebbe.
 
-Corrente di alimentazione richiesta (a 3.3V), per modalità:
-    - Sleep:      0.0001 mA
-    - Standby:    1.25 mA
-    - Rx:         16 mA
-    - Tx:         16 - 130 mA a seconda della potenza di trasmissione
-
-
 <br>
-Protocollo di comunicazione
----
+Corrente di alimentazione richiesta (a 3.3V), per modalità:
+
+- Sleep:      0.0001 mA
+- Standby:    1.25 mA
+- Rx:         16 mA
+- Tx:         16 - 130 mA a seconda della potenza di trasmissione
+
+
+<br><div id='2'/>
+
+2. Protocollo di comunicazione
+------------------------------
 
 Il protocollo di comunicazione alla base di questa classe presuppone che in una
 stessa banda di frequenza siano presenti esattamente due radio che condividono
@@ -69,8 +89,7 @@ meno dispendioso possibile in termini di tempo del programma.
 
 Gli schemi sottostanti illustrano la trasmissione di un mesasggio.
 
-**1 - con trasmissione di ACK:**
-
+1 - con ACK:
 
 	mod       ?   |    tx    |            rx             |        def
 	fz          INVIA       ISR                         ISR
@@ -81,8 +100,7 @@ Gli schemi sottostanti illustrano la trasmissione di un mesasggio.
 	fz                       ISR              LEGGI    ISR
 	mod             rx        |       stby      |  tx   |          def
 
-**2 - senza ACK:**
-
+2 - senza ACK:
 
 	mod       ?   |    tx    |              def
 	fz          INVIA       ISR
@@ -100,9 +118,10 @@ Gli schemi sottostanti illustrano la trasmissione di un mesasggio.
     `def`: la modalità che l'utente ha scelto come default per quella radio
 - `RF`: presenza di segnali radio e loro direzione
 
-<br><br>  
-Collisioni
----
+<br><div id='3'/>
+
+3. Collisioni
+-------------
 
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei
 messaggi contemporaneamente. Questo problema deve essere gestito come possibile
@@ -115,49 +134,65 @@ quelli in uscita, che potrebbero perdersi.
 Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe
 trasmettere. Il primo schema si riferisce ai messaggi con richiesat di ACK, il
 secondo a quelli senza.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-stato tx                    |*********|############ 1 ############|
-A           ----------------|---------|---------------------------|---------->
-|                         INVIA      ISR                         ISR
-|                                    ISR              LEGGI    ISR
-B           ---------------------------|-----------------|-------|----------->
-stato tx            |####### 2 ########|                 |*******|
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\n
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-stato tx                    |*********|######## 3 #######|
-A           ----------------|---------|----------------------------->
-|                         INVIA      ISR
-|                                    ISR              LEGGI
-B           ---------------------------|-----------------|----------->
-stato tx            |######## 2 #######|
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- [   ]: nessuna restrizione, è il momento giusto per trasmettere un messaggio
-- [***]: impossibile trasmettere, invia() aspetta che sia di nuovo possibile (ma al
+
+1 - con ACK:
+
+	stato tx                    |*********|############ 1 ############|
+	A           ----------------|---------|---------------------------|---------->
+	|                         INVIA      ISR                         ISR
+	|                                    ISR              LEGGI    ISR
+	B           ---------------------------|-----------------|-------|----------->
+	stato tx            |####### 2 ########|                 |*******|
+
+2 - Senza ACK:
+
+	stato tx                    |*********|######## 3 #######|
+	A           ----------------|---------|----------------------------->
+	|                         INVIA      ISR
+	|                                    ISR              LEGGI
+	B           ---------------------------|-----------------|----------->
+	stato tx            |######## 2 #######|
+
+- [`   `]: nessuna restrizione, è il momento giusto per trasmettere un messaggio
+- [`***`]: impossibile trasmettere, `invia()` aspetta che sia di nuovo possibile (ma al
     massimo 50 ms)
-- [###]: la funzione invia() non dovrebbe mai essere chiamata qui:
-    1. CHIAMATA AD `invia()` QUI --> PROBLEMA NEL CODICE DELL'UTENTE
-        In teoria non bisognerebbe trasmettere (l'altra radio non è in modalità rx),
-        ma in realtà se l'utente chiama invia() mentre la classe aspetta un ack per
+- [`###`]: la funzione `invia()` non dovrebbe mai essere chiamata qui.
+    -  [`1`]: In teoria non bisognerebbe trasmettere (l'altra radio non è in modalità rx),
+        ma in realtà se l'utente chiama `invia()` mentre la classe aspetta un ack per
         il messaggio precedente significa che l'utente ha rinunciato a controllare
-        quell'ack. In tal caso invia() si comporta come se il messaggio precedente
+        quell'ack. In tal caso `invia()` si comporta come se il messaggio precedente
         non avesse contenuto una richiesta di ack. Probabilmente questo messaggio
-        andrà perso, ma il compito della funzione invia() non è aspettare l'ack
+        andrà perso, ma il compito della funzione `invia()` non è aspettare l'ack
         precedente (quello è compito dell'utente, anche se lo aspettasse per un certo
-        tempo invia() non potrebbe segnalare se è arrivato o no). La sequenza corretta
-        sarebbe: invia() con richiesta ack -> aspettaAck(), che contiene un timeout ->
-        ackRicevuto()? -> invia() prossimo messaggio, oppure invia() -> delay(x) ->
-        ackRicevuto()? -> rinunciaAck() invia()
-    2. momento critico: se si chiama invia() qui ci sarà una collisione con
+        tempo `invia()` non potrebbe segnalare se è arrivato o no). La sequenza corretta
+        sarebbe:
+        
+        ```cpp
+		inviaConAck();
+		aspettaAck(); 		// contiene un timeout
+		if(ackRicevuto())
+			invia(); 		// prossimo messaggio
+        ```
+        oppure
+        
+        ```cpp
+        inviaConAck();
+        delay(x); 			// potrebbero essere altre funzioni 
+        if(ackRicevuto())
+			invia(); 		// prossimo messaggio  
+        rinunciaAck(); 		// smetti di aspettare l'ACK
+        ```
+    - [`2`]: Momento critico: se si chiama invia() qui ci sarà una collisione con
         l'invia() della radio A e entrambi i messaggi saranno persi, ma questa classe
         non ha modo di evitarlo. Spetta all'utente impedire queste collisioni o saperle
         gestire.
-    3. i messaggi inviati qui saranno persi. È un difetto dei messaggi senza ACK.
+    - [`3`]: I messaggi inviati qui saranno persi. È un difetto dei messaggi senza ACK.
 
 
-<br>
-Hardware
----
+<br><div id='4'/>
+
+4. Hardware
+-----------
 
 Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW
 di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono,
@@ -172,25 +207,26 @@ veramente sfruttato da questa classe, ma se è già connesso deve essere gestito
 per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V.
 
 
-| RFM69    | uC      |
-|-----------|---------|
-| MISO      | MISO    |
-| MOSI      | MOSI    |
-| SCK       | SCK     |
-| NSS       | I/O *   |
-| DIO0      | INT **  |
-| _RESET &_ | _I/O *_ |
+| RFM69       | uC        |
+|-------------|-----------|
+| MISO        | MISO      |
+| MOSI        | MOSI      |
+| SCK         | SCK       |
+| NSS         | I/O `*`   |
+| DIO0        | INT `**`  |
+| _RESET `&`_ | _I/O `*`_ |
 
-- &:  Opzionale
-- *:  OUT è qualsiasi pin di input/output (sarà configurato come output dalla classe)
-- **: INT è un pin capace di attivare un interupt del microcontrollore. Ad esempio
+- `&`:  Opzionale
+- `*`:  OUT è qualsiasi pin di input/output (sarà configurato come output dalla classe)
+- `**`: INT è un pin capace di attivare un interupt del microcontrollore. Ad esempio
     su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4
     e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.
 
 
-<br>
-Struttura messaggi
----
+<br><div id='5'/>
+
+5. Struttura dei messaggi
+---------------------
 
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente
 struttura:
@@ -211,9 +247,10 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 
 
 
+<br><div id='6'/>
 
-
-**Esempio di utilizzo**
+6. Esempio di utilizzo
+----------------------
 
 ```cpp
 
@@ -374,4 +411,3 @@ void loop(){
 }
 #endif
 ```
-*/
