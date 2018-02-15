@@ -84,7 +84,7 @@
 {\info 
 {\title {\comment RFM69 }RFM69}
 {\comment Generato daDoxgyen. }
-{\creatim \yr2018\mo2\dy15\hr1\min10\sec0}
+{\creatim \yr2018\mo2\dy15\hr1\min13\sec17}
 }\pard\plain 
 \sectd\pgnlcrm
 {\footer \s29\widctlpar\tqc\tx4320\tqr\tx8640\qr\adjustright \fs20\cgrid {\chpgn}}
@@ -131,7 +131,7 @@ Il codice della libreria \'E8 ampiamente commentato in italiano. I commenti norm
 {\f2 Documentazione} {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
  \par
 \par
-{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 1. Caratteristiche del modulo radio } \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 1. Caratteristiche del modulo radio} \par}
 \par
 \par
 Caratteristiche principali dei moduli radio RFM69HCW:\par
@@ -164,7 +164,7 @@ Tx: 16 - 130 mA a seconda della potenza di trasmissione\par}
 \par
 \par
 \par
-{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 2. Protocollo di comunicazione } \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 2. Protocollo di comunicazione} \par}
 \par
 \par
 Il protocollo di comunicazione alla base di questa classe presuppone che in una stessa banda di frequenza siano presenti esattamente due radio che condividono la stessa sync word. La stessa frequenza pu\'F2 quindi essere utilizzata anche da altri dispositivi; naturalmente, per\'F2, se dispositivi trasmittenti sulla stessa frequenza trasmettono dati nell stesso momento nessuno di essi ricever\'E0 un mesaggio valido (a meno che la differenza nella potenza trasmessa sia abbastanza grande da permettere al segnale pi\'F9 forte di "coprire" il pi\'F9 debole, in tal caso solo il dispositivo ricevente il pi\'F9 forte otterr\'E0 un messaggio).\par
@@ -207,7 +207,7 @@ mod             rx        |       stby      |       def\par
 \par
 \par
 \par
-{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 3. Collisioni } \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 3. Collisioni} \par}
 \par
 \par
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei messaggi contemporaneamente. Questo problema deve essere gestito come possibile dal codice dell'utente. Tuttavia le funzioni della classe in caso di conflitto impediscono la perdita di entrambi i messaggi (cosa che potrebbe portare a un blocco senza uscita se entrambi i programmi cercassero di reinviare subito il proprio messaggio). D\'E0 quindi la priorit\'E0 ai messaggi gi\'E0 arrivati a scapito di quelli in uscita, che potrebbero perdersi.\par
@@ -253,7 +253,7 @@ stato tx            |######## 2 #######|\par
 \par
 \par
 \par
-{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 4. Hardware } \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 4. Hardware} \par}
 \par
 \par
 Come gi\'E0 detto ho scritto questa classe in particolare per il modulo RFM69HCW di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.3V (ad es. Adafruit vende {\f2 https://www.adafruit.com/product/3071} per la maggior parte dei paesi, tra cui tutti quelli europei, e {\f2 https://www.adafruit.com/product/3070} per gli USA e pochi altri).\par
@@ -321,7 +321,7 @@ Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'i
 \par
 \par
 \par
-{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 5. Struttura dei messaggi } \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 5. Struttura dei messaggi} \par}
 \par
 \par
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura:\par
@@ -375,7 +375,7 @@ La prima riga \'E8 la lunghezzza della sezione in bytes, la seconda \'E8 il suo 
 \par
 \par
 \par
-{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 6. Esempio di utilizzo } \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 6. Esempio di utilizzo} \par}
 \par
 \par
 {

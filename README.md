@@ -32,8 +32,7 @@ Il codice della libreria è ampiamente commentato in italiano. I commenti normal
 ---
 <br><div id='id-section1'/>
 
-1. Caratteristiche del modulo radio
------------------------------------
+## 1. Caratteristiche del modulo radio ##
 
 Caratteristiche principali dei moduli radio RFM69HCW:
 
@@ -69,8 +68,7 @@ Corrente di alimentazione richiesta (a 3.3V), per modalità:
 
 <br><div id='2'/>
 
-2. Protocollo di comunicazione
-------------------------------
+## 2. Protocollo di comunicazione ##
 
 Il protocollo di comunicazione alla base di questa classe presuppone che in una
 stessa banda di frequenza siano presenti esattamente due radio che condividono
@@ -122,8 +120,7 @@ Gli schemi sottostanti illustrano la trasmissione di un mesasggio.
 
 <br><div id='3'/>
 
-3. Collisioni
--------------
+## 3. Collisioni ##
 
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei
 messaggi contemporaneamente. Questo problema deve essere gestito come possibile
@@ -193,8 +190,7 @@ secondo a quelli senza.
 
 <br><div id='4'/>
 
-4. Hardware
------------
+## 4. Hardware ##
 
 Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW
 di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono,
@@ -227,8 +223,7 @@ per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V
 
 <br><div id='5'/>
 
-5. Struttura dei messaggi
----------------------
+## 5. Struttura dei messaggi ##
 
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente
 struttura:
@@ -251,8 +246,7 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 
 <br><div id='6'/>
 
-6. Esempio di utilizzo
-----------------------
+## 6. Esempio di utilizzo ##
 
 ```cpp
 
