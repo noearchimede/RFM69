@@ -9,26 +9,25 @@ radio.
 #include "RFM69.h"
 
 
-// #define MODULO_r o MODULO_t per compilare rispettivamente il programma per la
-// radio ricevente o per quella trasmittente.
+// #define MODULO_1 o MODULO_2 per compilare uno dei due programmi
 //------------------------------------------------------------------------------
-#define MODULO_r
-// #define MODULO_t
+#define MODULO_1
+// #define MODULO_2
 //------------------------------------------------------------------------------
 
 
 
 
-// telecomando
-#ifdef MODULO_r
+// t
+#ifdef MODULO_1
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
 RFM69 radio(2, 3);
 // Un LED, 0 per non usarlo
 #define LED 4
 #endif
 
-// quadricotetro
-#ifdef MODULO_t
+// q
+#ifdef MODULO_2
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
 RFM69 radio(A2, 3, A3);
 // Un LED, 0 per non usarlo
@@ -47,7 +46,7 @@ void setup() {
     // Restituisce 0
     int initFallita = radio.inizializza(4);
     if(initFallita) {
-        // Stampa l'errore riscontrato (questa funzione pesa quasi 0.5 kB)
+        // Stampa l'errore riscontrato (questa funzione pesa 0.5 kB)
         radio.stampaErroreSerial(Serial, initFallita);
         // Inizializzazione fallita, blocca il progrmma
         while(true);
@@ -56,8 +55,7 @@ void setup() {
 
 
 
-
-#ifdef MODULO_t
+#ifdef MODULO_1
 
 
 void loop(){
@@ -114,7 +112,7 @@ void loop(){
 
 
 
-#ifdef MODULO_r
+#ifdef MODULO_2
 
 
 void loop(){
