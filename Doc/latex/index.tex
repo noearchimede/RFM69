@@ -1,15 +1,43 @@
-{\bfseries Autore\+:} Noè Archimede Pezzoli ({\tt noearchimede@gmail.\+com}) ~\newline
-{\bfseries Data\+:} Febbraio 2018 ~\newline
-~\newline
-~\newline
-La classe \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} permette di collegare due microcontrollori tramite moduli radio della famiglia R\+F\+M69 di Hope\+RF, e in particolare tramite il modulo R\+F\+M69\+H\+CW ({\tt http\+://www.\+hoperf.\+com/rf\+\_\+transceiver/modules/\+R\+F\+M69\+H\+C\+W.\+html}).
 
-~\newline
+
+
+
+{\bfseries Autore}\+: Noè Archimede Pezzoli ({\tt noearchimede@gmail.\+com})~\newline
+ {\bfseries Data}\+: Febbraio 2018~\newline
  
 
- \subsection*{Caratteristiche del modulo radio }
+
+
+\subsubsection*{Introduzione}
+
+La libreria \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} permette di collegare due microcontrollori tramite una coppia di moduli radio della famiglia \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} di Hope\+RF, in particolare del modello {\tt R\+F\+M69\+H\+CW}.
+
+Il codice della libreria è ampiamente commentato in italiano. I commenti normali ({\ttfamily // ...}), presenti soprattutto nei files di implementazione ({\ttfamily .cpp}), forniscono dettagli sull\textquotesingle{}implementazione. I commenti \char`\"{}speciali\char`\"{} ({\ttfamily //! ...} o {\ttfamily /$\ast$! ... $\ast$/}) sono concentrati nel file header e costituiscono una documentazione per l\textquotesingle{}utilizzatore della libreria che non desidera conoscere i dettagli del suo funzionamento. Questa documentazione può essere riunita da Doxygen in un unico file o pagina html; la versione html più recente è consultabile {\tt qui}. 
+
+
+
+\subsubsection*{Indice}
+
+{\tt 1. Caratteristiche del modulo radio}~\newline
+ {\tt 2. Protocollo di comunicazione}~\newline
+ {\tt 3. Collisioni}~\newline
+ {\tt 4. Hardware}~\newline
+ {\tt 5. Struttura dei messaggi}~\newline
+ {\tt 6. Esempio di utilizzo}~\newline
+
+
+{\tt Documentazione} 
+
+ ~\newline
+
+
+\subsection*{1. Caratteristiche del modulo radio }
+
+
 
 Caratteristiche principali dei moduli radio R\+F\+M69\+H\+CW\+:
+
+
 \begin{DoxyItemize}
 \item frequenza\+: 315, 433, 868 oppure 915 M\+Hz (esistono quattro versioni per adattarsi alle bande utilizzabili senza licenza in diversi paesi)
 \item potenza di emissione\+: da -\/18d\+Bm a +20d\+Bm (100mW)
@@ -20,7 +48,10 @@ Caratteristiche principali dei moduli radio R\+F\+M69\+H\+CW\+:
 
 I messaggi possono includere un controllo C\+R\+C16 di due bytes che riduce drasticamente la probabilità di errore durante la trasmissione. Possono inoltre essere criptati secondo l\textquotesingle{}algoritmo Avanced Encryption Standard A\+E\+S-\/128 con una chiave di 16 bytes per impedirne la lettura da parte di eventuali terze radio. La possibilità offerta dal modulo di assegnare ad ogni modulo un indirizzo unico in modo da creare una rete con fino a 255 dispositivi nonb è sfruttata, ma un risultato simile è ottenibile creando una rete in cui ogni radio ha una sync word unica che può sostituire temporaneamente con quella di un\textquotesingle{}altra radio (ottenuta da una tabella pubblica) per inviare un messaggio a quella radio. Questo permette di creare una rete di dimensione arbitraria (è possibile impostare fino a 8 byte di sync word, per un totale di 2$^\wedge$64 indirizzi possibili) ma non di inviare messaggi broadcast, come invece il sistema di addressing incluso nel modulo permetterebbe.
 
-Corrente di alimentazione richiesta (a 3.\+3V), per modalità\+:
+~\newline
+ Corrente di alimentazione richiesta (a 3.\+3V), per modalità\+:
+
+
 \begin{DoxyItemize}
 \item Sleep\+: 0.\+0001 mA
 \item Standby\+: 1.\+25 mA
@@ -28,17 +59,20 @@ Corrente di alimentazione richiesta (a 3.\+3V), per modalità\+:
 \item Tx\+: 16 -\/ 130 mA a seconda della potenza di trasmissione
 \end{DoxyItemize}
 
+~\newline
 
 
- \subsection*{Protocollo di comunicazione }
+\subsection*{2. Protocollo di comunicazione }
+
+
 
 Il protocollo di comunicazione alla base di questa classe presuppone che in una stessa banda di frequenza siano presenti esattamente due radio che condividono la stessa sync word. La stessa frequenza può quindi essere utilizzata anche da altri dispositivi; naturalmente, però, se dispositivi trasmittenti sulla stessa frequenza trasmettono dati nell stesso momento nessuno di essi riceverà un mesaggio valido (a meno che la differenza nella potenza trasmessa sia abbastanza grande da permettere al segnale più forte di \char`\"{}coprire\char`\"{} il più debole, in tal caso solo il dispositivo ricevente il più forte otterrà un messaggio).
 
 Alla lettura di ogni messaggio la radio ricevente può trasmettere automaticamente un segnale di A\+CK se la radio trasmittente lo ha richiesto. In questo modo se l\textquotesingle{}utente deve essere certo che un messaggio trasmesso sia stato ricevuto e letto (quindi certamente anche utilizzato, visto che la lettura avviene solo su richiesta dell\textquotesingle{}utente e non automaticamente come la ricezione) non deve né implementare un sistema di A\+CK né modificare il codice ricevente, e il segnale di A\+CK sarà il meno dispendioso possibile in termini di tempo del programma.
 
-Gli schemi sottostanti illustrano la trasmissione di un mesasggio. Nel primo caso si tratta di un messaaggio con richiesta di A\+CK, nel secondo no. 
-\begin{DoxyCode}
-mod       ?   |    tx    |            rx             |        def
+Gli schemi sottostanti illustrano la trasmissione di un mesasggio.
+
+1 -\/ con A\+CK\+: \begin{DoxyVerb}mod       ?   |    tx    |            rx             |        def
 fz          INVIA       ISR                         ISR
 A       ------|----------|---------------------------|-------------------->
 RF             |||MESS|||                    ^^^^^^^
@@ -46,11 +80,10 @@ RF             |||MESS|||                    ^^^^^^^
 B       ------------------|-----------------|-------|--------------------->
 fz                       ISR              LEGGI    ISR
 mod             rx        |       stby      |  tx   |          def
-\end{DoxyCode}
- ~\newline
+\end{DoxyVerb}
 
-\begin{DoxyCode}
-mod       ?   |    tx    |              def
+
+2 -\/ senza A\+CK\+: \begin{DoxyVerb}mod       ?   |    tx    |              def
 fz          INVIA       ISR
 A       ------|----------|--------------------------------->
 RF             |||MESS|||
@@ -58,7 +91,9 @@ RF             |||MESS|||
 B       ------------------|-----------------|--------------->
 fz                       ISR              LEGGI
 mod             rx        |       stby      |       def
-\end{DoxyCode}
+\end{DoxyVerb}
+
+
 
 \begin{DoxyItemize}
 \item {\ttfamily A, B}\+: Programma delle stazioni radio, evoluzione nel tempo
@@ -67,46 +102,57 @@ mod             rx        |       stby      |       def
 \item {\ttfamily RF}\+: presenza di segnali radio e loro direzione
 \end{DoxyItemize}
 
+~\newline
 
 
- \subsection*{Collisioni }
+\subsection*{3. Collisioni }
+
+
 
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei messaggi contemporaneamente. Questo problema deve essere gestito come possibile dal codice dell\textquotesingle{}utente. Tuttavia le funzioni della classe in caso di conflitto impediscono la perdita di entrambi i messaggi (cosa che potrebbe portare a un blocco senza uscita se entrambi i programmi cercassero di reinviare subito il proprio messaggio). Dà quindi la priorità ai messaggi già arrivati a scapito di quelli in uscita, che potrebbero perdersi.
 
-Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di A\+CK, il secondo a quelli senza. 
-\begin{DoxyCode}
-stato tx                    |*********|############ 1 ############|
+Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di A\+CK, il secondo a quelli senza.
+
+1 -\/ con A\+CK\+: \begin{DoxyVerb}stato tx                    |*********|############ 1 ############|
 A           ----------------|---------|---------------------------|---------->
 |                         INVIA      ISR                         ISR
 |                                    ISR              LEGGI    ISR
 B           ---------------------------|-----------------|-------|----------->
 stato tx            |####### 2 ########|                 |*******|
-\end{DoxyCode}
- ~\newline
+\end{DoxyVerb}
 
-\begin{DoxyCode}
-stato tx                    |*********|######## 3 #######|
+
+2 -\/ Senza A\+CK\+: \begin{DoxyVerb}stato tx                    |*********|######## 3 #######|
 A           ----------------|---------|----------------------------->
 |                         INVIA      ISR
 |                                    ISR              LEGGI
 B           ---------------------------|-----------------|----------->
 stato tx            |######## 2 #######|
-\end{DoxyCode}
+\end{DoxyVerb}
+
+
 
 \begin{DoxyItemize}
-\item [ ]\+: nessuna restrizione, è il momento giusto per trasmettere un messaggio
-\item [$\ast$$\ast$$\ast$]\+: impossibile trasmettere, invia() aspetta che sia di nuovo possibile (ma al massimo 50 ms)
-\item [\#\#\#]\+: la funzione invia() non dovrebbe mai essere chiamata qui\+:
-\begin{DoxyEnumerate}
-\item C\+H\+I\+A\+M\+A\+TA AD {\ttfamily invia()} Q\+UI --$>$ P\+R\+O\+B\+L\+E\+MA N\+EL C\+O\+D\+I\+CE D\+E\+LL\textquotesingle{}U\+T\+E\+N\+TE In teoria non bisognerebbe trasmettere (l\textquotesingle{}altra radio non è in modalità rx), ma in realtà se l\textquotesingle{}utente chiama invia() mentre la classe aspetta un ack per il messaggio precedente significa che l\textquotesingle{}utente ha rinunciato a controllare quell\textquotesingle{}ack. In tal caso invia() si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andrà perso, ma il compito della funzione invia() non è aspettare l\textquotesingle{}ack precedente (quello è compito dell\textquotesingle{}utente, anche se lo aspettasse per un certo tempo invia() non potrebbe segnalare se è arrivato o no). La sequenza corretta sarebbe\+: invia() con richiesta ack -\/$>$ aspetta\+Ack(), che contiene un timeout -\/$>$ ack\+Ricevuto()? -\/$>$ invia() prossimo messaggio, oppure invia() -\/$>$ delay(x) -\/$>$ ack\+Ricevuto()? -\/$>$ rinuncia\+Ack() invia()
-\item momento critico\+: se si chiama invia() qui ci sarà una collisione con l\textquotesingle{}invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all\textquotesingle{}utente impedire queste collisioni o saperle gestire.
-\item i messaggi inviati qui saranno persi. È un difetto dei messaggi senza A\+CK.
-\end{DoxyEnumerate}
+\item []\+: nessuna restrizione, è il momento giusto per trasmettere un messaggio
+\item [{\ttfamily $\ast$$\ast$$\ast$}]\+: impossibile trasmettere, {\ttfamily invia()} aspetta che sia di nuovo possibile (ma al massimo 50 ms)
+\item [{\ttfamily \#\#\#}]\+: la funzione {\ttfamily invia()} non dovrebbe mai essere chiamata qui.
+\begin{DoxyItemize}
+\item [{\ttfamily 1}]\+: In teoria non bisognerebbe trasmettere (l\textquotesingle{}altra radio non è in modalità rx), ma in realtà se l\textquotesingle{}utente chiama {\ttfamily invia()} mentre la classe aspetta un ack per il messaggio precedente significa che l\textquotesingle{}utente ha rinunciato a controllare quell\textquotesingle{}ack. In tal caso {\ttfamily invia()} si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andrà perso, ma il compito della funzione {\ttfamily invia()} non è aspettare l\textquotesingle{}ack precedente (quello è compito dell\textquotesingle{}utente, anche se lo aspettasse per un certo tempo {\ttfamily invia()} non potrebbe segnalare se è arrivato o no). La sequenza corretta sarebbe\+:
+
+```cpp invia\+Con\+Ack(); aspetta\+Ack(); // contiene un timeout if(ack\+Ricevuto()) invia(); // prossimo messaggio ``` oppure
+
+```cpp invia\+Con\+Ack(); delay(x); // potrebbero essere altre funzioni if(ack\+Ricevuto()) invia(); // prossimo messaggio rinuncia\+Ack(); // smetti di aspettare l\textquotesingle{}A\+CK ``{\ttfamily }
+\item {\ttfamily [}2`]\+: Momento critico\+: se si chiama invia() qui ci sarà una collisione con l\textquotesingle{}invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all\textquotesingle{}utente impedire queste collisioni o saperle gestire.
+\item [{\ttfamily 3}]\+: I messaggi inviati qui saranno persi. È un difetto dei messaggi senza A\+CK.
+\end{DoxyItemize}
 \end{DoxyItemize}
 
+~\newline
 
 
- \subsection*{Hardware }
+\subsection*{4. Hardware }
+
+
 
 Come già detto ho scritto questa classe in particolare per il modulo R\+F\+M69\+H\+CW di Hope\+RF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.\+3V (ad es. Adafruit vende {\tt https\+://www.\+adafruit.\+com/product/3071} per la maggior parte dei paesi, tra cui tutti quelli europei, e {\tt https\+://www.\+adafruit.\+com/product/3070} per gli U\+SA e pochi altri).
 
@@ -115,30 +161,33 @@ Il modulo comunica con il microcontrollore tramite S\+PI, deve poter chiamare un
 \tabulinesep=1mm
 \begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ R\+F\+M69 }&\textbf{ uC  }\\\cline{1-2}
+\rowcolor{\tableheadbgcolor}\textbf{ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} }&\textbf{ uC  }\\\cline{1-2}
 \endfirsthead
 \hline
 \endfoot
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ R\+F\+M69 }&\textbf{ uC  }\\\cline{1-2}
+\rowcolor{\tableheadbgcolor}\textbf{ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} }&\textbf{ uC  }\\\cline{1-2}
 \endhead
 M\+I\+SO &M\+I\+SO \\\cline{1-2}
 M\+O\+SI &M\+O\+SI \\\cline{1-2}
 S\+CK &S\+CK \\\cline{1-2}
-N\+SS &I/O $\ast$ \\\cline{1-2}
-D\+I\+O0 &I\+NT $\ast$$\ast$ \\\cline{1-2}
-{\itshape R\+E\+S\+ET \&} &{\itshape I/O $\ast$} \\\cline{1-2}
+N\+SS &I/O {\ttfamily $\ast$} \\\cline{1-2}
+D\+I\+O0 &I\+NT {\ttfamily $\ast$$\ast$} \\\cline{1-2}
+{\itshape R\+E\+S\+ET {\ttfamily \&}} &{\itshape I/O {\ttfamily $\ast$}} \\\cline{1-2}
 \end{longtabu}
 
 \begin{DoxyItemize}
-\item \&\+: Opzionale
-\item $\ast$\+: O\+UT è qualsiasi pin di input/output (sarà configurato come output dalla classe)
-\item $\ast$$\ast$\+: I\+NT è un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino U\+NO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell\textquotesingle{}ambiete di programmazione Arduino.
+\item {\ttfamily \&}\+: Opzionale
+\item {\ttfamily $\ast$}\+: O\+UT è qualsiasi pin di input/output (sarà configurato come output dalla classe)
+\item {\ttfamily $\ast$$\ast$}\+: I\+NT è un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino U\+NO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell\textquotesingle{}ambiete di programmazione Arduino.
 \end{DoxyItemize}
 
+~\newline
 
 
- \subsection*{Struttura messaggi }
+\subsection*{5. Struttura dei messaggi }
+
+
 
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura\+:
 
@@ -166,11 +215,12 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 \end{DoxyItemize}
 
 ~\newline
-{\bfseries Documentazione dettagliata dei membri della classe\+: \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} }
 
-~\newline
-~\newline
-Esempio di utilizzo ~\newline
+
+\subsection*{6. Esempio di utilizzo }
+
+
+
 
 \begin{DoxyCode}
 \textcolor{preprocessor}{#include <Arduino.h>}

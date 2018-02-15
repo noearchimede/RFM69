@@ -84,7 +84,7 @@
 {\info 
 {\title {\comment RFM69 }RFM69}
 {\comment Generato daDoxgyen. }
-{\creatim \yr2018\mo2\dy13\hr19\min45\sec5}
+{\creatim \yr2018\mo2\dy15\hr1\min10\sec0}
 }\pard\plain 
 \sectd\pgnlcrm
 {\footer \s29\widctlpar\tqc\tx4320\tqr\tx8640\qr\adjustright \fs20\cgrid {\chpgn}}
@@ -97,7 +97,7 @@
 \par\par\par\par\par\par\par\par\par\par\par\par
 \pard\plain \s16\qc\sa60\widctlpar\outlinelevel1\adjustright \f1\cgrid 
 {\field\fldedit {\*\fldinst AUTHOR \\*MERGEFORMAT}{\fldrslt AUTHOR}}\par
-Versione \par{\field\fldedit {\*\fldinst CREATEDATE \\*MERGEFORMAT}{\fldrslt Mar 13 Feb 2018 }}\par
+Versione \par{\field\fldedit {\*\fldinst CREATEDATE \\*MERGEFORMAT}{\fldrslt Gio 15 Feb 2018 }}\par
 \page\page\vertalt
 \pard\plain 
 \s1\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs36\kerning36\cgrid Sommario\par
@@ -110,19 +110,32 @@ Versione \par{\field\fldedit {\*\fldinst CREATEDATE \\*MERGEFORMAT}{\fldrslt Mar
 
 \pard\plain \sect\sbkpage
 \s1\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs36\kerning36\cgrid 
-Driver per i moduli radio RFM69\par \pard\plain 
-{\tc \v Driver per i moduli radio RFM69}
+Driver Arduino per i moduli radio RFM69\par \pard\plain 
+{\tc \v Driver Arduino per i moduli radio RFM69}
 {
 \pard\plain \s17\sa60\sb30\widctlpar\qj \fs22\cgrid {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-{\b Autore:}  No\'E8 Archimede Pezzoli ({\f2 noearchimede@gmail.com}) \par
-{\b Data:}  Febbraio 2018 \par
-\par
-\par
-La classe {\b RFM69} permette di collegare due microcontrollori tramite moduli radio della famiglia RFM69 di HopeRF, e in particolare tramite il modulo RFM69HCW ({\f2 http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html}).\par
-\par
+{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
+{\b Autore} : No\'E8 Archimede Pezzoli ({\f2 noearchimede@gmail.com})\par
+ {\b Data} : Febbraio 2018\par
  {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
- {\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Caratteristiche del modulo radio } \par}
-Caratteristiche principali dei moduli radio RFM69HCW:{
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Introduzione} \par}
+La libreria {\b RFM69} permette di collegare due microcontrollori tramite una coppia di moduli radio della famiglia {\b RFM69} di HopeRF, in particolare del modello {\f2 RFM69HCW}.\par
+Il codice della libreria \'E8 ampiamente commentato in italiano. I commenti normali ({\f2 // ...} ), presenti soprattutto nei files di implementazione ({\f2 .cpp} ), forniscono dettagli sull'implementazione. I commenti "speciali" ({\f2 //! ...}  o {\f2 /*! ... */} ) sono concentrati nel file header e costituiscono una documentazione per l'utilizzatore della libreria che non desidera conoscere i dettagli del suo funzionamento. Questa documentazione pu\'F2 essere riunita da Doxygen in un unico file o pagina html; la versione html pi\'F9 recente \'E8 consultabile {\f2 qui}. {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Indice} \par}
+{\f2 1. Caratteristiche del modulo radio}\par
+ {\f2 2. Protocollo di comunicazione}\par
+ {\f2 3. Collisioni}\par
+ {\f2 4. Hardware}\par
+ {\f2 5. Struttura dei messaggi}\par
+ {\f2 6. Esempio di utilizzo}\par
+{\f2 Documentazione} {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
+ \par
+\par
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 1. Caratteristiche del modulo radio } \par}
+\par
+\par
+Caratteristiche principali dei moduli radio RFM69HCW:\par
+{
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 frequenza: 315, 433, 868 oppure 915 MHz (esistono quattro versioni per adattarsi alle bande utilizzabili senza licenza in diversi paesi)\par
@@ -134,8 +147,11 @@ sensdibilit\'E0: fino a -120dBm (con bassa bitrate)\par
 bitrate fino a 300'000 Baud\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 modulazioni: FSK, GFSK, MSK, GMSK, OOK\par}
+\par
 I messaggi possono includere un controllo CRC16 di due bytes che riduce drasticamente la probabilit\'E0 di errore durante la trasmissione. Possono inoltre essere criptati secondo l'algoritmo Avanced Encryption Standard AES-128 con una chiave di 16 bytes per impedirne la lettura da parte di eventuali terze radio. La possibilit\'E0 offerta dal modulo di assegnare ad ogni modulo un indirizzo unico in modo da creare una rete con fino a 255 dispositivi nonb \'E8 sfruttata, ma un risultato simile \'E8 ottenibile creando una rete in cui ogni radio ha una sync word unica che pu\'F2 sostituire temporaneamente con quella di un'altra radio (ottenuta da una tabella pubblica) per inviare un messaggio a quella radio. Questo permette di creare una rete di dimensione arbitraria (\'E8 possibile impostare fino a 8 byte di sync word, per un totale di 2^64 indirizzi possibili) ma non di inviare messaggi broadcast, come invece il sistema di addressing incluso nel modulo permetterebbe.\par
-Corrente di alimentazione richiesta (a 3.3V), per modalit\'E0:{
+\par
+ Corrente di alimentazione richiesta (a 3.3V), per modalit\'E0:\par
+{
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 Sleep: 0.0001 mA\par
@@ -145,11 +161,16 @@ Standby: 1.25 mA\par
 Rx: 16 mA\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 Tx: 16 - 130 mA a seconda della potenza di trasmissione\par}
-{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
- {\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Protocollo di comunicazione } \par}
+\par
+\par
+\par
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 2. Protocollo di comunicazione } \par}
+\par
+\par
 Il protocollo di comunicazione alla base di questa classe presuppone che in una stessa banda di frequenza siano presenti esattamente due radio che condividono la stessa sync word. La stessa frequenza pu\'F2 quindi essere utilizzata anche da altri dispositivi; naturalmente, per\'F2, se dispositivi trasmittenti sulla stessa frequenza trasmettono dati nell stesso momento nessuno di essi ricever\'E0 un mesaggio valido (a meno che la differenza nella potenza trasmessa sia abbastanza grande da permettere al segnale pi\'F9 forte di "coprire" il pi\'F9 debole, in tal caso solo il dispositivo ricevente il pi\'F9 forte otterr\'E0 un messaggio).\par
 Alla lettura di ogni messaggio la radio ricevente pu\'F2 trasmettere automaticamente un segnale di ACK se la radio trasmittente lo ha richiesto. In questo modo se l'utente deve essere certo che un messaggio trasmesso sia stato ricevuto e letto (quindi certamente anche utilizzato, visto che la lettura avviene solo su richiesta dell'utente e non automaticamente come la ricezione) non deve n\'E9 implementare un sistema di ACK n\'E9 modificare il codice ricevente, e il segnale di ACK sar\'E0 il meno dispendioso possibile in termini di tempo del programma.\par
-Gli schemi sottostanti illustrano la trasmissione di un mesasggio. Nel primo caso si tratta di un messaaggio con richiesta di ACK, nel secondo no. {
+Gli schemi sottostanti illustrano la trasmissione di un mesasggio.\par
+1 - con ACK: {
 \par
 \pard\plain \s40\li0\widctlpar\adjustright \shading1000\cbpat8 \f2\fs16\cgrid mod       ?   |    tx    |            rx             |        def\par
 fz          INVIA       ISR                         ISR\par
@@ -160,8 +181,8 @@ B       ------------------|-----------------|-------|--------------------->\par
 fz                       ISR              LEGGI    ISR\par
 mod             rx        |       stby      |  tx   |          def\par
 }
- \par
-{
+\par
+2 - senza ACK: {
 \par
 \pard\plain \s40\li0\widctlpar\adjustright \shading1000\cbpat8 \f2\fs16\cgrid mod       ?   |    tx    |              def\par
 fz          INVIA       ISR\par
@@ -172,6 +193,7 @@ B       ------------------|-----------------|--------------->\par
 fz                       ISR              LEGGI\par
 mod             rx        |       stby      |       def\par
 }
+\par
 {
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
@@ -182,10 +204,15 @@ mod             rx        |       stby      |       def\par
 {\f2 mod} : modalit\'E0 della radio. {\f2 tx}  = trasmissione, {\f2 rx}  = ricezione, {\f2 stby}  = standby, {\f2 def} : la modalit\'E0 che l'utente ha scelto come default per quella radio\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 {\f2 RF} : presenza di segnali radio e loro direzione\par}
-{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
- {\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Collisioni } \par}
+\par
+\par
+\par
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 3. Collisioni } \par}
+\par
+\par
 Le funzioni di questa classe non impediscono che le due radio trasmettano dei messaggi contemporaneamente. Questo problema deve essere gestito come possibile dal codice dell'utente. Tuttavia le funzioni della classe in caso di conflitto impediscono la perdita di entrambi i messaggi (cosa che potrebbe portare a un blocco senza uscita se entrambi i programmi cercassero di reinviare subito il proprio messaggio). D\'E0 quindi la priorit\'E0 ai messaggi gi\'E0 arrivati a scapito di quelli in uscita, che potrebbero perdersi.\par
-Lo schema sottostante mostara i momenti in cui non si pu\'F2 o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di ACK, il secondo a quelli senza. {
+Lo schema sottostante mostara i momenti in cui non si pu\'F2 o non si dovrebbe trasmettere. Il primo schema si riferisce ai messaggi con richiesat di ACK, il secondo a quelli senza.\par
+1 - con ACK: {
 \par
 \pard\plain \s40\li0\widctlpar\adjustright \shading1000\cbpat8 \f2\fs16\cgrid stato tx                    |*********|############ 1 ############|\par
 A           ----------------|---------|---------------------------|---------->\par
@@ -194,8 +221,8 @@ A           ----------------|---------|---------------------------|---------->\p
 B           ---------------------------|-----------------|-------|----------->\par
 stato tx            |####### 2 ########|                 |*******|\par
 }
- \par
-{
+\par
+2 - Senza ACK: {
 \par
 \pard\plain \s40\li0\widctlpar\adjustright \shading1000\cbpat8 \f2\fs16\cgrid stato tx                    |*********|######## 3 #######|\par
 A           ----------------|---------|----------------------------->\par
@@ -204,31 +231,39 @@ A           ----------------|---------|----------------------------->\par
 B           ---------------------------|-----------------|----------->\par
 stato tx            |######## 2 #######|\par
 }
+\par
 {
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-[ ]: nessuna restrizione, \'E8 il momento giusto per trasmettere un messaggio\par
+[]: nessuna restrizione, \'E8 il momento giusto per trasmettere un messaggio\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-[***]: impossibile trasmettere, invia() aspetta che sia di nuovo possibile (ma al massimo 50 ms)\par
+[{\f2 ***} ]: impossibile trasmettere, {\f2 invia()}  aspetta che sia di nuovo possibile (ma al massimo 50 ms)\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-[###]: la funzione invia() non dovrebbe mai essere chiamata qui:{
+[{\f2 ###} ]: la funzione {\f2 invia()}  non dovrebbe mai essere chiamata qui.{
 \par
-\pard\plain \s91\fi-360\li720\widctlpar\fs20\cgrid 
-1.\tab CHIAMATA AD {\f2 invia()}  QUI \'96> PROBLEMA NEL CODICE DELL'UTENTE In teoria non bisognerebbe trasmettere (l'altra radio non \'E8 in modalit\'E0 rx), ma in realt\'E0 se l'utente chiama invia() mentre la classe aspetta un ack per il messaggio precedente significa che l'utente ha rinunciato a controllare quell'ack. In tal caso invia() si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andr\'E0 perso, ma il compito della funzione invia() non \'E8 aspettare l'ack precedente (quello \'E8 compito dell'utente, anche se lo aspettasse per un certo tempo invia() non potrebbe segnalare se \'E8 arrivato o no). La sequenza corretta sarebbe: invia() con richiesta ack -> aspettaAck(), che contiene un timeout -> ackRicevuto()? -> invia() prossimo messaggio, oppure invia() -> delay(x) -> ackRicevuto()? -> rinunciaAck() invia()\par
-\pard\plain \s91\fi-360\li720\widctlpar\fs20\cgrid 
-2.\tab momento critico: se si chiama invia() qui ci sar\'E0 una collisione con l'invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all'utente impedire queste collisioni o saperle gestire.\par
-\pard\plain \s91\fi-360\li720\widctlpar\fs20\cgrid 
-3.\tab i messaggi inviati qui saranno persi. \'C8 un difetto dei messaggi senza ACK.\par}
+\pard\plain \s81\fi-360\li720\widctlpar\jclisttab\tx720{\*\pn \pnlvlbody\ilvl0\ls2\pnrnot0\pndec }\ls2\adjustright \fs20\cgrid 
+[{\f2 1} ]: In teoria non bisognerebbe trasmettere (l'altra radio non \'E8 in modalit\'E0 rx), ma in realt\'E0 se l'utente chiama {\f2 invia()}  mentre la classe aspetta un ack per il messaggio precedente significa che l'utente ha rinunciato a controllare quell'ack. In tal caso {\f2 invia()}  si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andr\'E0 perso, ma il compito della funzione {\f2 invia()}  non \'E8 aspettare l'ack precedente (quello \'E8 compito dell'utente, anche se lo aspettasse per un certo tempo {\f2 invia()}  non potrebbe segnalare se \'E8 arrivato o no). La sequenza corretta sarebbe:\par
+```cpp inviaConAck(); aspettaAck(); // contiene un timeout if(ackRicevuto()) invia(); // prossimo messaggio ``` oppure\par
+```cpp inviaConAck(); delay(x); // potrebbero essere altre funzioni if(ackRicevuto()) invia(); // prossimo messaggio rinunciaAck(); // smetti di aspettare l'ACK ``{\f2 } \par
+\pard\plain \s81\fi-360\li720\widctlpar\jclisttab\tx720{\*\pn \pnlvlbody\ilvl0\ls2\pnrnot0\pndec }\ls2\adjustright \fs20\cgrid 
+{\f2 [} 2`]: Momento critico: se si chiama invia() qui ci sar\'E0 una collisione con l'invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all'utente impedire queste collisioni o saperle gestire.\par
+\pard\plain \s81\fi-360\li720\widctlpar\jclisttab\tx720{\*\pn \pnlvlbody\ilvl0\ls2\pnrnot0\pndec }\ls2\adjustright \fs20\cgrid 
+[{\f2 3} ]: I messaggi inviati qui saranno persi. \'C8 un difetto dei messaggi senza ACK.\par}
 \par}
-{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
- {\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Hardware } \par}
+\par
+\par
+\par
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 4. Hardware } \par}
+\par
+\par
 Come gi\'E0 detto ho scritto questa classe in particolare per il modulo RFM69HCW di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.3V (ad es. Adafruit vende {\f2 https://www.adafruit.com/product/3071} per la maggior parte dei paesi, tra cui tutti quelli europei, e {\f2 https://www.adafruit.com/product/3070} per gli USA e pochi altri).\par
 Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'interrupt su quest'ultimo e pu\'F2 "affidargli" il proprio pin di reset (non veramente sfruttato da questa classe, ma se \'E8 gi\'E0 connesso deve essere gestito per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V.\par
+\par
 \trowd \trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 
 \clcbpat16\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx4374
 \clcbpat16\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx8748
 \pard \widctlpar\intbl\adjustright
-{RFM69 \cell }{uC  \cell }
+{{\b RFM69} \cell }{uC  \cell }
 \pard \widctlpar\intbl\adjustright
 {\row }
 \trowd \trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 
@@ -256,21 +291,21 @@ Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'i
 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx4374
 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx8748
 \pard \widctlpar\intbl\adjustright
-{NSS \cell }{I/O * \cell }
+{NSS \cell }{I/O {\f2 *}  \cell }
 \pard \widctlpar\intbl\adjustright
 {\row }
 \trowd \trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 
 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx4374
 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx8748
 \pard \widctlpar\intbl\adjustright
-{DIO0 \cell }{INT ** \cell }
+{DIO0 \cell }{INT {\f2 **}  \cell }
 \pard \widctlpar\intbl\adjustright
 {\row }
 \trowd \trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 
 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx4374
 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx8748
 \pard \widctlpar\intbl\adjustright
-{{\i RESET &}  \cell }{{\i I/O *}  \cell }
+{{\i RESET {\f2 &} }  \cell }{{\i I/O {\f2 *} }  \cell }
 \pard \widctlpar\intbl\adjustright
 {\row }
 \pard\plain
@@ -278,14 +313,19 @@ Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'i
 {
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-&: Opzionale\par
+{\f2 &} : Opzionale\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-*: OUT \'E8 qualsiasi pin di input/output (sar\'E0 configurato come output dalla classe)\par
+{\f2 *} : OUT \'E8 qualsiasi pin di input/output (sar\'E0 configurato come output dalla classe)\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-**: INT \'E8 un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4 e 5, cio\'E9 rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.\par}
-{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
- {\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 Struttura messaggi } \par}
+{\f2 **} : INT \'E8 un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4 e 5, cio\'E9 rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.\par}
+\par
+\par
+\par
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 5. Struttura dei messaggi } \par}
+\par
+\par
 Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura:\par
+\par
 \trowd \trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 
 \clcbpat16\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx1458
 \clcbpat16\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr \brdrs\brdrw10 \cltxlrtb \cellx2916
@@ -333,10 +373,11 @@ La prima riga \'E8 la lunghezzza della sezione in bytes, la seconda \'E8 il suo 
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 {\f2 crc}  \'E8 un Cyclic Redundancy Checksum generato dalla radio.\par}
 \par
-{\b Documentazione dettagliata dei membri della classe: {\b RFM69} } \par
 \par
 \par
-Esempio di utilizzo \par
+{\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {\tc\tcl4 6. Esempio di utilizzo } \par}
+\par
+\par
 {
 \par
 \pard\plain \s40\li0\widctlpar\adjustright \shading1000\cbpat8 \f2\fs16\cgrid #include <Arduino.h>\par
@@ -511,10 +552,10 @@ Elenco dei tipi composti\par \pard\plain
 \par
 \pard\plain \s71\li360\sa27\sb27\widctlpar\tqr\tldot\tx8640\adjustright \fs20\cgrid 
 {\b {\b RFM69::Errore} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Contenitore dell'{\f2 enum}  {\b Errore::ListaErrori} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAFG \\*MERGEFORMAT}{\fldrslt pagenum}}
+Contenitore dell'{\f2 enum}  {\b Errore::ListaErrori} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAFS \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b {\b RFM69} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Driver per i moduli radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAEA \\*MERGEFORMAT}{\fldrslt pagenum}}
+Driver per i moduli radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAEM \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 \par}
 \pard\plain \sect\sbkpage
@@ -528,26 +569,32 @@ Elenco dei file\par \pard\plain
 {
 \par
 \pard\plain \s71\li360\sa27\sb27\widctlpar\tqr\tldot\tx8640\adjustright \fs20\cgrid 
+{\b /Users/noe/Documents/Robot/Librerie/RFM69/Esempi/{\b Esempio_base.cpp} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Esempio semplice ma abbastanza completo dell'utilizzo della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAA \\*MERGEFORMAT}{\fldrslt pagenum}}
+\par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69.h} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Header della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAA \\*MERGEFORMAT}{\fldrslt pagenum}}
+Header della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAG \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69_comunicazione.cpp} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Implementazione delle principali funzioni pubbliche della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAB \\*MERGEFORMAT}{\fldrslt pagenum}}
+Implementazione delle principali funzioni pubbliche della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAH \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69_costanti_impostazione.h} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Costanti per l'impostazione della radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAC \\*MERGEFORMAT}{\fldrslt pagenum}}
+Costanti per l'impostazione della radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAI \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69_impostazioni.h} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-File di configurazione del modulo radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAD \\*MERGEFORMAT}{\fldrslt pagenum}}
+File di configurazione del modulo radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAJ \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69_inizializzazione.cpp} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Implementazione delle funzioni di inizializzazione della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAE \\*MERGEFORMAT}{\fldrslt pagenum}}
+Implementazione delle funzioni di inizializzazione della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAK \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69_registri.h} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Registri della radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAF \\*MERGEFORMAT}{\fldrslt pagenum}}
+Registri della radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAAL \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 {\b /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/{\b RFM69_SPI.cpp} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Implementazione della comunicazione SPI con la radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAADZ \\*MERGEFORMAT}{\fldrslt pagenum}}
+Implementazione della comunicazione SPI con la radio RFM69 })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAEF \\*MERGEFORMAT}{\fldrslt pagenum}}
+\par
+{\b /Users/noe/Documents/Robot/Librerie/RFM69/Test/{\b main.cpp} ({\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Esempio semplice ma abbastanza completo dell'utilizzo della classe {\b RFM69} })} \tab {\field\fldedit {\*\fldinst PAGEREF AAAAAAAAEG \\*MERGEFORMAT}{\fldrslt pagenum}}
 \par
 \par}
 \pard\plain \sect\sbkpage
@@ -558,8 +605,8 @@ Documentazione delle classi{\tc \v Documentazione delle classi}
 Riferimenti per la struct RFM69::Errore\par \pard\plain 
 {\tc\tcl2 \v RFM69::Errore}
 {\xe \v RFM69::Errore}
-{\bkmkstart AAAAAAAAFG}
-{\bkmkend AAAAAAAAFG}
+{\bkmkstart AAAAAAAAFS}
+{\bkmkend AAAAAAAAFS}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -604,7 +651,7 @@ Contenitore dell'{\f2 enum}  {\b Errore::ListaErrori}. \par
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 vedi {\b ListaErrori} per dettagli sui codici di errore \par
 }{
-Definizione alla linea 770 del file RFM69.h.}\par
+Definizione alla linea 387 del file RFM69.h.}\par
 }
 {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
 \pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
@@ -616,8 +663,8 @@ Documentazione dei tipi enumerati (enum)\par
 {\b 
 enum {\b RFM69::Errore::ListaErrori}}}
 \par
-{\bkmkstart AAAAAAAAFH}
-{\bkmkend AAAAAAAAFH}
+{\bkmkstart AAAAAAAAFT}
+{\bkmkend AAAAAAAAFT}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -645,112 +692,112 @@ Valori del tipo enumerato:\par}
 \pard \widctlpar\intbl\adjustright
 {\xe \v ok\:RFM69::Errore}
 {\xe \v RFM69::Errore\:ok}
-{\qr ok{\bkmkstart AAAAAAAAFI}
-{\bkmkend AAAAAAAAFI}
+{\qr ok{\bkmkstart AAAAAAAAFU}
+{\bkmkend AAAAAAAAFU}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 Nessun errore. \par
 }\cell }{\row }
 {\xe \v errore\:RFM69::Errore}
 {\xe \v RFM69::Errore\:errore}
-{\qr errore{\bkmkstart AAAAAAAAFJ}
-{\bkmkend AAAAAAAAFJ}
+{\qr errore{\bkmkstart AAAAAAAAFV}
+{\bkmkend AAAAAAAAFV}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 Errore generico \par
 }\cell }{\row }
 {\xe \v initTroppeRadio\:RFM69::Errore}
 {\xe \v RFM69::Errore\:initTroppeRadio}
-{\qr initTroppeRadio{\bkmkstart AAAAAAAAFK}
-{\bkmkend AAAAAAAAFK}
+{\qr initTroppeRadio{\bkmkstart AAAAAAAAFW}
+{\bkmkend AAAAAAAAFW}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b inizializza()}: Visto che ha una sola ISR questa classe pu\'F2 gestrire una sola radio ma il programma ha provato ad inizializzarne una seconda \par
 }\cell }{\row }
 {\xe \v initInitSPIFallita\:RFM69::Errore}
 {\xe \v RFM69::Errore\:initInitSPIFallita}
-{\qr initInitSPIFallita{\bkmkstart AAAAAAAAFL}
-{\bkmkend AAAAAAAAFL}
+{\qr initInitSPIFallita{\bkmkstart AAAAAAAAFX}
+{\bkmkend AAAAAAAAFX}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b inizializza()}: L'inizializzazione di SPI non \'E8 riuscita \par
 }\cell }{\row }
 {\xe \v initNessunaRadioConnessa\:RFM69::Errore}
 {\xe \v RFM69::Errore\:initNessunaRadioConnessa}
-{\qr initNessunaRadioConnessa{\bkmkstart AAAAAAAAFM}
-{\bkmkend AAAAAAAAFM}
+{\qr initNessunaRadioConnessa{\bkmkstart AAAAAAAAFY}
+{\bkmkend AAAAAAAAFY}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b inizializza()}: Non \'E8 stata trovato nessun dispositivo connesso a SPI con lo Slave Select specificato nel constructor \par
 }\cell }{\row }
 {\xe \v initVersioneRadioNon0x24\:RFM69::Errore}
 {\xe \v RFM69::Errore\:initVersioneRadioNon0x24}
-{\qr initVersioneRadioNon0x24{\bkmkstart AAAAAAAAFN}
-{\bkmkend AAAAAAAAFN}
+{\qr initVersioneRadioNon0x24{\bkmkstart AAAAAAAAFZ}
+{\bkmkend AAAAAAAAFZ}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b inizializza()}: \'C8 stato trovato un dispositivo ma non \'E8 una radio RFM69 \par
 }\cell }{\row }
 {\xe \v initPinInterruptNonValido\:RFM69::Errore}
 {\xe \v RFM69::Errore\:initPinInterruptNonValido}
-{\qr initPinInterruptNonValido{\bkmkstart AAAAAAAAFO}
-{\bkmkend AAAAAAAAFO}
+{\qr initPinInterruptNonValido{\bkmkstart AAAAAAAAGA}
+{\bkmkend AAAAAAAAGA}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b inizializza()}: Il pin scelto come interrupt non va bene perch\'E9 non \'E8 collegato ad alcun interrupt nel microcontrollore \par
 }\cell }{\row }
 {\xe \v initErroreImpostazione\:RFM69::Errore}
 {\xe \v RFM69::Errore\:initErroreImpostazione}
-{\qr initErroreImpostazione{\bkmkstart AAAAAAAAFP}
-{\bkmkend AAAAAAAAFP}
+{\qr initErroreImpostazione{\bkmkstart AAAAAAAAGB}
+{\bkmkend AAAAAAAAGB}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b inizializza()}: Errore nella scrittura dei registri della radio \par
 }\cell }{\row }
 {\xe \v inviaMessaggioVuoto\:RFM69::Errore}
 {\xe \v RFM69::Errore\:inviaMessaggioVuoto}
-{\qr inviaMessaggioVuoto{\bkmkstart AAAAAAAAFQ}
-{\bkmkend AAAAAAAAFQ}
+{\qr inviaMessaggioVuoto{\bkmkstart AAAAAAAAGC}
+{\bkmkend AAAAAAAAGC}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 inviaMessaggio(): La lunghezza del messaggio \'E8 nulla \par
 }\cell }{\row }
 {\xe \v inviaTimeoutTxPrecedente\:RFM69::Errore}
 {\xe \v RFM69::Errore\:inviaTimeoutTxPrecedente}
-{\qr inviaTimeoutTxPrecedente{\bkmkstart AAAAAAAAFR}
-{\bkmkend AAAAAAAAFR}
+{\qr inviaTimeoutTxPrecedente{\bkmkstart AAAAAAAAGD}
+{\bkmkend AAAAAAAAGD}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 inviaMessaggio(): {\b invia()} \'E8 stata chiamata mentre c'era un messaggio in uscita, la funzione ha aspettato per pi\'F9 del tempo massimo di invio di un messaggio e alla fine dell'attesa il messaggio non era ancora partito \par
 }\cell }{\row }
 {\xe \v leggiNessunMessaggio\:RFM69::Errore}
 {\xe \v RFM69::Errore\:leggiNessunMessaggio}
-{\qr leggiNessunMessaggio{\bkmkstart AAAAAAAAFS}
-{\bkmkend AAAAAAAAFS}
+{\qr leggiNessunMessaggio{\bkmkstart AAAAAAAAGE}
+{\bkmkend AAAAAAAAGE}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b leggi()}: Non c'\'E8 nessun nuovo messaggio da leggere \par
 }\cell }{\row }
 {\xe \v leggiArrayTroppoCorta\:RFM69::Errore}
 {\xe \v RFM69::Errore\:leggiArrayTroppoCorta}
-{\qr leggiArrayTroppoCorta{\bkmkstart AAAAAAAAFT}
-{\bkmkend AAAAAAAAFT}
+{\qr leggiArrayTroppoCorta{\bkmkstart AAAAAAAAGF}
+{\bkmkend AAAAAAAAGF}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b leggi()}: l'array in cui la funzion {\f2 {\b leggi()}}  dovrerbbe copiare il messaggio \'E8 troppo corta per contenerlo \par
 }\cell }{\row }
 {\xe \v messaggioTroppoLungo\:RFM69::Errore}
 {\xe \v RFM69::Errore\:messaggioTroppoLungo}
-{\qr messaggioTroppoLungo{\bkmkstart AAAAAAAAFU}
-{\bkmkend AAAAAAAAFU}
+{\qr messaggioTroppoLungo{\bkmkstart AAAAAAAAGG}
+{\bkmkend AAAAAAAAGG}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\b leggi()}: il messaggio \'E8 troppo lungo per essere letto da questa istanza della classe, che \'E8 stata inizializzata con un buffer di dimensione inferiore \par
 }\cell }{\row }
 {\xe \v modImpossibile\:RFM69::Errore}
 {\xe \v RFM69::Errore\:modImpossibile}
-{\qr modImpossibile{\bkmkstart AAAAAAAAFV}
-{\bkmkend AAAAAAAAFV}
+{\qr modImpossibile{\bkmkstart AAAAAAAAGH}
+{\bkmkend AAAAAAAAGH}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 cambiaModalita(): Nel contesto in cui \'E8 stata chiamata non \'E8 possibile passare alla modalit\'E0 richiesta \par
 }\cell }{\row }
 {\xe \v modTimeout\:RFM69::Errore}
 {\xe \v RFM69::Errore\:modTimeout}
-{\qr modTimeout{\bkmkstart AAAAAAAAFW}
-{\bkmkend AAAAAAAAFW}
+{\qr modTimeout{\bkmkstart AAAAAAAAGI}
+{\bkmkend AAAAAAAAGI}
 \cell }{{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 cambiaModalita(): Il cambio di modalit\'E0 non \'E8 avvenuto entro un tempo massimo ampiamente sufficiente. \par
 }\cell }{\row }
 }
 {
-Definizione alla linea 785 del file RFM69.h.}\par
+Definizione alla linea 402 del file RFM69.h.}\par
 }
 {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
 La documentazione per questa struct \'E8 stata generata a partire dal seguente file:{\par
@@ -764,8 +811,8 @@ La documentazione per questa struct \'E8 stata generata a partire dal seguente f
 Riferimenti per la classe RFM69\par \pard\plain 
 {\tc\tcl2 \v RFM69}
 {\xe \v RFM69}
-{\bkmkstart AAAAAAAAEA}
-{\bkmkend AAAAAAAAEA}
+{\bkmkstart AAAAAAAAEM}
+{\bkmkend AAAAAAAAEM}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -1057,9 +1104,9 @@ Driver per i moduli radio RFM69. \par
 }
 
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Per una descrizione approfondita, cfr. la pagina {\b Driver per i moduli radio RFM69} \par
+Per una descrizione approfondita, cfr. la pagina {\b Driver Arduino per i moduli radio RFM69} \par
 }{
-Definizione alla linea 415 del file RFM69.h.}\par
+Definizione alla linea 32 del file RFM69.h.}\par
 }
 {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
 \pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
@@ -1071,8 +1118,8 @@ Documentazione dei costruttori e dei distruttori\par
 {\b 
 RFM69::RFM69 (uint8_t  {\i pinSS}, uint8_t  {\i pinInterrupt})}}
 \par
-{\bkmkstart AAAAAAAAEB}
-{\bkmkend AAAAAAAAEB}
+{\bkmkstart AAAAAAAAEN}
+{\bkmkend AAAAAAAAEN}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1105,8 +1152,8 @@ Definizione alla linea 243 del file RFM69_inizializzazione.cpp.}\par
 {\b 
 RFM69::RFM69 (uint8_t  {\i pinSS}, uint8_t  {\i pinInterrupt}, uint8_t  {\i pinReset})}}
 \par
-{\bkmkstart AAAAAAAAEC}
-{\bkmkend AAAAAAAAEC}
+{\bkmkstart AAAAAAAAEO}
+{\bkmkend AAAAAAAAEO}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1145,8 +1192,8 @@ Definizione alla linea 247 del file RFM69_inizializzazione.cpp.}\par
 {\b 
 RFM69::~RFM69 ()}}
 \par
-{\bkmkstart AAAAAAAAED}
-{\bkmkend AAAAAAAAED}
+{\bkmkstart AAAAAAAAEP}
+{\bkmkend AAAAAAAAEP}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1164,8 +1211,8 @@ Definizione alla linea 263 del file RFM69_inizializzazione.cpp.}\par
 {\b 
 RFM69::RFM69 (const {\b RFM69} & ){\f2 [delete]}}}
 \par
-{\bkmkstart AAAAAAAAEE}
-{\bkmkend AAAAAAAAEE}
+{\bkmkstart AAAAAAAAEQ}
+{\bkmkend AAAAAAAAEQ}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1185,8 +1232,8 @@ Documentazione delle funzioni membro\par
 {\b 
 int RFM69::inizializza (uint8_t  {\i lunghezzaMaxMessaggio})}}
 \par
-{\bkmkstart AAAAAAAAEF}
-{\bkmkend AAAAAAAAEF}
+{\bkmkstart AAAAAAAAER}
+{\bkmkend AAAAAAAAER}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1237,8 +1284,8 @@ Definizione alla linea 278 del file RFM69_inizializzazione.cpp.}\par
 {\b 
 int RFM69::invia (const uint8_t  {\i messaggio}[], uint8_t  {\i lunghezza})}}
 \par
-{\bkmkstart AAAAAAAAEG}
-{\bkmkend AAAAAAAAEG}
+{\bkmkstart AAAAAAAAES}
+{\bkmkend AAAAAAAAES}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1274,8 +1321,8 @@ Definizione alla linea 28 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::inviaConAck (const uint8_t  {\i messaggio}[], uint8_t  {\i lunghezza})}}
 \par
-{\bkmkstart AAAAAAAAEH}
-{\bkmkend AAAAAAAAEH}
+{\bkmkstart AAAAAAAAET}
+{\bkmkend AAAAAAAAET}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1311,8 +1358,8 @@ Definizione alla linea 36 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::inviaFinoAck (const uint8_t  {\i messaggio}[], uint8_t  {\i lunghezza}, uint16_t &  {\i tentativi})}}
 \par
-{\bkmkstart AAAAAAAAEI}
-{\bkmkend AAAAAAAAEI}
+{\bkmkstart AAAAAAAAEU}
+{\bkmkend AAAAAAAAEU}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1354,8 +1401,8 @@ Definizione alla linea 45 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::leggi (uint8_t  {\i messaggio}[], uint8_t &  {\i lunghezza})}}
 \par
-{\bkmkstart AAAAAAAAEJ}
-{\bkmkend AAAAAAAAEJ}
+{\bkmkstart AAAAAAAAEV}
+{\bkmkend AAAAAAAAEV}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1390,8 +1437,8 @@ Definizione alla linea 133 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::iniziaRicezione ()}}
 \par
-{\bkmkstart AAAAAAAAEK}
-{\bkmkend AAAAAAAAEK}
+{\bkmkstart AAAAAAAAEW}
+{\bkmkend AAAAAAAAEW}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1409,8 +1456,8 @@ Definizione alla linea 193 del file RFM69_comunicazione.cpp.}\par
 {\b 
 bool RFM69::nuovoMessaggio ()}}
 \par
-{\bkmkstart AAAAAAAAEL}
-{\bkmkend AAAAAAAAEL}
+{\bkmkstart AAAAAAAAEX}
+{\bkmkend AAAAAAAAEX}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1430,8 +1477,8 @@ Definizione alla linea 205 del file RFM69_comunicazione.cpp.}\par
 {\b 
 uint8_t RFM69::dimensioneMessaggio ()}}
 \par
-{\bkmkstart AAAAAAAAEM}
-{\bkmkend AAAAAAAAEM}
+{\bkmkstart AAAAAAAAEY}
+{\bkmkend AAAAAAAAEY}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1451,8 +1498,8 @@ Definizione alla linea 213 del file RFM69_comunicazione.cpp.}\par
 {\b 
 bool RFM69::aspettaAck ()}}
 \par
-{\bkmkstart AAAAAAAAEN}
-{\bkmkend AAAAAAAAEN}
+{\bkmkstart AAAAAAAAEZ}
+{\bkmkend AAAAAAAAEZ}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1480,8 +1527,8 @@ Definizione alla linea 239 del file RFM69_comunicazione.cpp.}\par
 {\b 
 bool RFM69::ricevutoAck ()}}
 \par
-{\bkmkstart AAAAAAAAEO}
-{\bkmkend AAAAAAAAEO}
+{\bkmkstart AAAAAAAAFA}
+{\bkmkend AAAAAAAAFA}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1514,8 +1561,8 @@ Definizione alla linea 255 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::rinunciaAck ()}}
 \par
-{\bkmkstart AAAAAAAAEP}
-{\bkmkend AAAAAAAAEP}
+{\bkmkstart AAAAAAAAFB}
+{\bkmkend AAAAAAAAFB}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1537,8 +1584,8 @@ Definizione alla linea 262 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::standby ()}}
 \par
-{\bkmkstart AAAAAAAAEQ}
-{\bkmkend AAAAAAAAEQ}
+{\bkmkstart AAAAAAAAFC}
+{\bkmkend AAAAAAAAFC}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1556,8 +1603,8 @@ Definizione alla linea 530 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::listen ()}}
 \par
-{\bkmkstart AAAAAAAAER}
-{\bkmkend AAAAAAAAER}
+{\bkmkstart AAAAAAAAFD}
+{\bkmkend AAAAAAAAFD}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1575,8 +1622,8 @@ Definizione alla linea 527 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::sleep ()}}
 \par
-{\bkmkstart AAAAAAAAES}
-{\bkmkend AAAAAAAAES}
+{\bkmkstart AAAAAAAAFE}
+{\bkmkend AAAAAAAAFE}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1592,8 +1639,8 @@ Definizione alla linea 533 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::sleepDefault ()}}
 \par
-{\bkmkstart AAAAAAAAET}
-{\bkmkend AAAAAAAAET}
+{\bkmkstart AAAAAAAAFF}
+{\bkmkend AAAAAAAAFF}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1612,8 +1659,8 @@ Definizione alla linea 537 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::standbyDefault ()}}
 \par
-{\bkmkstart AAAAAAAAEU}
-{\bkmkend AAAAAAAAEU}
+{\bkmkstart AAAAAAAAFG}
+{\bkmkend AAAAAAAAFG}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1632,8 +1679,8 @@ Definizione alla linea 540 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::listenDefault ()}}
 \par
-{\bkmkstart AAAAAAAAEV}
-{\bkmkend AAAAAAAAEV}
+{\bkmkstart AAAAAAAAFH}
+{\bkmkend AAAAAAAAFH}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1651,8 +1698,8 @@ Definizione alla linea 543 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::rxDefault ()}}
 \par
-{\bkmkstart AAAAAAAAEW}
-{\bkmkend AAAAAAAAEW}
+{\bkmkstart AAAAAAAAFI}
+{\bkmkend AAAAAAAAFI}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1670,8 +1717,8 @@ Definizione alla linea 546 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::impostaTimeoutAck (uint16_t  {\i tempoMs})}}
 \par
-{\bkmkstart AAAAAAAAEX}
-{\bkmkend AAAAAAAAEX}
+{\bkmkstart AAAAAAAAFJ}
+{\bkmkend AAAAAAAAFJ}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1698,8 +1745,8 @@ Definizione alla linea 550 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int8_t RFM69::rssi ()}}
 \par
-{\bkmkstart AAAAAAAAEY}
-{\bkmkend AAAAAAAAEY}
+{\bkmkstart AAAAAAAAFK}
+{\bkmkend AAAAAAAAFK}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1719,8 +1766,8 @@ Definizione alla linea 219 del file RFM69_comunicazione.cpp.}\par
 {\b 
 uint8_t RFM69::tempoRicezione ()}}
 \par
-{\bkmkstart AAAAAAAAEZ}
-{\bkmkend AAAAAAAAEZ}
+{\bkmkstart AAAAAAAAFL}
+{\bkmkend AAAAAAAAFL}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1740,8 +1787,8 @@ Definizione alla linea 224 del file RFM69_comunicazione.cpp.}\par
 {\b 
 int RFM69::nrMessaggiInviati (){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAFA}
-{\bkmkend AAAAAAAAFA}
+{\bkmkstart AAAAAAAAFM}
+{\bkmkend AAAAAAAAFM}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1753,7 +1800,7 @@ Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione. }}\par
 {{\s5\sb90\sa30\keepn\widctlpar\adjustright \b\f1\fs20\cgrid 
 Restituisce:\par}\pard\plain \s62\li720\widctlpar\ql\adjustright \fs20\cgrid Il numero di messaggi inviati dopo l'ultima inizializzazione \par
 }}{
-Definizione alla linea 694 del file RFM69.h.}\par
+Definizione alla linea 311 del file RFM69.h.}\par
 }
 {\xe \v nrMessaggiRicevuti\:RFM69}
 {\xe \v RFM69\:nrMessaggiRicevuti}
@@ -1761,8 +1808,8 @@ Definizione alla linea 694 del file RFM69.h.}\par
 {\b 
 int RFM69::nrMessaggiRicevuti (){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAFB}
-{\bkmkend AAAAAAAAFB}
+{\bkmkstart AAAAAAAAFN}
+{\bkmkend AAAAAAAAFN}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1774,7 +1821,7 @@ Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione. }}\pa
 {{\s5\sb90\sa30\keepn\widctlpar\adjustright \b\f1\fs20\cgrid 
 Restituisce:\par}\pard\plain \s62\li720\widctlpar\ql\adjustright \fs20\cgrid Il numero di messaggi ricevuti dopo l'ultima inizializzazione \par
 }}{
-Definizione alla linea 698 del file RFM69.h.}\par
+Definizione alla linea 315 del file RFM69.h.}\par
 }
 {\xe \v stampaErroreSerial\:RFM69}
 {\xe \v RFM69\:stampaErroreSerial}
@@ -1782,8 +1829,8 @@ Definizione alla linea 698 del file RFM69.h.}\par
 {\b 
 void RFM69::stampaErroreSerial (HardwareSerial &  {\i serial}, int  {\i errore})}}
 \par
-{\bkmkstart AAAAAAAAFC}
-{\bkmkend AAAAAAAAFC}
+{\bkmkstart AAAAAAAAFO}
+{\bkmkend AAAAAAAAFO}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1814,8 +1861,8 @@ Definizione alla linea 557 del file RFM69_comunicazione.cpp.}\par
 {\b 
 void RFM69::stampaRegistriSerial (HardwareSerial &  {\i Serial})}}
 \par
-{\bkmkstart AAAAAAAAFD}
-{\bkmkend AAAAAAAAFD}
+{\bkmkstart AAAAAAAAFP}
+{\bkmkend AAAAAAAAFP}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1833,8 +1880,8 @@ Definizione alla linea 445 del file RFM69_inizializzazione.cpp.}\par
 {\b 
 uint8_t RFM69::valoreRegistro (uint8_t  {\i indirizzo})}}
 \par
-{\bkmkstart AAAAAAAAFE}
-{\bkmkend AAAAAAAAFE}
+{\bkmkstart AAAAAAAAFQ}
+{\bkmkend AAAAAAAAFQ}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1850,8 +1897,8 @@ Definizione alla linea 473 del file RFM69_inizializzazione.cpp.}\par
 {\b 
 {\b RFM69}& RFM69::operator= (const {\b RFM69} & ){\f2 [delete]}}}
 \par
-{\bkmkstart AAAAAAAAFF}
-{\bkmkend AAAAAAAAFF}
+{\bkmkstart AAAAAAAAFR}
+{\bkmkend AAAAAAAAFR}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -1875,11 +1922,82 @@ La documentazione per questa classe \'E8 stata generata a partire dai seguenti f
 Documentazione dei file{\tc \v Documentazione dei file}
 \par \pard\plain 
 \pard\plain \s2\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs28\kerning28\cgrid 
+Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/Esempi/Esempio_base.cpp\par \pard\plain 
+{\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/Esempi/Esempio_base.cpp}
+{\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/Esempi/Esempio_base.cpp}
+{\bkmkstart AAAAAAAAAA}
+{\bkmkend AAAAAAAAAA}
+\par
+{
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Esempio semplice ma abbastanza completo dell'utilizzo della classe {\b RFM69}. }}\par
+{
+\pard\plain \s18\widctlpar\fs22\cgrid {\f2 #include <Arduino.h>}\par
+{\f2 #include "RFM69.h"}\par
+}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Definizioni\par
+\pard\plain 
+
+{
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b MODULO_r}{\bkmkstart AAAAAAAAAB}
+{\bkmkend AAAAAAAAAB}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b LED}\~ 4{\bkmkstart AAAAAAAAAC}
+{\bkmkend AAAAAAAAAC}
+\par
+}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Funzioni\par
+\pard\plain 
+
+{
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+void {\b setup} (){\bkmkstart AAAAAAAAAD}
+{\bkmkend AAAAAAAAAD}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+void {\b loop} (){\bkmkstart AAAAAAAAAE}
+{\bkmkend AAAAAAAAAE}
+\par
+}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Variabili\par
+\pard\plain 
+
+{
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+{\b RFM69} {\b radio} (2, 3){\bkmkstart AAAAAAAAAF}
+{\bkmkend AAAAAAAAAF}
+\par
+}
+{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Descrizione dettagliata\par
+\pard\plain 
+{
+\pard\plain \s17\sa60\sb30\widctlpar\qj \fs22\cgrid {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Esempio semplice ma abbastanza completo dell'utilizzo della classe {\b RFM69}. \par
+}{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Questo programma stabilisce una comunicazione unidirezionale ma con ACK tra due radio. \par
+}}
+\par \pard\plain 
+
+\pard\plain \sect\sbkpage
+\s2\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs28\kerning28\cgrid 
+\pard\plain \s2\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs28\kerning28\cgrid 
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69.h\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69.h}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69.h}
-{\bkmkstart AAAAAAAAAA}
-{\bkmkend AAAAAAAAAA}
+{\bkmkstart AAAAAAAAAG}
+{\bkmkend AAAAAAAAAG}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -1922,8 +2040,8 @@ Header della classe {\b RFM69}. \par
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_comunicazione.cpp\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_comunicazione.cpp}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_comunicazione.cpp}
-{\bkmkstart AAAAAAAAAB}
-{\bkmkend AAAAAAAAAB}
+{\bkmkstart AAAAAAAAAH}
+{\bkmkend AAAAAAAAAH}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -1963,8 +2081,8 @@ Il file \'E8 suddiviso in 5 sezioni:\par
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_costanti_impostazione.h\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_costanti_impostazione.h}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_costanti_impostazione.h}
-{\bkmkstart AAAAAAAAAC}
-{\bkmkend AAAAAAAAAC}
+{\bkmkstart AAAAAAAAAI}
+{\bkmkend AAAAAAAAAI}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -1987,8 +2105,8 @@ Questo file contiene le scelte possibili per tutte le impostazioni dela radio {\
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_impostazioni.h\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_impostazioni.h}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_impostazioni.h}
-{\bkmkstart AAAAAAAAAD}
-{\bkmkend AAAAAAAAAD}
+{\bkmkstart AAAAAAAAAJ}
+{\bkmkend AAAAAAAAAJ}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -2002,7 +2120,8 @@ Descrizione dettagliata\par
 File di configurazione del modulo radio RFM69. \par
 }{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 Questo file contiene una lunga serie di costanti {\f2 #define} d tramite le quali \'E8 possibile modificare tutte le impostazioni della radio. Il file \'E8 {\f2 #include} d in {\b RFM69_inizializzazione.cpp}, dove le sue costanti saranno usate per scrivere i registri della radio.\par
-La maggior parte delle impostazioni sono liberamente selezionabili dall'utente. \par
+Tutte le costanti seguenti possono essere modificate dall'utente.\par
+Questo file deve restare nella posizione in cui si trova (cio\'E8 assieme al resto dell'implementazione della classe {\b RFM69}). \par
 }}
 \par \pard\plain 
 
@@ -2012,8 +2131,8 @@ La maggior parte delle impostazioni sono liberamente selezionabili dall'utente. 
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_inizializzazione.cpp\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_inizializzazione.cpp}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_inizializzazione.cpp}
-{\bkmkstart AAAAAAAAAE}
-{\bkmkend AAAAAAAAAE}
+{\bkmkstart AAAAAAAAAK}
+{\bkmkend AAAAAAAAAK}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -2055,8 +2174,8 @@ In questo file sono raggruppate tutte le funzioni di inizializzazione Il file \'
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_registri.h\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_registri.h}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_registri.h}
-{\bkmkstart AAAAAAAAAF}
-{\bkmkend AAAAAAAAAF}
+{\bkmkstart AAAAAAAAAL}
+{\bkmkend AAAAAAAAAL}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -2068,485 +2187,485 @@ Definizioni\par
 {
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_00_FIFO}\~ 0x00{\bkmkstart AAAAAAAAAG}
-{\bkmkend AAAAAAAAAG}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_01_OP_MODE}\~ 0x01{\bkmkstart AAAAAAAAAH}
-{\bkmkend AAAAAAAAAH}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_02_DATA_MODUL}\~ 0x02{\bkmkstart AAAAAAAAAI}
-{\bkmkend AAAAAAAAAI}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_03_BITRATE_MSB}\~ 0x03{\bkmkstart AAAAAAAAAJ}
-{\bkmkend AAAAAAAAAJ}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_04_BITRATE_LSB}\~ 0x04{\bkmkstart AAAAAAAAAK}
-{\bkmkend AAAAAAAAAK}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_05_FDEV_MSB}\~ 0x05{\bkmkstart AAAAAAAAAL}
-{\bkmkend AAAAAAAAAL}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_06_FDEF_LSB}\~ 0x06{\bkmkstart AAAAAAAAAM}
+#define {\b RFM69_00_FIFO}\~ 0x00{\bkmkstart AAAAAAAAAM}
 {\bkmkend AAAAAAAAAM}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_07_FRF_MSB}\~ 0x07{\bkmkstart AAAAAAAAAN}
+#define {\b RFM69_01_OP_MODE}\~ 0x01{\bkmkstart AAAAAAAAAN}
 {\bkmkend AAAAAAAAAN}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_08_FRF_MID}\~ 0x08{\bkmkstart AAAAAAAAAO}
+#define {\b RFM69_02_DATA_MODUL}\~ 0x02{\bkmkstart AAAAAAAAAO}
 {\bkmkend AAAAAAAAAO}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_09_FRF_LSB}\~ 0x09{\bkmkstart AAAAAAAAAP}
+#define {\b RFM69_03_BITRATE_MSB}\~ 0x03{\bkmkstart AAAAAAAAAP}
 {\bkmkend AAAAAAAAAP}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_0A_OSC_1}\~ 0x0A{\bkmkstart AAAAAAAAAQ}
+#define {\b RFM69_04_BITRATE_LSB}\~ 0x04{\bkmkstart AAAAAAAAAQ}
 {\bkmkend AAAAAAAAAQ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_0B_AFC_CTRL}\~ 0x0B{\bkmkstart AAAAAAAAAR}
+#define {\b RFM69_05_FDEV_MSB}\~ 0x05{\bkmkstart AAAAAAAAAR}
 {\bkmkend AAAAAAAAAR}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_0D_LISTEN_1}\~ 0x0D{\bkmkstart AAAAAAAAAS}
+#define {\b RFM69_06_FDEF_LSB}\~ 0x06{\bkmkstart AAAAAAAAAS}
 {\bkmkend AAAAAAAAAS}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_0E_LISTEN_2}\~ 0x0E{\bkmkstart AAAAAAAAAT}
+#define {\b RFM69_07_FRF_MSB}\~ 0x07{\bkmkstart AAAAAAAAAT}
 {\bkmkend AAAAAAAAAT}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_0F_LISTEN_3}\~ 0x0F{\bkmkstart AAAAAAAAAU}
+#define {\b RFM69_08_FRF_MID}\~ 0x08{\bkmkstart AAAAAAAAAU}
 {\bkmkend AAAAAAAAAU}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_10_VERSION}\~ 0x10{\bkmkstart AAAAAAAAAV}
+#define {\b RFM69_09_FRF_LSB}\~ 0x09{\bkmkstart AAAAAAAAAV}
 {\bkmkend AAAAAAAAAV}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_11_PA_LEVEL}\~ 0x11{\bkmkstart AAAAAAAAAW}
+#define {\b RFM69_0A_OSC_1}\~ 0x0A{\bkmkstart AAAAAAAAAW}
 {\bkmkend AAAAAAAAAW}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_12_PA_RAMP}\~ 0x12{\bkmkstart AAAAAAAAAX}
+#define {\b RFM69_0B_AFC_CTRL}\~ 0x0B{\bkmkstart AAAAAAAAAX}
 {\bkmkend AAAAAAAAAX}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_13_OCP}\~ 0x13{\bkmkstart AAAAAAAAAY}
+#define {\b RFM69_0D_LISTEN_1}\~ 0x0D{\bkmkstart AAAAAAAAAY}
 {\bkmkend AAAAAAAAAY}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_18_LNA}\~ 0x18{\bkmkstart AAAAAAAAAZ}
+#define {\b RFM69_0E_LISTEN_2}\~ 0x0E{\bkmkstart AAAAAAAAAZ}
 {\bkmkend AAAAAAAAAZ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_19_RX_BW}\~ 0x19{\bkmkstart AAAAAAAABA}
+#define {\b RFM69_0F_LISTEN_3}\~ 0x0F{\bkmkstart AAAAAAAABA}
 {\bkmkend AAAAAAAABA}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_1A_AFC_BW}\~ 0x1A{\bkmkstart AAAAAAAABB}
+#define {\b RFM69_10_VERSION}\~ 0x10{\bkmkstart AAAAAAAABB}
 {\bkmkend AAAAAAAABB}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_1B_OOK_PEAK}\~ 0x1B{\bkmkstart AAAAAAAABC}
+#define {\b RFM69_11_PA_LEVEL}\~ 0x11{\bkmkstart AAAAAAAABC}
 {\bkmkend AAAAAAAABC}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_1C_OOK_AVG}\~ 0x1C{\bkmkstart AAAAAAAABD}
+#define {\b RFM69_12_PA_RAMP}\~ 0x12{\bkmkstart AAAAAAAABD}
 {\bkmkend AAAAAAAABD}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_1D_OOK_FIX}\~ 0x1D{\bkmkstart AAAAAAAABE}
+#define {\b RFM69_13_OCP}\~ 0x13{\bkmkstart AAAAAAAABE}
 {\bkmkend AAAAAAAABE}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_1E_AFC_FEI}\~ 0x1E{\bkmkstart AAAAAAAABF}
+#define {\b RFM69_18_LNA}\~ 0x18{\bkmkstart AAAAAAAABF}
 {\bkmkend AAAAAAAABF}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_1F_AFC_MSB}\~ 0x1F{\bkmkstart AAAAAAAABG}
+#define {\b RFM69_19_RX_BW}\~ 0x19{\bkmkstart AAAAAAAABG}
 {\bkmkend AAAAAAAABG}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_20_AFC_LSB}\~ 0x20{\bkmkstart AAAAAAAABH}
+#define {\b RFM69_1A_AFC_BW}\~ 0x1A{\bkmkstart AAAAAAAABH}
 {\bkmkend AAAAAAAABH}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_21_FEI_MSB}\~ 0x21{\bkmkstart AAAAAAAABI}
+#define {\b RFM69_1B_OOK_PEAK}\~ 0x1B{\bkmkstart AAAAAAAABI}
 {\bkmkend AAAAAAAABI}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_22_FEI_LSB}\~ 0x22{\bkmkstart AAAAAAAABJ}
+#define {\b RFM69_1C_OOK_AVG}\~ 0x1C{\bkmkstart AAAAAAAABJ}
 {\bkmkend AAAAAAAABJ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_23_RSSI_CONFIG}\~ 0x23{\bkmkstart AAAAAAAABK}
+#define {\b RFM69_1D_OOK_FIX}\~ 0x1D{\bkmkstart AAAAAAAABK}
 {\bkmkend AAAAAAAABK}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_24_RSSI_VALUE}\~ 0x24{\bkmkstart AAAAAAAABL}
+#define {\b RFM69_1E_AFC_FEI}\~ 0x1E{\bkmkstart AAAAAAAABL}
 {\bkmkend AAAAAAAABL}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_25_DIO_MAPPING_1}\~ 0x25{\bkmkstart AAAAAAAABM}
+#define {\b RFM69_1F_AFC_MSB}\~ 0x1F{\bkmkstart AAAAAAAABM}
 {\bkmkend AAAAAAAABM}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_26_DIO_MAPPING_2}\~ 0x26{\bkmkstart AAAAAAAABN}
+#define {\b RFM69_20_AFC_LSB}\~ 0x20{\bkmkstart AAAAAAAABN}
 {\bkmkend AAAAAAAABN}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_27_IRQ_FLAGS_1}\~ 0x27{\bkmkstart AAAAAAAABO}
+#define {\b RFM69_21_FEI_MSB}\~ 0x21{\bkmkstart AAAAAAAABO}
 {\bkmkend AAAAAAAABO}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_28_IRQ_FLAGS_2}\~ 0x28{\bkmkstart AAAAAAAABP}
+#define {\b RFM69_22_FEI_LSB}\~ 0x22{\bkmkstart AAAAAAAABP}
 {\bkmkend AAAAAAAABP}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_29_RSSI_TRESH}\~ 0x29{\bkmkstart AAAAAAAABQ}
+#define {\b RFM69_23_RSSI_CONFIG}\~ 0x23{\bkmkstart AAAAAAAABQ}
 {\bkmkend AAAAAAAABQ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_2A_RX_TIMEOUT_1}\~ 0x2A{\bkmkstart AAAAAAAABR}
+#define {\b RFM69_24_RSSI_VALUE}\~ 0x24{\bkmkstart AAAAAAAABR}
 {\bkmkend AAAAAAAABR}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_2B_RX_TIMEOUT_2}\~ 0x2B{\bkmkstart AAAAAAAABS}
+#define {\b RFM69_25_DIO_MAPPING_1}\~ 0x25{\bkmkstart AAAAAAAABS}
 {\bkmkend AAAAAAAABS}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_2C_PREAMBLE_MSB}\~ 0x2C{\bkmkstart AAAAAAAABT}
+#define {\b RFM69_26_DIO_MAPPING_2}\~ 0x26{\bkmkstart AAAAAAAABT}
 {\bkmkend AAAAAAAABT}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_2D_PREAMBLE_LSB}\~ 0x2D{\bkmkstart AAAAAAAABU}
+#define {\b RFM69_27_IRQ_FLAGS_1}\~ 0x27{\bkmkstart AAAAAAAABU}
 {\bkmkend AAAAAAAABU}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_2E_SYNC_CONFIG}\~ 0x2E{\bkmkstart AAAAAAAABV}
+#define {\b RFM69_28_IRQ_FLAGS_2}\~ 0x28{\bkmkstart AAAAAAAABV}
 {\bkmkend AAAAAAAABV}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_2F_SYNC_VALUE_1}\~ 0x2F{\bkmkstart AAAAAAAABW}
+#define {\b RFM69_29_RSSI_TRESH}\~ 0x29{\bkmkstart AAAAAAAABW}
 {\bkmkend AAAAAAAABW}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_30_SYNC_VALUE_2}\~ 0x30{\bkmkstart AAAAAAAABX}
+#define {\b RFM69_2A_RX_TIMEOUT_1}\~ 0x2A{\bkmkstart AAAAAAAABX}
 {\bkmkend AAAAAAAABX}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_31_SYNC_VALUE_3}\~ 0x31{\bkmkstart AAAAAAAABY}
+#define {\b RFM69_2B_RX_TIMEOUT_2}\~ 0x2B{\bkmkstart AAAAAAAABY}
 {\bkmkend AAAAAAAABY}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_32_SYNC_VALUE_4}\~ 0x32{\bkmkstart AAAAAAAABZ}
+#define {\b RFM69_2C_PREAMBLE_MSB}\~ 0x2C{\bkmkstart AAAAAAAABZ}
 {\bkmkend AAAAAAAABZ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_33_SYNC_VALUE_5}\~ 0x33{\bkmkstart AAAAAAAACA}
+#define {\b RFM69_2D_PREAMBLE_LSB}\~ 0x2D{\bkmkstart AAAAAAAACA}
 {\bkmkend AAAAAAAACA}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_34_SYNC_VALUE_6}\~ 0x34{\bkmkstart AAAAAAAACB}
+#define {\b RFM69_2E_SYNC_CONFIG}\~ 0x2E{\bkmkstart AAAAAAAACB}
 {\bkmkend AAAAAAAACB}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_35_SYNC_VALUE_7}\~ 0x35{\bkmkstart AAAAAAAACC}
+#define {\b RFM69_2F_SYNC_VALUE_1}\~ 0x2F{\bkmkstart AAAAAAAACC}
 {\bkmkend AAAAAAAACC}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_36_SYNC_VALUE_8}\~ 0x36{\bkmkstart AAAAAAAACD}
+#define {\b RFM69_30_SYNC_VALUE_2}\~ 0x30{\bkmkstart AAAAAAAACD}
 {\bkmkend AAAAAAAACD}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_37_PACKET_CONFIG_1}\~ 0x37{\bkmkstart AAAAAAAACE}
+#define {\b RFM69_31_SYNC_VALUE_3}\~ 0x31{\bkmkstart AAAAAAAACE}
 {\bkmkend AAAAAAAACE}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_38_PAYLOAD_LENGHT}\~ 0x38{\bkmkstart AAAAAAAACF}
+#define {\b RFM69_32_SYNC_VALUE_4}\~ 0x32{\bkmkstart AAAAAAAACF}
 {\bkmkend AAAAAAAACF}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_39_NODE_ADRS}\~ 0x39{\bkmkstart AAAAAAAACG}
+#define {\b RFM69_33_SYNC_VALUE_5}\~ 0x33{\bkmkstart AAAAAAAACG}
 {\bkmkend AAAAAAAACG}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_3A_BROADCAST_ADRS}\~ 0x3A{\bkmkstart AAAAAAAACH}
+#define {\b RFM69_34_SYNC_VALUE_6}\~ 0x34{\bkmkstart AAAAAAAACH}
 {\bkmkend AAAAAAAACH}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_3B_AUTO_MODES}\~ 0x3B{\bkmkstart AAAAAAAACI}
+#define {\b RFM69_35_SYNC_VALUE_7}\~ 0x35{\bkmkstart AAAAAAAACI}
 {\bkmkend AAAAAAAACI}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_3C_FIFO_TRESH}\~ 0x3C{\bkmkstart AAAAAAAACJ}
+#define {\b RFM69_36_SYNC_VALUE_8}\~ 0x36{\bkmkstart AAAAAAAACJ}
 {\bkmkend AAAAAAAACJ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_3D_PACKET_CONFIG_2}\~ 0x3D{\bkmkstart AAAAAAAACK}
+#define {\b RFM69_37_PACKET_CONFIG_1}\~ 0x37{\bkmkstart AAAAAAAACK}
 {\bkmkend AAAAAAAACK}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_3E_AES_KEY_1}\~ 0x3E{\bkmkstart AAAAAAAACL}
+#define {\b RFM69_38_PAYLOAD_LENGHT}\~ 0x38{\bkmkstart AAAAAAAACL}
 {\bkmkend AAAAAAAACL}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_3F_AES_KEY_2}\~ 0x3F{\bkmkstart AAAAAAAACM}
+#define {\b RFM69_39_NODE_ADRS}\~ 0x39{\bkmkstart AAAAAAAACM}
 {\bkmkend AAAAAAAACM}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_40_AES_KEY_3}\~ 0x40{\bkmkstart AAAAAAAACN}
+#define {\b RFM69_3A_BROADCAST_ADRS}\~ 0x3A{\bkmkstart AAAAAAAACN}
 {\bkmkend AAAAAAAACN}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_41_AES_KEY_4}\~ 0x41{\bkmkstart AAAAAAAACO}
+#define {\b RFM69_3B_AUTO_MODES}\~ 0x3B{\bkmkstart AAAAAAAACO}
 {\bkmkend AAAAAAAACO}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_42_AES_KEY_5}\~ 0x42{\bkmkstart AAAAAAAACP}
+#define {\b RFM69_3C_FIFO_TRESH}\~ 0x3C{\bkmkstart AAAAAAAACP}
 {\bkmkend AAAAAAAACP}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_43_AES_KEY_6}\~ 0x43{\bkmkstart AAAAAAAACQ}
+#define {\b RFM69_3D_PACKET_CONFIG_2}\~ 0x3D{\bkmkstart AAAAAAAACQ}
 {\bkmkend AAAAAAAACQ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_44_AES_KEY_7}\~ 0x44{\bkmkstart AAAAAAAACR}
+#define {\b RFM69_3E_AES_KEY_1}\~ 0x3E{\bkmkstart AAAAAAAACR}
 {\bkmkend AAAAAAAACR}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_45_AES_KEY_8}\~ 0x45{\bkmkstart AAAAAAAACS}
+#define {\b RFM69_3F_AES_KEY_2}\~ 0x3F{\bkmkstart AAAAAAAACS}
 {\bkmkend AAAAAAAACS}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_46_AES_KEY_9}\~ 0x46{\bkmkstart AAAAAAAACT}
+#define {\b RFM69_40_AES_KEY_3}\~ 0x40{\bkmkstart AAAAAAAACT}
 {\bkmkend AAAAAAAACT}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_47_AES_KEY_10}\~ 0x47{\bkmkstart AAAAAAAACU}
+#define {\b RFM69_41_AES_KEY_4}\~ 0x41{\bkmkstart AAAAAAAACU}
 {\bkmkend AAAAAAAACU}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_48_AES_KEY_11}\~ 0x48{\bkmkstart AAAAAAAACV}
+#define {\b RFM69_42_AES_KEY_5}\~ 0x42{\bkmkstart AAAAAAAACV}
 {\bkmkend AAAAAAAACV}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_49_AES_KEY_12}\~ 0x49{\bkmkstart AAAAAAAACW}
+#define {\b RFM69_43_AES_KEY_6}\~ 0x43{\bkmkstart AAAAAAAACW}
 {\bkmkend AAAAAAAACW}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_4A_AES_KEY_13}\~ 0x4A{\bkmkstart AAAAAAAACX}
+#define {\b RFM69_44_AES_KEY_7}\~ 0x44{\bkmkstart AAAAAAAACX}
 {\bkmkend AAAAAAAACX}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_4B_AES_KEY_14}\~ 0x4B{\bkmkstart AAAAAAAACY}
+#define {\b RFM69_45_AES_KEY_8}\~ 0x45{\bkmkstart AAAAAAAACY}
 {\bkmkend AAAAAAAACY}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_4C_AES_KEY_15}\~ 0x4C{\bkmkstart AAAAAAAACZ}
+#define {\b RFM69_46_AES_KEY_9}\~ 0x46{\bkmkstart AAAAAAAACZ}
 {\bkmkend AAAAAAAACZ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_4D_AES_KEY_16}\~ 0x4D{\bkmkstart AAAAAAAADA}
+#define {\b RFM69_47_AES_KEY_10}\~ 0x47{\bkmkstart AAAAAAAADA}
 {\bkmkend AAAAAAAADA}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_4E_TEMP_1}\~ 0x4E{\bkmkstart AAAAAAAADB}
+#define {\b RFM69_48_AES_KEY_11}\~ 0x48{\bkmkstart AAAAAAAADB}
 {\bkmkend AAAAAAAADB}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_4F_TEMP_2}\~ 0x4F{\bkmkstart AAAAAAAADC}
+#define {\b RFM69_49_AES_KEY_12}\~ 0x49{\bkmkstart AAAAAAAADC}
 {\bkmkend AAAAAAAADC}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_58_TEST_LNA}\~ 0x58{\bkmkstart AAAAAAAADD}
+#define {\b RFM69_4A_AES_KEY_13}\~ 0x4A{\bkmkstart AAAAAAAADD}
 {\bkmkend AAAAAAAADD}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_5A_TEST_PA_1}\~ 0x5A{\bkmkstart AAAAAAAADE}
+#define {\b RFM69_4B_AES_KEY_14}\~ 0x4B{\bkmkstart AAAAAAAADE}
 {\bkmkend AAAAAAAADE}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_5C_TEST_PA_2}\~ 0x5C{\bkmkstart AAAAAAAADF}
+#define {\b RFM69_4C_AES_KEY_15}\~ 0x4C{\bkmkstart AAAAAAAADF}
 {\bkmkend AAAAAAAADF}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_6F_TEST_DAGC}\~ 0x6F{\bkmkstart AAAAAAAADG}
+#define {\b RFM69_4D_AES_KEY_16}\~ 0x4D{\bkmkstart AAAAAAAADG}
 {\bkmkend AAAAAAAADG}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_71_TEST_AFC}\~ 0x71{\bkmkstart AAAAAAAADH}
+#define {\b RFM69_4E_TEMP_1}\~ 0x4E{\bkmkstart AAAAAAAADH}
 {\bkmkend AAAAAAAADH}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_4F_TEMP_2}\~ 0x4F{\bkmkstart AAAAAAAADI}
+{\bkmkend AAAAAAAADI}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_58_TEST_LNA}\~ 0x58{\bkmkstart AAAAAAAADJ}
+{\bkmkend AAAAAAAADJ}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_5A_TEST_PA_1}\~ 0x5A{\bkmkstart AAAAAAAADK}
+{\bkmkend AAAAAAAADK}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_5C_TEST_PA_2}\~ 0x5C{\bkmkstart AAAAAAAADL}
+{\bkmkend AAAAAAAADL}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_6F_TEST_DAGC}\~ 0x6F{\bkmkstart AAAAAAAADM}
+{\bkmkend AAAAAAAADM}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_71_TEST_AFC}\~ 0x71{\bkmkstart AAAAAAAADN}
+{\bkmkend AAAAAAAADN}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 #define {\b RFM69_RESERVED}(x)\par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_ULTIMO_REGISTRO}\~ 0x71{\bkmkstart AAAAAAAADI}
-{\bkmkend AAAAAAAADI}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_FLAGS_1_MODE_READY}\~ 0x80{\bkmkstart AAAAAAAADJ}
-{\bkmkend AAAAAAAADJ}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_FLAGS_1_RX_READY}\~ 0x40{\bkmkstart AAAAAAAADK}
-{\bkmkend AAAAAAAADK}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_FLAGS_1_TX_READY}\~ 0X20{\bkmkstart AAAAAAAADL}
-{\bkmkend AAAAAAAADL}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_FLAGS_1_PLL_LOCK}\~ 0X10{\bkmkstart AAAAAAAADM}
-{\bkmkend AAAAAAAADM}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_FLAGS_1_RSSI}\~ 0X08{\bkmkstart AAAAAAAADN}
-{\bkmkend AAAAAAAADN}
-\par
-\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-#define {\b RFM69_FLAGS_1_TIMEOUT}\~ 0X04{\bkmkstart AAAAAAAADO}
+#define {\b RFM69_ULTIMO_REGISTRO}\~ 0x71{\bkmkstart AAAAAAAADO}
 {\bkmkend AAAAAAAADO}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_1_AUTO_MODE}\~ 0X02{\bkmkstart AAAAAAAADP}
+#define {\b RFM69_FLAGS_1_MODE_READY}\~ 0x80{\bkmkstart AAAAAAAADP}
 {\bkmkend AAAAAAAADP}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_1_SYNC_ADDR_MATCH}\~ 0X01{\bkmkstart AAAAAAAADQ}
+#define {\b RFM69_FLAGS_1_RX_READY}\~ 0x40{\bkmkstart AAAAAAAADQ}
 {\bkmkend AAAAAAAADQ}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_FIFO_FULL}\~ 0x80{\bkmkstart AAAAAAAADR}
+#define {\b RFM69_FLAGS_1_TX_READY}\~ 0X20{\bkmkstart AAAAAAAADR}
 {\bkmkend AAAAAAAADR}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_FIFO_NOT_EMPTY}\~ 0x40{\bkmkstart AAAAAAAADS}
+#define {\b RFM69_FLAGS_1_PLL_LOCK}\~ 0X10{\bkmkstart AAAAAAAADS}
 {\bkmkend AAAAAAAADS}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_FIFO_LEVEL}\~ 0x20{\bkmkstart AAAAAAAADT}
+#define {\b RFM69_FLAGS_1_RSSI}\~ 0X08{\bkmkstart AAAAAAAADT}
 {\bkmkend AAAAAAAADT}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_FIFO_OVERRUN}\~ 0x10{\bkmkstart AAAAAAAADU}
+#define {\b RFM69_FLAGS_1_TIMEOUT}\~ 0X04{\bkmkstart AAAAAAAADU}
 {\bkmkend AAAAAAAADU}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_PACKET_SENT}\~ 0x08{\bkmkstart AAAAAAAADV}
+#define {\b RFM69_FLAGS_1_AUTO_MODE}\~ 0X02{\bkmkstart AAAAAAAADV}
 {\bkmkend AAAAAAAADV}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_PAYLOAD_READY}\~ 0x04{\bkmkstart AAAAAAAADW}
+#define {\b RFM69_FLAGS_1_SYNC_ADDR_MATCH}\~ 0X01{\bkmkstart AAAAAAAADW}
 {\bkmkend AAAAAAAADW}
 \par
 \pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 
-#define {\b RFM69_FLAGS_2_CRC_OK}\~ 0x02{\bkmkstart AAAAAAAADX}
+#define {\b RFM69_FLAGS_2_FIFO_FULL}\~ 0x80{\bkmkstart AAAAAAAADX}
 {\bkmkend AAAAAAAADX}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_FLAGS_2_FIFO_NOT_EMPTY}\~ 0x40{\bkmkstart AAAAAAAADY}
+{\bkmkend AAAAAAAADY}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_FLAGS_2_FIFO_LEVEL}\~ 0x20{\bkmkstart AAAAAAAADZ}
+{\bkmkend AAAAAAAADZ}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_FLAGS_2_FIFO_OVERRUN}\~ 0x10{\bkmkstart AAAAAAAAEA}
+{\bkmkend AAAAAAAAEA}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_FLAGS_2_PACKET_SENT}\~ 0x08{\bkmkstart AAAAAAAAEB}
+{\bkmkend AAAAAAAAEB}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_FLAGS_2_PAYLOAD_READY}\~ 0x04{\bkmkstart AAAAAAAAEC}
+{\bkmkend AAAAAAAAEC}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b RFM69_FLAGS_2_CRC_OK}\~ 0x02{\bkmkstart AAAAAAAAED}
+{\bkmkend AAAAAAAAED}
 \par
 }
 {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
@@ -2569,8 +2688,8 @@ Documentazione delle definizioni\par
 {\b 
 #define RFM69_RESERVED( x)}}
 \par
-{\bkmkstart AAAAAAAADY}
-{\bkmkend AAAAAAAADY}
+{\bkmkstart AAAAAAAAEE}
+{\bkmkend AAAAAAAAEE}
 {
 \pard\plain \s51\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 {\b Valore:}{
@@ -2595,8 +2714,8 @@ Definizione alla linea 103 del file RFM69_registri.h.}\par
 Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_SPI.cpp\par \pard\plain 
 {\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_SPI.cpp}
 {\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/RFM69/RFM69_SPI.cpp}
-{\bkmkstart AAAAAAAADZ}
-{\bkmkend AAAAAAAADZ}
+{\bkmkstart AAAAAAAAEF}
+{\bkmkend AAAAAAAAEF}
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
@@ -2613,6 +2732,77 @@ Descrizione dettagliata\par
 Implementazione della comunicazione SPI con la radio RFM69. \par
 }{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 Il file contiene l'implementazione della classe che gestisce la comunicazione tra la radio RFM69 e il microcontrollore. Questa classe \'E8 un membro privato della classe {\b RFM69}. \par
+}}
+\par \pard\plain 
+
+\pard\plain \sect\sbkpage
+\s2\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs28\kerning28\cgrid 
+\pard\plain \s2\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs28\kerning28\cgrid 
+Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/Test/main.cpp\par \pard\plain 
+{\tc\tcl2 \v /Users/noe/Documents/Robot/Librerie/RFM69/Test/main.cpp}
+{\xe \v /Users/noe/Documents/Robot/Librerie/RFM69/Test/main.cpp}
+{\bkmkstart AAAAAAAAEG}
+{\bkmkend AAAAAAAAEG}
+\par
+{
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Esempio semplice ma abbastanza completo dell'utilizzo della classe {\b RFM69}. }}\par
+{
+\pard\plain \s18\widctlpar\fs22\cgrid {\f2 #include <Arduino.h>}\par
+{\f2 #include "RFM69.h"}\par
+}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Definizioni\par
+\pard\plain 
+
+{
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b MODULO_r}{\bkmkstart AAAAAAAAEH}
+{\bkmkend AAAAAAAAEH}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+#define {\b LED}\~ 4{\bkmkstart AAAAAAAAEI}
+{\bkmkend AAAAAAAAEI}
+\par
+}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Funzioni\par
+\pard\plain 
+
+{
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+void {\b setup} (){\bkmkstart AAAAAAAAEJ}
+{\bkmkend AAAAAAAAEJ}
+\par
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+void {\b loop} (){\bkmkstart AAAAAAAAEK}
+{\bkmkend AAAAAAAAEK}
+\par
+}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Variabili\par
+\pard\plain 
+
+{
+\pard\plain \s80\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+
+{\b RFM69} {\b radio} (2, 3){\bkmkstart AAAAAAAAEL}
+{\bkmkend AAAAAAAAEL}
+\par
+}
+{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Descrizione dettagliata\par
+\pard\plain 
+{
+\pard\plain \s17\sa60\sb30\widctlpar\qj \fs22\cgrid {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Esempio semplice ma abbastanza completo dell'utilizzo della classe {\b RFM69}. \par
+}{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Questo programma stabilisce una comunicazione unidirezionale ma con ACK tra due radio. \par
 }}
 
 \pard\plain \sect\sbkpage

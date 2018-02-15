@@ -6,7 +6,10 @@ possibile modificare tutte le impostazioni della radio. Il file è `#include`d i
 RFM69_inizializzazione.cpp, dove le sue costanti saranno usate per scrivere i
 registri della radio.
 
-La maggior parte delle impostazioni sono liberamente selezionabili dall'utente.
+Tutte le costanti seguenti possono essere modificate dall'utente.
+
+Questo file deve restare nella posizione in cui si trova (cioè assieme al resto
+dell'implementazione della classe RFM69).
 
 */
 

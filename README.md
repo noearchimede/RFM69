@@ -1,10 +1,12 @@
 Driver Arduino per i moduli radio RFM69
 =======================================
--
+
+---
+
 **Autore**:   Noè Archimede Pezzoli (noearchimede@gmail.com)<br>
 **Data**:  Febbraio 2018<br>
 
--
+---
 
 ### Introduzione ###
 
@@ -14,7 +16,7 @@ della famiglia RFM69 di HopeRF, in particolare del modello
 
 Il codice della libreria è ampiamente commentato in italiano. I commenti normali (`// ...`), presenti soprattutto nei files di implementazione (`.cpp`), forniscono dettagli sull'implementazione. I commenti "speciali" (`//! ...` o `/*! ... */`) sono concentrati nel file header e costituiscono una documentazione per l'utilizzatore della libreria che non desidera conoscere i dettagli del suo funzionamento. Questa documentazione può essere riunita da Doxygen in un unico file o pagina html; la versione html più recente è consultabile [qui](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html).
 
--
+---
 
 ### Indice ###
 
@@ -24,10 +26,10 @@ Il codice della libreria è ampiamente commentato in italiano. I commenti normal
 [4. Hardware](#4)<br>
 [5. Struttura dei messaggi](#5)<br>
 [6. Esempio di utilizzo](#6)<br>
-	
+
 [Documentazione](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html)
 
--
+---
 <br><div id='id-section1'/>
 
 1. Caratteristiche del modulo radio
@@ -41,7 +43,7 @@ alle bande utilizzabili senza licenza in diversi paesi)
 - sensdibilità: fino a -120dBm (con bassa bitrate)
 - bitrate fino a 300'000 Baud
 - modulazioni: FSK, GFSK, MSK, GMSK, OOK
-  
+
 
 I messaggi possono includere un controllo CRC16 di due bytes che riduce drasticamente
 la probabilità di errore durante la trasmissione. Possono inoltre essere criptati
@@ -110,7 +112,7 @@ Gli schemi sottostanti illustrano la trasmissione di un mesasggio.
 	B       ------------------|-----------------|--------------->
 	fz                       ISR              LEGGI
 	mod             rx        |       stby      |       def
-	
+
 - `A, B`: Programma delle stazioni radio, evoluzione nel tempo
 - `fz`: funzioni chiamate. `invia()` e `leggi()` sono chiamate dall'utente, `isr()`
     è l'interrupt service routine della classe
@@ -166,7 +168,7 @@ secondo a quelli senza.
         precedente (quello è compito dell'utente, anche se lo aspettasse per un certo
         tempo `invia()` non potrebbe segnalare se è arrivato o no). La sequenza corretta
         sarebbe:
-        
+
         ```cpp
 		inviaConAck();
 		aspettaAck(); 		// contiene un timeout
@@ -174,10 +176,10 @@ secondo a quelli senza.
 			invia(); 		// prossimo messaggio
         ```
         oppure
-        
+
         ```cpp
         inviaConAck();
-        delay(x); 			// potrebbero essere altre funzioni 
+        delay(x); 			// potrebbero essere altre funzioni
         if(ackRicevuto())
 			invia(); 		// prossimo messaggio  
         rinunciaAck(); 		// smetti di aspettare l'ACK
@@ -256,18 +258,18 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 
 #include <Arduino.h>
 #include "RFM69.h"
-	
-	
+
+
 // #define MODULO_r o MODULO_t per compilare rispettivamente il programma per la
 // radio ricevente o per quella trasmittente.
 //------------------------------------------------------------------------------
 #define MODULO_r
 // #define MODULO_t
 //------------------------------------------------------------------------------
-	
-	
-	
-	
+
+
+
+
 // telecomando
 #ifdef MODULO_r
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
@@ -275,7 +277,7 @@ RFM69 radio(2, 3);
 // Un LED, 0 per non usarlo
 #define LED 4
 #endif
-	
+
 // quadricotetro
 #ifdef MODULO_t
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
@@ -283,15 +285,15 @@ RFM69 radio(A2, 3, A3);
 // Un LED, 0 per non usarlo
 #define LED 7
 #endif
-	
-	
-	
-	
+
+
+
+
 void setup() {
-	
+
     Serial.begin(115200);
     if(LED) pinMode(LED, OUTPUT);
-	
+
     // Inizializza la radio. Deve essere chiamato una volta all'inizio del programma.
     // Restituisce 0
     int initFallita = radio.inizializza(4);
@@ -302,45 +304,45 @@ void setup() {
         while(true);
     }
 }
-	
-	
-	
-	
+
+
+
+
 #ifdef MODULO_t
-	
-	
+
+
 void loop(){
-	
+
     // crea un messaggio
     uint8_t lung = 4;
     uint8_t mess[lung] = {0,0x13, 0x05, 0x98};
-	
+
     unsigned long t;
     bool ok;
-	
+
     while(true) {
-	
+
         // Aggiorna messaggio
         mess[0] = (uint8_t)radio.nrMessaggiInviati();
-	
+
         Serial.print("Invio...");
         if(LED) digitalWrite(LED, HIGH);
-	
+
         // Registra tempo di invio
         t = millis();
-	
+
         // Invia
         radio.inviaConAck(mess, lung);
         // Aspetta fino alla ricezione di un ack o al timeout impostato nella classe
         while(radio.aspettaAck());
         // Controlla se è arrivato un Ack (l'attesa può finire anche senza ack, per timeout)
         if(radio.ricevutoAck()) ok = true;  else ok = false;
-	
+
         // calcola il tempo trascorso dall'invio
         t = millis() - t;
-	
+
         if(LED) digitalWrite(LED, LOW);
-	
+
         if(ok) {
             Serial.print(" mess #");
             Serial.print(radio.nrMessaggiInviati());
@@ -354,28 +356,28 @@ void loop(){
             Serial.print(" perso");
         }
         Serial.println();
-	
+
         delay(1000);
     }
 }
-	
+
 #endif
-	
-	
-	
+
+
+
 #ifdef MODULO_r
-	
-	
+
+
 void loop(){
-	
+
     // metti la radio in modalità ricezione
     radio.iniziaRicezione();
-	
+
     // aspetta un messaggio
     while(!radio.nuovoMessaggio());
-	
+
     if(LED) digitalWrite(LED, HIGH);
-	
+
     // ottieni la dimensione del messaggio ricevuto
     uint8_t lung = radio.dimensioneMessaggio();
     // crea un'array in cui copiarlo
@@ -386,7 +388,7 @@ void loop(){
     // messaggio (in questo caso corrispondeve anche prima, ma avrebbe anche
     // potuto essere più grande, ad. es. se mess. fosse stato un buffer generico
     // già allocato alla dimensione del messaggio più lungo possibile)
-	
+
     if (erroreLettura) {
         Serial.print("Errore lettura");
     }
@@ -399,15 +401,15 @@ void loop(){
             Serial.print(mess[i], HEX);
         }
         Serial.print("  rssi: ");
-	
+
         // Ottieni il valore RSSI del segnale che ha portato questo messaggio
         Serial.print(radio.rssi());
     }
     Serial.println();
-	
+
     delay(50);
     if(LED) digitalWrite(LED, LOW);
-	
+
 }
 #endif
 ```
