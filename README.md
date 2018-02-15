@@ -130,9 +130,8 @@ blocco senza uscita se entrambi i programmi cercassero di reinviare subito il
 proprio messaggio). Dà quindi la priorità ai messaggi già arrivati a scapito di
 quelli in uscita, che potrebbero perdersi.
 
-Lo schema sottostante mostara i momenti in cui non si può o non si dovrebbe
-trasmettere. Il primo schema si riferisce ai messaggi con richiesat di ACK, il
-secondo a quelli senza.
+Lo schema sottostante illusta la trasmissione di un mesaggio evidenziando i momenti
+in cui non si può o non si dovrebbe trasmetterne altri.
 
 1 - con ACK:
 

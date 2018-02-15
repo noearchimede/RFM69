@@ -32,11 +32,11 @@ int \textbf{ inizializza} (uint8\+\_\+t lunghezza\+Max\+Messaggio)
 \begin{Indent}\textbf{ Funzioni fondamentali}\par
 {\em Devono essere usate in ogni programma per permettere una comunicazione radio }\begin{DoxyCompactItemize}
 \item 
-int \textbf{ invia} (const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza)
+int \textbf{ invia} (const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza, uint8\+\_\+t titolo=0)
 \begin{DoxyCompactList}\small\item\em Invia un messaggio. \end{DoxyCompactList}\item 
-int \textbf{ invia\+Con\+Ack} (const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza)
+int \textbf{ invia\+Con\+Ack} (const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza, uint8\+\_\+t titolo=0)
 \begin{DoxyCompactList}\small\item\em Invia un messaggio con richiesta di A\+CK. \end{DoxyCompactList}\item 
-int \textbf{ invia\+Fino\+Ack} (const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza, uint16\+\_\+t \&tentativi)
+int \textbf{ invia\+Fino\+Ack} (uint16\+\_\+t \&tentativi, const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza, uint8\+\_\+t titolo=0)
 \begin{DoxyCompactList}\small\item\em Invia un messaggio ripetutamente fino alla ricezione di un A\+CK. \end{DoxyCompactList}\item 
 int \textbf{ leggi} (uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t \&lunghezza)
 \begin{DoxyCompactList}\small\item\em Restituisce un messaggio, se ce n\textquotesingle{}è uno da leggere. \end{DoxyCompactList}\item 
@@ -50,6 +50,8 @@ bool \textbf{ nuovo\+Messaggio} ()
 \begin{DoxyCompactList}\small\item\em Controlla se c\textquotesingle{}è un nuovo messaggio. \end{DoxyCompactList}\item 
 uint8\+\_\+t \textbf{ dimensione\+Messaggio} ()
 \begin{DoxyCompactList}\small\item\em Restituisce la dimensione dell\textquotesingle{}ultimo mesasggio. \end{DoxyCompactList}\item 
+uint8\+\_\+t \textbf{ titolo\+Messaggio} ()
+\begin{DoxyCompactList}\small\item\em Restituisce il titolo dell\textquotesingle{}ultimo messaggio. \end{DoxyCompactList}\item 
 bool \textbf{ aspetta\+Ack} ()
 \begin{DoxyCompactList}\small\item\em Restituisce true se la classe sta aspettando un A\+CK. \end{DoxyCompactList}\item 
 bool \textbf{ ricevuto\+Ack} ()
@@ -232,16 +234,19 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 
 Definizione alla linea 278 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
-\mbox{\label{class_r_f_m69_acaa74f1cfeb7942af527e0b7139f35ee}} 
+\mbox{\label{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}} 
 \index{R\+F\+M69@{R\+F\+M69}!invia@{invia}}
 \index{invia@{invia}!R\+F\+M69@{R\+F\+M69}}
 \subsubsection{invia()}
-{\footnotesize\ttfamily int R\+F\+M69\+::invia (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int R\+F\+M69\+::invia (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza,  }\item[{uint8\+\_\+t}]{titolo = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 
 
 Invia un messaggio. 
 
+\begin{DoxyNote}{Nota}
+Spesso nella documentazione ci sono riferimenti a questa funzione. A volte tali riferimenti non sono in realtà a questa funzione ma al gruppo delle funzioni invia, cioé {\ttfamily \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}}, {\ttfamily \doxyref{invia\+Con\+Ack()}{pag.}{class_r_f_m69_a715503499e7c79cb3d2b164e466dcd7f}} e {\ttfamily \doxyref{invia\+Fino\+Ack()}{pag.}{class_r_f_m69_af2ea878aed6c1cce272d63c8c6d39322}}.
+\end{DoxyNote}
 Questa funzione prepara il modulo radio per trasmettere un messaggio. La trasmissione inizierà alla fine di questa funzione e sarà terminata dall\textquotesingle{}isr().
 
 Cfr. la descrizione generale della classe \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} per informazioni su quando questa funzione può o non può essere usata.
@@ -250,7 +255,9 @@ Cfr. la descrizione generale della classe \doxyref{R\+F\+M69}{pag.}{class_r_f_m6
 \begin{DoxyParams}{Parametri}
 {\em messaggio\mbox{[}in\mbox{]}} & array di bytes ({\ttfamily uint8\+\_\+t}) che costituiscono il messaggio \\
 \hline
-{\em lunghezza\mbox{[}in\mbox{]}} & lunghezza del messaggio in bytes\\
+{\em lunghezza\mbox{[}in\mbox{]}} & lunghezza del messaggio in bytes \\
+\hline
+{\em titolo} & [in] cfr. il commento alla funzione {\ttfamily \doxyref{titolo\+Messaggio()}{pag.}{class_r_f_m69_a5995c4fa211e5cf869782b777bc7fa2f}}\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Restituisce}
@@ -260,17 +267,17 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 
 Definizione alla linea 28 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
-\mbox{\label{class_r_f_m69_a0e97c4be951afd5cb53b0ed49505700d}} 
+\mbox{\label{class_r_f_m69_a715503499e7c79cb3d2b164e466dcd7f}} 
 \index{R\+F\+M69@{R\+F\+M69}!invia\+Con\+Ack@{invia\+Con\+Ack}}
 \index{invia\+Con\+Ack@{invia\+Con\+Ack}!R\+F\+M69@{R\+F\+M69}}
 \subsubsection{invia\+Con\+Ack()}
-{\footnotesize\ttfamily int R\+F\+M69\+::invia\+Con\+Ack (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int R\+F\+M69\+::invia\+Con\+Ack (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza,  }\item[{uint8\+\_\+t}]{titolo = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 
 
 Invia un messaggio con richiesta di A\+CK. 
 
-Il messaggio inviato conterrà una richiesta di A\+CK, che dovrà poi essere gestito da altre funzioni. Questa agisce come \doxyref{invia()}{pag.}{class_r_f_m69_acaa74f1cfeb7942af527e0b7139f35ee}, cioé prepara il modulo radio per trasmettere un messaggio. La trasmissione inizierà alla fine di questa funzione e sarà terminata dall\textquotesingle{}isr().
+Il messaggio inviato conterrà una richiesta di A\+CK, che dovrà poi essere gestito da altre funzioni. Questa agisce come \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}, cioé prepara il modulo radio per trasmettere un messaggio. La trasmissione inizierà alla fine di questa funzione e sarà terminata dall\textquotesingle{}isr().
 
 Cfr. la descrizione generale della classe \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} per informazioni su quando questa funzione può o non può essere usata.
 
@@ -278,7 +285,9 @@ Cfr. la descrizione generale della classe \doxyref{R\+F\+M69}{pag.}{class_r_f_m6
 \begin{DoxyParams}{Parametri}
 {\em messaggio\mbox{[}in\mbox{]}} & array di bytes ({\ttfamily uint8\+\_\+t}) che costituiscono il messaggio \\
 \hline
-{\em lunghezza\mbox{[}in\mbox{]}} & lunghezza del messaggio in bytes\\
+{\em lunghezza\mbox{[}in\mbox{]}} & lunghezza del messaggio in bytes \\
+\hline
+{\em titolo} & [in] cfr. il commento alla funzione {\ttfamily \doxyref{titolo\+Messaggio()}{pag.}{class_r_f_m69_a5995c4fa211e5cf869782b777bc7fa2f}}\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Restituisce}
@@ -286,13 +295,13 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 \end{DoxyReturn}
 
 
-Definizione alla linea 36 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 38 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
-\mbox{\label{class_r_f_m69_a70e2123b40692022c27be0c40961f87d}} 
+\mbox{\label{class_r_f_m69_af2ea878aed6c1cce272d63c8c6d39322}} 
 \index{R\+F\+M69@{R\+F\+M69}!invia\+Fino\+Ack@{invia\+Fino\+Ack}}
 \index{invia\+Fino\+Ack@{invia\+Fino\+Ack}!R\+F\+M69@{R\+F\+M69}}
 \subsubsection{invia\+Fino\+Ack()}
-{\footnotesize\ttfamily int R\+F\+M69\+::invia\+Fino\+Ack (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza,  }\item[{uint16\+\_\+t \&}]{tentativi }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int R\+F\+M69\+::invia\+Fino\+Ack (\begin{DoxyParamCaption}\item[{uint16\+\_\+t \&}]{tentativi,  }\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza,  }\item[{uint8\+\_\+t}]{titolo = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 
 
@@ -304,11 +313,13 @@ Dopo l\textquotesingle{}esecuzione della funzione {\ttfamily tentativi} conterr�
 
 
 \begin{DoxyParams}{Parametri}
+{\em tentativi\mbox{[}in/out\mbox{]}} & /b prima\+: numero di tentativi da effettuare prima di rinunciare alla trasmissione del messaggio /b dopo\+: numero di tentativi effettuati \\
+\hline
 {\em messaggio\mbox{[}in\mbox{]}} & array di bytes ({\ttfamily uint8\+\_\+t}) che costituiscono il messaggio \\
 \hline
 {\em lunghezza\mbox{[}in\mbox{]}} & lunghezza del messaggio in bytes \\
 \hline
-{\em tentativi\mbox{[}in/out\mbox{]}} & /b prima\+: numero di tentativi da effettuare prima di rinunciare alla trasmissione del messaggio /b dopo\+: numero di tentativi effettuati\\
+{\em titolo} & [in] cfr. il commento alla funzione {\ttfamily \doxyref{titolo\+Messaggio()}{pag.}{class_r_f_m69_a5995c4fa211e5cf869782b777bc7fa2f}}\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Restituisce}
@@ -316,7 +327,7 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 \end{DoxyReturn}
 
 
-Definizione alla linea 45 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 49 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ade25e9bc296b574729d8136f88815384}} 
 \index{R\+F\+M69@{R\+F\+M69}!leggi@{leggi}}
@@ -328,7 +339,7 @@ Definizione alla linea 45 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 Restituisce un messaggio, se ce n\textquotesingle{}è uno da leggere. 
 
-Il messaggio è trasferito dalla radio al microcontrollore già nell\textquotesingle{}isr(). Questa funzione restituisce all\textquotesingle{}utente il contenuto del buffer della classe senza accedere alla radio. Deve tuttavia utilizzarla se il messaggio ricevuto contiene una richiesta di A\+CK. In tal caso alla fine della funzione viene iniziata la trasmissione dell\textquotesingle{}ack. Se è già in corso una trasmissione (funzione \doxyref{invia()}{pag.}{class_r_f_m69_acaa74f1cfeb7942af527e0b7139f35ee} chiamata prima di \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}, normalmente non dovrebbe succedere), \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384} aspetterà fino alla fine della trasmissione prima di inviare l\textquotesingle{}ack; dopo 50 ms interromperà ogni eventuale trasmissione.
+Il messaggio è trasferito dalla radio al microcontrollore già nell\textquotesingle{}isr(). Questa funzione restituisce all\textquotesingle{}utente il contenuto del buffer della classe senza accedere alla radio. Deve tuttavia utilizzarla se il messaggio ricevuto contiene una richiesta di A\+CK. In tal caso alla fine della funzione viene iniziata la trasmissione dell\textquotesingle{}ack. Se è già in corso una trasmissione (funzione \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295} chiamata prima di \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}, normalmente non dovrebbe succedere), \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384} aspetterà fino alla fine della trasmissione prima di inviare l\textquotesingle{}ack; dopo 50 ms interromperà ogni eventuale trasmissione.
 
 
 \begin{DoxyParams}{Parametri}
@@ -342,7 +353,7 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 \end{DoxyReturn}
 
 
-Definizione alla linea 133 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 139 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a6b17f375887fff59187de5984045a212}} 
 \index{R\+F\+M69@{R\+F\+M69}!inizia\+Ricezione@{inizia\+Ricezione}}
@@ -356,7 +367,7 @@ Attiva la radio in modo che possa ricevere dei messaggi.
 
 Per riceve la radio deve essere in modalità ricezione. Nelle altre modalità non si accorgerà nemmeno di aver ricevuto un messaggio. Quindi se non si chiama questa funzione sulla radio ricevente tutti i messaggi inviatile andranno persi. 
 
-Definizione alla linea 193 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 199 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ab4ed0d38db090722fb9ef1bb7592bd31}} 
 \index{R\+F\+M69@{R\+F\+M69}!nuovo\+Messaggio@{nuovo\+Messaggio}}
@@ -373,7 +384,7 @@ Controlla se c\textquotesingle{}è un nuovo messaggio.
 \end{DoxyReturn}
 
 
-Definizione alla linea 205 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 211 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a969d07c431bf5cdfd295ffdef380b497}} 
 \index{R\+F\+M69@{R\+F\+M69}!dimensione\+Messaggio@{dimensione\+Messaggio}}
@@ -390,7 +401,26 @@ la dimensione dell\textquotesingle{}utlimo messaggio ricevuto in bytes
 \end{DoxyReturn}
 
 
-Definizione alla linea 213 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 219 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a5995c4fa211e5cf869782b777bc7fa2f}} 
+\index{R\+F\+M69@{R\+F\+M69}!titolo\+Messaggio@{titolo\+Messaggio}}
+\index{titolo\+Messaggio@{titolo\+Messaggio}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{titolo\+Messaggio()}
+{\footnotesize\ttfamily uint8\+\_\+t R\+F\+M69\+::titolo\+Messaggio (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Restituisce il titolo dell\textquotesingle{}ultimo messaggio. 
+
+Il titolo di un messaggio è un numero compreso tra 1 e 16 scritto nell\textquotesingle{}intestazione dall\textquotesingle{}utente (con il parametro {\ttfamily titolo} di {\ttfamily \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}}). La classe si limita a inviarlo e renderlo disponibile prima della lettura del messaggio tramite questa funzione, non lo utilizza. L\textquotesingle{}utente può usarlo per scartare subito messaggi non interessanti e dare grande importanza ad altri, oppure semplicemente per creare più funzioni di lettura dei messaggi, ognuna specializzata in un particolare tipo di messaggio, e chiamare subito quella giusta.
+
+\begin{DoxyReturn}{Restituisce}
+il titolo dell\textquotesingle{}ultimo messaggio 
+\end{DoxyReturn}
+
+
+Definizione alla linea 225 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950}} 
 \index{R\+F\+M69@{R\+F\+M69}!aspetta\+Ack@{aspetta\+Ack}}
@@ -416,7 +446,7 @@ Questa funzione contiene un sistema di timeout. Dopo lo scadere del tempo restit
 \end{DoxyWarning}
 
 
-Definizione alla linea 239 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 251 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ad1dac77e3fee1b9c1c1f519a603f9132}} 
 \index{R\+F\+M69@{R\+F\+M69}!ricevuto\+Ack@{ricevuto\+Ack}}
@@ -431,7 +461,7 @@ Restituisce true se la radio ha ricevuto un A\+CK.
 \begin{DoxyReturn}{Restituisce}
 {\ttfamily true} se la radio ha ricevuto un A\+CK per l\textquotesingle{}ultimo messaggio inviato
 \end{DoxyReturn}
-Questa funzione non aspetta l\textquotesingle{}A\+CK, dice solo se è arrivato, quindi chiamata immediatamente dopo {\ttfamily \doxyref{invia()}{pag.}{class_r_f_m69_acaa74f1cfeb7942af527e0b7139f35ee}} restituisce sempre {\ttfamily false}. Normalmente è perciò usata insieme a \doxyref{aspetta\+Ack()}{pag.}{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950} (cioé subito dopo di essa).
+Questa funzione non aspetta l\textquotesingle{}A\+CK, dice solo se è arrivato, quindi chiamata immediatamente dopo {\ttfamily \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}} restituisce sempre {\ttfamily false}. Normalmente è perciò usata insieme a \doxyref{aspetta\+Ack()}{pag.}{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950} (cioé subito dopo di essa).
 
 Esempio\+: 
 \begin{DoxyCode}
@@ -446,7 +476,7 @@ Esempio\+:
 \end{DoxyCode}
  
 
-Definizione alla linea 255 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 267 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a7e9a828d5c3f3c82a27b5e15c11b4dde}} 
 \index{R\+F\+M69@{R\+F\+M69}!rinuncia\+Ack@{rinuncia\+Ack}}
@@ -465,7 +495,7 @@ Questa funzione è chiamata automaticamente da \doxyref{aspetta\+Ack()}{pag.}{cl
 
 Se il vero A\+CK dovesse arrivare dopo l\textquotesingle{}esecuzione di questa funzione non avrà nessun effetto. 
 
-Definizione alla linea 262 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 274 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a641eb4b586c56cba627a73cc6006a63e}} 
 \index{R\+F\+M69@{R\+F\+M69}!standby@{standby}}
@@ -479,7 +509,7 @@ Mette la radio in standby (richiederà 1.\+25mA di corrente)
 
 La modalità {\ttfamily standby} serve per mettere la radio in pausa per qualche secondo. Per pause più lunghe conviene usare {\ttfamily \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544}}, soprattutto se l\textquotesingle{}intero dispositivo deve essere messo in standby per un certo periodo. Se invece il dispositivo utilizza relativamente tanta corrente durante lo standby della radio (ad es. ha accesi diversi L\+ED, un motore, ...) la differenza tra {\ttfamily \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544}} e {\ttfamily \doxyref{standby()}{pag.}{class_r_f_m69_a641eb4b586c56cba627a73cc6006a63e}} non è rilevante. 
 
-Definizione alla linea 530 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 542 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ae9966b4e02747e72a745c75306edbc0b}} 
 \index{R\+F\+M69@{R\+F\+M69}!listen@{listen}}
@@ -493,7 +523,7 @@ Mette la radio in modalità {\ttfamily listen}
 
 {\ttfamily listen} è una modalità particolare che consiste in realtà nella continua alternanza tra due modalità\+: {\ttfamily rx} (ricezione) e {\ttfamily idle} (una specie di sleep adattato alla modalità listen). 
 
-Definizione alla linea 527 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 539 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544}} 
 \index{R\+F\+M69@{R\+F\+M69}!sleep@{sleep}}
@@ -507,7 +537,7 @@ Mette la radio in modalità sleep (richiederà 0.\+1uA di corrente)
 
 
 
-Definizione alla linea 533 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 545 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03}} 
 \index{R\+F\+M69@{R\+F\+M69}!sleep\+Default@{sleep\+Default}}
@@ -522,7 +552,7 @@ Imposta la modalità di default della radio.
 Questa funzione non cambia la modalità attuale!~\newline
 Ad es.{\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03};} non corrisponde a {\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03}; \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
 
-Definizione alla linea 537 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 549 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a43a1a3d1a049e325e85537e3efe4a82c}} 
 \index{R\+F\+M69@{R\+F\+M69}!standby\+Default@{standby\+Default}}
@@ -537,7 +567,7 @@ Imposta la modalità di default della radio.
 Questa funzione non cambia la modalità attuale!~\newline
 Ad es.{\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03};} non corrisponde a {\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03}; \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
 
-Definizione alla linea 540 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 552 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_adb7e764b5d62bd05e3d592000547c895}} 
 \index{R\+F\+M69@{R\+F\+M69}!listen\+Default@{listen\+Default}}
@@ -551,7 +581,7 @@ Definizione alla linea 540 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 
 
-Definizione alla linea 543 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 555 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a249357ef0b7e1cb464e6960aed1cb2f5}} 
 \index{R\+F\+M69@{R\+F\+M69}!rx\+Default@{rx\+Default}}
@@ -565,7 +595,7 @@ Definizione alla linea 543 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 
 
-Definizione alla linea 546 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 558 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a440d37e3362fc5249c62a88eb2d472d1}} 
 \index{R\+F\+M69@{R\+F\+M69}!imposta\+Timeout\+Ack@{imposta\+Timeout\+Ack}}
@@ -584,7 +614,7 @@ Imposta il tempo d\textquotesingle{}attesa massimo per un A\+CK.
 \end{DoxyParams}
 
 
-Definizione alla linea 550 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 562 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a82233bd29dc90576ad24815e73d3e452}} 
 \index{R\+F\+M69@{R\+F\+M69}!rssi@{rssi}}
@@ -601,7 +631,7 @@ Received Signal Strength Indicator (R\+S\+SI) per l\textquotesingle{}ultimo mess
 \end{DoxyReturn}
 
 
-Definizione alla linea 219 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 231 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a42cddb43229d81b1af95c4ca80f9ae26}} 
 \index{R\+F\+M69@{R\+F\+M69}!tempo\+Ricezione@{tempo\+Ricezione}}
@@ -618,7 +648,7 @@ Il tempo in millisecondi dall\textquotesingle{}inizio del programma a cui è sta
 \end{DoxyReturn}
 
 
-Definizione alla linea 224 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 236 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a7247bad24b8b3c040a35eb3b4fe84a7d}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Inviati@{nr\+Messaggi\+Inviati}}
@@ -635,7 +665,7 @@ Il numero di messaggi inviati dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 311 del file R\+F\+M69.\+h.
+Definizione alla linea 332 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a510888edc4cf87dbe13d89433dd87dc7}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Ricevuti@{nr\+Messaggi\+Ricevuti}}
@@ -652,7 +682,7 @@ Il numero di messaggi ricevuti dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 315 del file R\+F\+M69.\+h.
+Definizione alla linea 336 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a669f68c685ae70f7e42f00d1b659f3ab}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Errore\+Serial@{stampa\+Errore\+Serial}}
@@ -680,7 +710,7 @@ Siccome contiene alcune centinaia di caratteri, questa funzione \char`\"{}pesa\c
 \end{DoxyParams}
 
 
-Definizione alla linea 557 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 569 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a7a65d533c452153744998ba3ae33196f}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Registri\+Serial@{stampa\+Registri\+Serial}}

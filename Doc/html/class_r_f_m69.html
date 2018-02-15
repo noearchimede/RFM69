@@ -75,15 +75,15 @@ Membri pubblici</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Funzioni fondamentali</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Devono essere usate in ogni programma per permettere una comunicazione radio </p>
 </div></td></tr>
-<tr class="memitem:acaa74f1cfeb7942af527e0b7139f35ee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#acaa74f1cfeb7942af527e0b7139f35ee">invia</a> (const uint8_t messaggio[], uint8_t lunghezza)</td></tr>
-<tr class="memdesc:acaa74f1cfeb7942af527e0b7139f35ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio.  <a href="#acaa74f1cfeb7942af527e0b7139f35ee">Continua...</a><br /></td></tr>
-<tr class="separator:acaa74f1cfeb7942af527e0b7139f35ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e97c4be951afd5cb53b0ed49505700d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a0e97c4be951afd5cb53b0ed49505700d">inviaConAck</a> (const uint8_t messaggio[], uint8_t lunghezza)</td></tr>
-<tr class="memdesc:a0e97c4be951afd5cb53b0ed49505700d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio con richiesta di ACK.  <a href="#a0e97c4be951afd5cb53b0ed49505700d">Continua...</a><br /></td></tr>
-<tr class="separator:a0e97c4be951afd5cb53b0ed49505700d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70e2123b40692022c27be0c40961f87d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a70e2123b40692022c27be0c40961f87d">inviaFinoAck</a> (const uint8_t messaggio[], uint8_t lunghezza, uint16_t &amp;tentativi)</td></tr>
-<tr class="memdesc:a70e2123b40692022c27be0c40961f87d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio ripetutamente fino alla ricezione di un ACK.  <a href="#a70e2123b40692022c27be0c40961f87d">Continua...</a><br /></td></tr>
-<tr class="separator:a70e2123b40692022c27be0c40961f87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaa68e53a33554a638cefe55089e2295"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295">invia</a> (const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo=0)</td></tr>
+<tr class="memdesc:aaaa68e53a33554a638cefe55089e2295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio.  <a href="#aaaa68e53a33554a638cefe55089e2295">Continua...</a><br /></td></tr>
+<tr class="separator:aaaa68e53a33554a638cefe55089e2295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a715503499e7c79cb3d2b164e466dcd7f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a715503499e7c79cb3d2b164e466dcd7f">inviaConAck</a> (const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo=0)</td></tr>
+<tr class="memdesc:a715503499e7c79cb3d2b164e466dcd7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio con richiesta di ACK.  <a href="#a715503499e7c79cb3d2b164e466dcd7f">Continua...</a><br /></td></tr>
+<tr class="separator:a715503499e7c79cb3d2b164e466dcd7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2ea878aed6c1cce272d63c8c6d39322"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#af2ea878aed6c1cce272d63c8c6d39322">inviaFinoAck</a> (uint16_t &amp;tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo=0)</td></tr>
+<tr class="memdesc:af2ea878aed6c1cce272d63c8c6d39322"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio ripetutamente fino alla ricezione di un ACK.  <a href="#af2ea878aed6c1cce272d63c8c6d39322">Continua...</a><br /></td></tr>
+<tr class="separator:af2ea878aed6c1cce272d63c8c6d39322"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade25e9bc296b574729d8136f88815384"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384">leggi</a> (uint8_t messaggio[], uint8_t &amp;lunghezza)</td></tr>
 <tr class="memdesc:ade25e9bc296b574729d8136f88815384"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce un messaggio, se ce n'è uno da leggere.  <a href="#ade25e9bc296b574729d8136f88815384">Continua...</a><br /></td></tr>
 <tr class="separator:ade25e9bc296b574729d8136f88815384"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,6 +99,9 @@ Membri pubblici</h2></td></tr>
 <tr class="memitem:a969d07c431bf5cdfd295ffdef380b497"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a969d07c431bf5cdfd295ffdef380b497">dimensioneMessaggio</a> ()</td></tr>
 <tr class="memdesc:a969d07c431bf5cdfd295ffdef380b497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce la dimensione dell'ultimo mesasggio.  <a href="#a969d07c431bf5cdfd295ffdef380b497">Continua...</a><br /></td></tr>
 <tr class="separator:a969d07c431bf5cdfd295ffdef380b497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5995c4fa211e5cf869782b777bc7fa2f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a5995c4fa211e5cf869782b777bc7fa2f">titoloMessaggio</a> ()</td></tr>
+<tr class="memdesc:a5995c4fa211e5cf869782b777bc7fa2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce il titolo dell'ultimo messaggio.  <a href="#a5995c4fa211e5cf869782b777bc7fa2f">Continua...</a><br /></td></tr>
+<tr class="separator:a5995c4fa211e5cf869782b777bc7fa2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9aae2404953422f02b7ac0f5e2b0b950"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950">aspettaAck</a> ()</td></tr>
 <tr class="memdesc:a9aae2404953422f02b7ac0f5e2b0b950"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce true se la classe sta aspettando un ACK.  <a href="#a9aae2404953422f02b7ac0f5e2b0b950">Continua...</a><br /></td></tr>
 <tr class="separator:a9aae2404953422f02b7ac0f5e2b0b950"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -359,8 +362,8 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 </div>
 </div>
-<a id="acaa74f1cfeb7942af527e0b7139f35ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acaa74f1cfeb7942af527e0b7139f35ee">&#9670;&nbsp;</a></span>invia()</h2>
+<a id="aaaa68e53a33554a638cefe55089e2295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaa68e53a33554a638cefe55089e2295">&#9670;&nbsp;</a></span>invia()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -375,7 +378,13 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>lunghezza</em>&#160;</td>
+          <td class="paramname"><em>lunghezza</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>titolo</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -386,12 +395,14 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </div><div class="memdoc">
 
 <p>Invia un messaggio. </p>
+<dl class="section note"><dt>Nota</dt><dd>Spesso nella documentazione ci sono riferimenti a questa funzione. A volte tali riferimenti non sono in realtà a questa funzione ma al gruppo delle funzioni invia, cioé <code><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a></code>, <code><a class="el" href="class_r_f_m69.html#a715503499e7c79cb3d2b164e466dcd7f" title="Invia un messaggio con richiesta di ACK. ">inviaConAck()</a></code> e <code><a class="el" href="class_r_f_m69.html#af2ea878aed6c1cce272d63c8c6d39322" title="Invia un messaggio ripetutamente fino alla ricezione di un ACK. ">inviaFinoAck()</a></code>.</dd></dl>
 <p>Questa funzione prepara il modulo radio per trasmettere un messaggio. La trasmissione inizierà alla fine di questa funzione e sarà terminata dall'isr().</p>
 <p>Cfr. la descrizione generale della classe <a class="el" href="class_r_f_m69.html">RFM69</a> per informazioni su quando questa funzione può o non può essere usata.</p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
     <tr><td class="paramname">messaggio[in]</td><td>array di bytes (<code>uint8_t</code>) che costituiscono il messaggio </td></tr>
-    <tr><td class="paramname">lunghezza[in]</td><td>lunghezza del messaggio in bytes</td></tr>
+    <tr><td class="paramname">lunghezza[in]</td><td>lunghezza del messaggio in bytes </td></tr>
+    <tr><td class="paramname">titolo</td><td>[in] cfr. il commento alla funzione <code><a class="el" href="class_r_f_m69.html#a5995c4fa211e5cf869782b777bc7fa2f" title="Restituisce il titolo dell&#39;ultimo messaggio. ">titoloMessaggio()</a></code></td></tr>
   </table>
   </dd>
 </dl>
@@ -401,8 +412,8 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 </div>
 </div>
-<a id="a0e97c4be951afd5cb53b0ed49505700d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e97c4be951afd5cb53b0ed49505700d">&#9670;&nbsp;</a></span>inviaConAck()</h2>
+<a id="a715503499e7c79cb3d2b164e466dcd7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a715503499e7c79cb3d2b164e466dcd7f">&#9670;&nbsp;</a></span>inviaConAck()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -417,7 +428,13 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>lunghezza</em>&#160;</td>
+          <td class="paramname"><em>lunghezza</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>titolo</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -428,23 +445,24 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </div><div class="memdoc">
 
 <p>Invia un messaggio con richiesta di ACK. </p>
-<p>Il messaggio inviato conterrà una richiesta di ACK, che dovrà poi essere gestito da altre funzioni. Questa agisce come <a class="el" href="class_r_f_m69.html#acaa74f1cfeb7942af527e0b7139f35ee" title="Invia un messaggio. ">invia()</a>, cioé prepara il modulo radio per trasmettere un messaggio. La trasmissione inizierà alla fine di questa funzione e sarà terminata dall'isr().</p>
+<p>Il messaggio inviato conterrà una richiesta di ACK, che dovrà poi essere gestito da altre funzioni. Questa agisce come <a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a>, cioé prepara il modulo radio per trasmettere un messaggio. La trasmissione inizierà alla fine di questa funzione e sarà terminata dall'isr().</p>
 <p>Cfr. la descrizione generale della classe <a class="el" href="class_r_f_m69.html">RFM69</a> per informazioni su quando questa funzione può o non può essere usata.</p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
     <tr><td class="paramname">messaggio[in]</td><td>array di bytes (<code>uint8_t</code>) che costituiscono il messaggio </td></tr>
-    <tr><td class="paramname">lunghezza[in]</td><td>lunghezza del messaggio in bytes</td></tr>
+    <tr><td class="paramname">lunghezza[in]</td><td>lunghezza del messaggio in bytes </td></tr>
+    <tr><td class="paramname">titolo</td><td>[in] cfr. il commento alla funzione <code><a class="el" href="class_r_f_m69.html#a5995c4fa211e5cf869782b777bc7fa2f" title="Restituisce il titolo dell&#39;ultimo messaggio. ">titoloMessaggio()</a></code></td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>Codice di errore definito nell'enum <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">RFM69::Errore::ListaErrori</a> </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00036">36</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00038">38</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a70e2123b40692022c27be0c40961f87d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70e2123b40692022c27be0c40961f87d">&#9670;&nbsp;</a></span>inviaFinoAck()</h2>
+<a id="af2ea878aed6c1cce272d63c8c6d39322"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2ea878aed6c1cce272d63c8c6d39322">&#9670;&nbsp;</a></span>inviaFinoAck()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -452,6 +470,12 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
         <tr>
           <td class="memname">int RFM69::inviaFinoAck </td>
           <td>(</td>
+          <td class="paramtype">uint16_t &amp;&#160;</td>
+          <td class="paramname"><em>tentativi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const uint8_t&#160;</td>
           <td class="paramname"><em>messaggio</em>[], </td>
         </tr>
@@ -464,8 +488,8 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t &amp;&#160;</td>
-          <td class="paramname"><em>tentativi</em>&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>titolo</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -480,15 +504,16 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Dopo l'esecuzione della funzione <code>tentativi</code> conterrà il numero di tentativi effettuati.</p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
+    <tr><td class="paramname">tentativi[in/out]</td><td>/b prima: numero di tentativi da effettuare prima di rinunciare alla trasmissione del messaggio /b dopo: numero di tentativi effettuati </td></tr>
     <tr><td class="paramname">messaggio[in]</td><td>array di bytes (<code>uint8_t</code>) che costituiscono il messaggio </td></tr>
     <tr><td class="paramname">lunghezza[in]</td><td>lunghezza del messaggio in bytes </td></tr>
-    <tr><td class="paramname">tentativi[in/out]</td><td>/b prima: numero di tentativi da effettuare prima di rinunciare alla trasmissione del messaggio /b dopo: numero di tentativi effettuati</td></tr>
+    <tr><td class="paramname">titolo</td><td>[in] cfr. il commento alla funzione <code><a class="el" href="class_r_f_m69.html#a5995c4fa211e5cf869782b777bc7fa2f" title="Restituisce il titolo dell&#39;ultimo messaggio. ">titoloMessaggio()</a></code></td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>Codice di errore definito nell'enum <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">RFM69::Errore::ListaErrori</a> </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00045">45</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00049">49</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -519,7 +544,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </div><div class="memdoc">
 
 <p>Restituisce un messaggio, se ce n'è uno da leggere. </p>
-<p>Il messaggio è trasferito dalla radio al microcontrollore già nell'isr(). Questa funzione restituisce all'utente il contenuto del buffer della classe senza accedere alla radio. Deve tuttavia utilizzarla se il messaggio ricevuto contiene una richiesta di ACK. In tal caso alla fine della funzione viene iniziata la trasmissione dell'ack. Se è già in corso una trasmissione (funzione <a class="el" href="class_r_f_m69.html#acaa74f1cfeb7942af527e0b7139f35ee" title="Invia un messaggio. ">invia()</a> chiamata prima di <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>, normalmente non dovrebbe succedere), <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a> aspetterà fino alla fine della trasmissione prima di inviare l'ack; dopo 50 ms interromperà ogni eventuale trasmissione.</p>
+<p>Il messaggio è trasferito dalla radio al microcontrollore già nell'isr(). Questa funzione restituisce all'utente il contenuto del buffer della classe senza accedere alla radio. Deve tuttavia utilizzarla se il messaggio ricevuto contiene una richiesta di ACK. In tal caso alla fine della funzione viene iniziata la trasmissione dell'ack. Se è già in corso una trasmissione (funzione <a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a> chiamata prima di <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>, normalmente non dovrebbe succedere), <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a> aspetterà fino alla fine della trasmissione prima di inviare l'ack; dopo 50 ms interromperà ogni eventuale trasmissione.</p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
     <tr><td class="paramname">messaggio</td><td>array[out] in cui sarà copiato il messaggio. Deve essere almeno grande quanto il messaggio, del quale si può ottenere la lunghezza con la funzione <a class="el" href="class_r_f_m69.html#a969d07c431bf5cdfd295ffdef380b497" title="Restituisce la dimensione dell&#39;ultimo mesasggio. ">dimensioneMessaggio()</a>. </td></tr>
@@ -529,7 +554,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>Codice di errore definito nell'enum <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">RFM69::Errore::ListaErrori</a> </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00133">133</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00139">139</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -551,7 +576,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Attiva la radio in modo che possa ricevere dei messaggi. </p>
 <p>Per riceve la radio deve essere in modalità ricezione. Nelle altre modalità non si accorgerà nemmeno di aver ricevuto un messaggio. Quindi se non si chiama questa funzione sulla radio ricevente tutti i messaggi inviatile andranno persi. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00193">193</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00199">199</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -573,7 +598,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Controlla se c'è un nuovo messaggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se il buffer della classe contiene un nuovo messaggio. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00205">205</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00211">211</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -595,7 +620,30 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Restituisce la dimensione dell'ultimo mesasggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>la dimensione dell'utlimo messaggio ricevuto in bytes </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00213">213</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00219">219</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5995c4fa211e5cf869782b777bc7fa2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5995c4fa211e5cf869782b777bc7fa2f">&#9670;&nbsp;</a></span>titoloMessaggio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t RFM69::titoloMessaggio </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Restituisce il titolo dell'ultimo messaggio. </p>
+<p>Il titolo di un messaggio è un numero compreso tra 1 e 16 scritto nell'intestazione dall'utente (con il parametro <code>titolo</code> di <code><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a></code>). La classe si limita a inviarlo e renderlo disponibile prima della lettura del messaggio tramite questa funzione, non lo utilizza. L'utente può usarlo per scartare subito messaggi non interessanti e dare grande importanza ad altri, oppure semplicemente per creare più funzioni di lettura dei messaggi, ognuna specializzata in un particolare tipo di messaggio, e chiamare subito quella giusta.</p>
+<dl class="section return"><dt>Restituisce</dt><dd>il titolo dell'ultimo messaggio </dd></dl>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00225">225</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -623,7 +671,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </ol>
 </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00239">239</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00251">251</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -644,9 +692,9 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 <p>Restituisce true se la radio ha ricevuto un ACK. </p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se la radio ha ricevuto un ACK per l'ultimo messaggio inviato</dd></dl>
-<p>Questa funzione non aspetta l'ACK, dice solo se è arrivato, quindi chiamata immediatamente dopo <code><a class="el" href="class_r_f_m69.html#acaa74f1cfeb7942af527e0b7139f35ee" title="Invia un messaggio. ">invia()</a></code> restituisce sempre <code>false</code>. Normalmente è perciò usata insieme a <a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950" title="Restituisce true se la classe sta aspettando un ACK. ">aspettaAck()</a> (cioé subito dopo di essa).</p>
-<p>Esempio: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 3; i++) {</div><div class="line">    <a class="code" href="class_r_f_m69.html#acaa74f1cfeb7942af527e0b7139f35ee">invia</a>();</div><div class="line">    <a class="code" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950">aspettaAck</a>();</div><div class="line">    <span class="keywordflow">if</span>(<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) <span class="keywordflow">break</span>;</div><div class="line">}</div><div class="line"><span class="keywordflow">if</span>(!<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) {</div><div class="line">    print(<span class="stringliteral">&quot;Trasmissione messaggio fallita&quot;</span>);</div><div class="line">}</div></div><!-- fragment --> 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00255">255</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p>Questa funzione non aspetta l'ACK, dice solo se è arrivato, quindi chiamata immediatamente dopo <code><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a></code> restituisce sempre <code>false</code>. Normalmente è perciò usata insieme a <a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950" title="Restituisce true se la classe sta aspettando un ACK. ">aspettaAck()</a> (cioé subito dopo di essa).</p>
+<p>Esempio: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 3; i++) {</div><div class="line">    <a class="code" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295">invia</a>();</div><div class="line">    <a class="code" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950">aspettaAck</a>();</div><div class="line">    <span class="keywordflow">if</span>(<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) <span class="keywordflow">break</span>;</div><div class="line">}</div><div class="line"><span class="keywordflow">if</span>(!<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) {</div><div class="line">    print(<span class="stringliteral">&quot;Trasmissione messaggio fallita&quot;</span>);</div><div class="line">}</div></div><!-- fragment --> 
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00267">267</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -670,7 +718,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Questa funzione è chiamata automaticamente da <a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950" title="Restituisce true se la classe sta aspettando un ACK. ">aspettaAck()</a> allo scadere del tempo massimo. Può essere usata dall'utente per terminare l'attesa prima di quella scadenza. In caso di invio di un secondo messaggio prima della ricezione dell'ACK (ad es. per trasmettere un'informazione urgente) è chiamata automaticamente.</p>
 <p>Se il vero ACK dovesse arrivare dopo l'esecuzione di questa funzione non avrà nessun effetto. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00262">262</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00274">274</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -692,7 +740,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Mette la radio in standby (richiederà 1.25mA di corrente) </p>
 <p>La modalità <code>standby</code> serve per mettere la radio in pausa per qualche secondo. Per pause più lunghe conviene usare <code><a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a></code>, soprattutto se l'intero dispositivo deve essere messo in standby per un certo periodo. Se invece il dispositivo utilizza relativamente tanta corrente durante lo standby della radio (ad es. ha accesi diversi LED, un motore, ...) la differenza tra <code><a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a></code> e <code><a class="el" href="class_r_f_m69.html#a641eb4b586c56cba627a73cc6006a63e" title="Mette la radio in standby (richiederà 1.25mA di corrente) ">standby()</a></code> non è rilevante. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00530">530</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00542">542</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -714,7 +762,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Mette la radio in modalità <code>listen</code> </p>
 <p><code>listen</code> è una modalità particolare che consiste in realtà nella continua alternanza tra due modalità: <code>rx</code> (ricezione) e <code>idle</code> (una specie di sleep adattato alla modalità listen). </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00527">527</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00539">539</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -735,7 +783,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 <p>Mette la radio in modalità sleep (richiederà 0.1uA di corrente) </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00533">533</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00545">545</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -758,7 +806,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Questa funzione non cambia la modalità attuale!<br />
 Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>;</code> non corrisponde a <code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>; <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00537">537</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00549">549</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -781,7 +829,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Questa funzione non cambia la modalità attuale!<br />
 Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>;</code> non corrisponde a <code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>; <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00540">540</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00552">552</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -802,7 +850,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 
 <p></p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00543">543</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00555">555</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -823,7 +871,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 
 <p></p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00546">546</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00558">558</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -851,7 +899,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
   </dd>
 </dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00550">550</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00562">562</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -873,7 +921,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce il valore RSSI per l'ultimo messaggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Received Signal Strength Indicator (RSSI) per l'ultimo messaggio ricevuto. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00219">219</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00231">231</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -895,7 +943,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce l'"ora" della ricezione dell'ultimo messaggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il tempo in millisecondi dall'inizio del programma a cui è stata attivata l'<code>isr()</code> che segna la finem della ricezione del messaggio. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00224">224</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00236">236</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -925,7 +973,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il numero di messaggi inviati dopo l'ultima inizializzazione </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00311">311</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00332">332</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -955,7 +1003,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il numero di messaggi ricevuti dopo l'ultima inizializzazione </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00315">315</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00336">336</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -998,7 +1046,7 @@ Siccome contiene alcune centinaia di caratteri, questa funzione "pesa" più dell
   </dd>
 </dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00557">557</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00569">569</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>

@@ -92,7 +92,11 @@ public:
     //!@{
 
     //! Invia un messaggio
-    /*! Questa funzione prepara il modulo radio per trasmettere un messaggio. La
+    /*! @note Spesso nella documentazione ci sono riferimenti a questa funzione.
+        A volte tali riferimenti non sono in realtà a questa funzione ma al gruppo
+        delle funzioni invia, cioé `invia()`, `inviaConAck()` e `inviaFinoAck()`.
+
+        Questa funzione prepara il modulo radio per trasmettere un messaggio. La
         trasmissione inizierà alla fine di questa funzione e sarà terminata
         dall'isr().
 
