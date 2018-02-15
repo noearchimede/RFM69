@@ -101,10 +101,11 @@ public:
 
         @param messaggio[in]  array di bytes (`uint8_t`) che costituiscono il messaggio
         @param lunghezza[in]  lunghezza del messaggio in bytes
+        @param titolo   [in]  cfr. il commento alla funzione `titoloMessaggio()`
 
         @return Codice di errore definito nell'enum RFM69::Errore::ListaErrori
     */
-    int invia(const uint8_t messaggio[], uint8_t lunghezza);
+    int invia(const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0);
 
     //! Invia un messaggio con richiesta di ACK
     /*! Il messaggio inviato conterrà una richiesta di ACK, che dovrà poi essere
@@ -118,10 +119,11 @@ public:
 
         @param messaggio[in]  array di bytes (`uint8_t`) che costituiscono il messaggio
         @param lunghezza[in]  lunghezza del messaggio in bytes
+        @param titolo   [in]  cfr. il commento alla funzione `titoloMessaggio()`
 
         @return Codice di errore definito nell'enum RFM69::Errore::ListaErrori
     */
-    int inviaConAck(const uint8_t messaggio[], uint8_t lunghezza);
+    int inviaConAck(const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0);
 
     //! Invia un messaggio ripetutamente fino alla ricezione di un ACK
     /*! Questa funzione invia un messaggio, aspetta l'ACK e se non lo riceve entro
@@ -134,15 +136,16 @@ public:
         Dopo l'esecuzione della funzione `tentativi` conterrà il numero di tentativi
         effettuati.
 
-        @param messaggio[in]      array di bytes (`uint8_t`) che costituiscono il messaggio
-        @param lunghezza[in]      lunghezza del messaggio in bytes
         @param tentativi[in/out]  /b prima: numero di tentativi da effettuare prima
                                   di rinunciare alla trasmissione del messaggio
                                   /b dopo: numero di tentativi effettuati
+        @param messaggio[in]      array di bytes (`uint8_t`) che costituiscono il messaggio
+        @param lunghezza[in]      lunghezza del messaggio in bytes
+        @param titolo   [in]  cfr. il commento alla funzione `titoloMessaggio()`
 
         @return Codice di errore definito nell'enum RFM69::Errore::ListaErrori
     */
-    int inviaFinoAck(const uint8_t messaggio[], uint8_t lunghezza, uint16_t& tentativi);
+    int inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0);
 
     //! Restituisce un messaggio, se ce n'è uno da leggere
     /*! Il messaggio è trasferito dalla radio al microcontrollore già nell'isr().
@@ -189,6 +192,20 @@ public:
     /*! @return la dimensione dell'utlimo messaggio ricevuto in bytes
     */
     uint8_t dimensioneMessaggio();
+
+    //! Restituisce il titolo dell'ultimo messaggio
+    /*! Il titolo di un messaggio è un numero compreso tra 1 e 16 scritto
+        nell'intestazione dall'utente (con il parametro `titolo` di `invia()`).
+        La classe si limita a inviarlo e renderlo disponibile prima della lettura
+        del messaggio tramite questa funzione, non lo utilizza. L'utente può
+        usarlo per scartare subito messaggi non interessanti e dare grande importanza
+        ad altri, oppure semplicemente per creare più funzioni di lettura dei
+        messaggi, ognuna specializzata in un particolare tipo di messaggio, e
+        chiamare subito quella giusta.
+
+        @return il titolo dell'ultimo messaggio
+    */
+    uint8_t titoloMessaggio();
 
     //! Restituisce true se la classe sta aspettando un ACK
     /*! @return `true` se la classe sta aspettando un ack, cioé se ha inviato un
@@ -496,12 +513,14 @@ private:
         struct {
             uint8_t ack : 1;
             uint8_t richiestaAck : 1;
+            uint8_t titolo: 4;
         } bit;          // scrittura e lettura
         uint8_t byte;   // trasmissione
 
         Intestazione() : byte(0) {}
     };
-
+    // Valore massimo nel field Intestazione::bit::titolo (dipende dalla sua dimensione)
+    const uint8_t valMaxTitolo = 16;
 
     // Struct per salvare informazioni sui messaggi ricecvuti
     struct InfoMessaggio {
@@ -713,3 +732,50 @@ private:
 
 
 #endif
+
+
+
+
+/*! @todo
+Si potrebbe aggiungere la possibilità di chiamare una funzione sull'altra radio
+in situazioni di urgenza, con due funzioni e un adattamento dell'ISR:
+/ /! Collega una funzione da eseguire immediatamente su richiestsa dell'altra radio
+/ *! Ogni radio può chiedere all'altra di eseguire una di al massimo tre
+    funzioni immediatamente dopo la ricezione del messaggio contentente la
+    richiesta (cioé all'interno dell'ISR).
+
+    @warning Le funzioni collegate saranno eseguite all'interno di un'Interrupt
+    Service Routine (ISR). Devono perciò:
+
+    - essere il più breve possibile (non contenere `delay()`s o funzioni lunghe);
+    - non aver bisogno di altri interrupt (ad es. il valore di `millis()` e
+      `micros()` non incrementa in un'ISR);
+    - non attivare gli interrupt (cioè non chiamare `sei()`).
+
+    È meglio usare queste funzioni solo in caso di urgenza, e nella maggior
+    parte dei casi gestire la chiamata a funzioni sull'altra radio con messaggi
+    normali (ad es. con uno `switch` che in base a un valore contenuto nel
+    messaggio chiama una funzione diversa).
+
+    @note La funzione deve essere della forma `void nome(void)`
+
+    @param fz Una funzione
+    @param nr Il numero con il quale essa sarà chiamata dall'altra radio
+* /
+bool collegaFunzioneISR(void (*fz)(), uint8_t nr);
+
+/ /! Chiama una funzione sull'altra radio
+/ *! La funzione selezionata sarà eseguinta nell'ISR <b>dall'altra radio</b>
+    non appena questa riceverà il messaggio.
+    cfr. `collegaFunzioneISR()` per informazioni sulla funzione chiamata.
+
+    Questa funzione farà un tentativo di trasmissione ogni 20 ms fino alla ricezione
+    di un ACK o allo scadere del tempo massimo specificato.
+
+    @param nr       Numero della funzione da eseguire
+    @param timeout  Tempo durante il quale la funzione proverà a trasmettere
+                    la sua richiesta di esecuzione all'altra radio
+    @return Codice errore come per le funzioni `invia()`
+* /
+int eseguiFunzioneRemota(uint8_t nr, uint16_t timeout);
+*/

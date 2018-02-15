@@ -25,29 +25,35 @@ Il file è suddiviso in 5 sezioni:
 
 // Invia un messaggio di dimensione compresa tra 1 e 64 bytes
 //
-int RFM69::invia(const uint8_t messaggio[], uint8_t lunghezza) {
+int RFM69::invia(const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo) {
     Intestazione intestazione;
+    if(titolo > valMaxTitolo) titolo = 0;
+    intestazione.bit.titolo = titolo;
     return inviaMessaggio(messaggio, lunghezza, intestazione.byte);
 }
 
 // Invia un messaggio di dimensione compresa tra 1 e 64 bytes richiedendo
 // un ACK all'altra radio
 //
-int RFM69::inviaConAck(const uint8_t messaggio[], uint8_t lunghezza) {
+int RFM69::inviaConAck(const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo) {
     Intestazione intestazione;
     intestazione.bit.richiestaAck = 1;
+    if(titolo > valMaxTitolo) titolo = 0;
+    intestazione.bit.titolo = titolo;
     return inviaMessaggio(messaggio, lunghezza, intestazione.byte);
 }
 
 // Invia un messaggio di dimensione compresa tra 1 e 64 bytes richiedendo
 // un ACK all'altra radio
 //
-int RFM69::inviaFinoAck(const uint8_t messaggio[], uint8_t lunghezza, uint16_t& tentativi) {
+int RFM69::inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo) {
     Intestazione intestazione;
     intestazione.bit.richiestaAck = 1;
+    if(titolo > valMaxTitolo) titolo = 0;
+    intestazione.bit.titolo = titolo;
 
     int errore;
-    int i = 0;
+    uint16_t i = 0;
     for(; i < tentativi; i++) {
         // Invia il messaggio
         errore = inviaMessaggio(messaggio, lunghezza, intestazione.byte);
@@ -212,6 +218,12 @@ bool RFM69::nuovoMessaggio() {
 //
 uint8_t RFM69::dimensioneMessaggio() {
     return ultimoMessaggio.dimensione;
+}
+
+// Restituisce il titolo dell'ultimo messaggio
+//
+uint8_t RFM69::titoloMessaggio() {
+    return ultimoMessaggio.intestazione.bit.titolo;
 }
 
 // Restituisce il valore RSSI del segnale dell'ultimo messaggio
