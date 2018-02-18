@@ -5,7 +5,7 @@
 
 // NOTA PER LA DOCUMENTAZIONE DOXYGEN
 //
-// Per inserire la documentazione di questa classe all'interno di una documentazione
+// Per includere la documentazione di questa classe all'interno di una documentazione
 // Doxygen più ampia inserire il contenuto del file README.md come descrizione
 // dettagliata della classe.
 
@@ -17,8 +17,6 @@
     Per una descrizione approfondita, cfr. la pagina @ref index
 */
 
-
-// Per una documentazione dettagliata, cfr. il file README.md
 
 
 
