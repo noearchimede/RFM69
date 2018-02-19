@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>RFM69: Riferimenti per il file /Users/noe/Documents/Robot/Librerie/RFM69/Test/main.cpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -27,14 +27,15 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Generato da Doxygen 1.8.13 -->
+<!-- Generato da Doxygen 1.8.14 -->
 <script type="text/javascript" src="menudata.js"></script>
 <script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
 $(function() {
   initMenu('',false,false,'search.php','Cerca');
 });
-</script>
+/* @license-end */</script>
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
@@ -51,7 +52,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Esempio semplice ma abbastanza completo dell'utilizzo della classe <a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a>.  
+<p>Esempio con il minimo di funzioni per permettere una comuniczione.  
 <a href="#details">Continua...</a></p>
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>&quot;</code><br />
@@ -60,11 +61,11 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Definizioni</h2></td></tr>
-<tr class="memitem:a779b99d2a30126dd92f22fea08d7c0f3"><td class="memItemLeft" align="right" valign="top"><a id="a779b99d2a30126dd92f22fea08d7c0f3"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MODULO_1</b></td></tr>
-<tr class="separator:a779b99d2a30126dd92f22fea08d7c0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9b210b522e823b8f560622e848af827"><td class="memItemLeft" align="right" valign="top"><a id="af9b210b522e823b8f560622e848af827"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MODULO_2</b></td></tr>
+<tr class="separator:af9b210b522e823b8f560622e848af827"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb7a7ba1ab7e0406f1b5ab36d579f585"><td class="memItemLeft" align="right" valign="top"><a id="aeb7a7ba1ab7e0406f1b5ab36d579f585"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>LED</b>&#160;&#160;&#160;4</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LED</b>&#160;&#160;&#160;7</td></tr>
 <tr class="separator:aeb7a7ba1ab7e0406f1b5ab36d579f585"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -78,12 +79,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>loop</b> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variabili</h2></td></tr>
-<tr class="memitem:a2df6ba949dd4ce1e7ee9a96a19aef0fd"><td class="memItemLeft" align="right" valign="top"><a id="a2df6ba949dd4ce1e7ee9a96a19aef0fd"></a>
-<a class="el" href="class_r_f_m69.html">RFM69</a>&#160;</td><td class="memItemRight" valign="bottom"><b>radio</b> (2, 3)</td></tr>
-<tr class="separator:a2df6ba949dd4ce1e7ee9a96a19aef0fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4801927c117e14f77944af1e13348ffe"><td class="memItemLeft" align="right" valign="top"><a id="a4801927c117e14f77944af1e13348ffe"></a>
+<a class="el" href="class_r_f_m69.html">RFM69</a>&#160;</td><td class="memItemRight" valign="bottom"><b>radio</b> (A2, 3, A3)</td></tr>
+<tr class="separator:a4801927c117e14f77944af1e13348ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
-<div class="textblock"><p>Esempio semplice ma abbastanza completo dell'utilizzo della classe <a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a>. </p>
+<div class="textblock"><p>Esempio con il minimo di funzioni per permettere una comuniczione. </p>
 <p>Questo programma stabilisce una comunicazione unidirezionale ma con ACK tra due radio. </p>
 
 <p class="definition">Definizione nel file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
@@ -92,7 +93,7 @@ Variabili</h2></td></tr>
 <hr class="footer"/><address class="footer"><small>
 Generato da &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.13
+</a> 1.8.14
 </small></address>
 </body>
 </html>
