@@ -348,6 +348,18 @@ public:
     */
     bool impostaPotenzaTx(int dBm);
 
+    //! Controlla se c'è una trasmissione in corso
+    /*! Questa funzione può essere utile se vicino alla radio si trova un dispsitivo
+        sensibile alle onde elettromagnetiche della frequenza emessa dalla radio
+        (ad es. un sensore che non è accurato in caso di forte disturbo attorno ai
+        433Mhz, nel caso il modulo radio usato sia europeo, potrebbe usare questa
+        funzione per rimandare la propria misurazione a dopo la trasmissione del
+        messaggio).
+
+        @return `true` se la radio sta trasmettendo un messaggio.
+    */
+    bool staTrasmettendo() {return (trasmissioneMessaggio || trasmissioneAck);}
+
     //!@}
     /*! @name Log
     Funzioni utili per monitorare il funzionamento della radio
