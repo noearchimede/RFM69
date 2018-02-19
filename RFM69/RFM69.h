@@ -388,8 +388,11 @@ public:
 
         Può essere usato per definire un tempo timeoutAck adeguato: chiamata dopo
         aver eseguito il programma finale con un timeout arbitrariamente grande,
-        questa funzione restituirà il valore ideale del timeout: se ad es. restituisce
-        100 si consiglia un timeout
+        questa funzione restituirà il valore ideale del timeout: se ad es. restituisse
+        100 un timeout adeguato potrebbe essere 110 o 120. Se però la media
+        ottieniAttesaMediaAck() fosse nettamente inferiore (ad es. 50) converrebbe
+        probabilmente identificare il punto in cui il tempo di attesa è massimo
+        usando la funzione ottieniAttesaAck() 
     */
     uint16_t ottieniAttesaMassimaAck() {return durataMassimaAttesaAck};
 
