@@ -317,6 +317,20 @@ public:
     */
     uint8_t tempoRicezione();
 
+    //! Imposta la potenza di trasmissione
+    /*! Imposta la potenza di trasmissione della radio. Sono validi i valori interi
+        compresi tra -2 e +20 dBm.
+
+        I valori non sono accurati, ma la relazione tra di essi è coerente.
+
+        @note Alla potenza massima, +20dBm, il segnale può in realtà rivelarsi
+              meno forte o più disturbato che con una potenza di +19.
+
+        @param Valore di potenza assoluta di trasmissione desiderato in dBm [-2; +20]
+
+        @param Codice di errore definito nell'enum RFM69::Errore::ListaErrori
+    */
+    bool impostaPotenzaTx(int dBm);
 
     //!@}
     /*! @name Log

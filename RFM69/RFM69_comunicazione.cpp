@@ -566,6 +566,62 @@ void RFM69::impostaTimeoutAck(uint16_t tempoMs) {
 
 
 
+
+//Imposta la potenza di trasmissione del segnale radio
+//
+bool RFM69::impostaPotenzaTx(int dBm) {
+
+
+    // Controlla che la potenza sia all'interno dei limiti
+    if(dBm < -18) return false;
+    if(dBm > 20) return false;
+
+    bool pa0, pa1, pa2;
+    int outPow; //solo i primi 5 bit possono essere usati.
+
+
+    if(dBm <= -2) {      //opzione 1
+        pa0 = 1;
+        pa1 = 0;
+        pa2 = 0;
+        outPow = dBm + 18;
+        highPower = false;
+    }
+    else if(dBm <= 13) { //opzione 2
+        pa0 = 0;
+        pa1 = 1;
+        pa2 = 0;
+        outPow = dBm + 18;
+        highPower = false;
+    }
+    else if(dBm <= 17) { //opzione 3
+        pa0 = 0;
+        pa1 = 1;
+        pa2 = 1;
+        outPow = dBm + 14;
+        highPower = false;
+    }
+    else if(dBm <= 20) { //opzione 4
+        pa0 = 0;
+        pa1 = 1;
+        pa2 = 1;
+        outPow = dBm + 11;
+        highPower = true;
+    }
+
+    //prepara il byte che sarà scritto nel registro e invia alla radio
+    uint8_t paLevel = 0;
+    paLevel = (pa0 << 7) | (pa1 << 6) | (pa2 << 5) | outPow;
+
+    spi.scriviRegistro(RFM69_11_PA_LEVEL, paLevel);
+
+    return true;
+}
+
+
+
+
+
 void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore) {
 
     serial.print(F("RFM69: "));
