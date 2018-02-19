@@ -82,6 +82,22 @@ public:
     */
     int inizializza(uint8_t lunghezzaMaxMessaggio);
 
+    //! Inizializza la radio e stampa il risultato (ok o errore...) sul monitor seriale.
+    /*! Questa funzione chima `inizializza(uint8_t)` e `stampaErroreSerial()`:
+        ~~~{.cpp}
+        int RFM69::inizializza(int lunghezzaMaxMessaggio, HardwareSerial& serial) {
+            serial.print(F("Inizializzazione RFM69... "));
+            int errore = inizializza(lunghezzaMaxMessaggio);
+            if(!errore) serial.println(F("ok"));
+            else stampaErroreSerial(serial, errore);
+            return errore;
+        }
+        ~~~
+
+        @return La funzione restituisce comunque il codice di errore restituito da
+                `inizializza(uint8_t)`
+    */
+    int inizializza(uint8_t lunghezzaMaxMessaggio, HardwareSerial& serial);
 
     //!@}
     /*! @name Funzioni fondamentali
@@ -363,9 +379,14 @@ public:
 
         @param serial un oggetto di `HardwareSerial`. Tipicamente sarà `Serial`
               (o ev. `Serial1` ecc. se si usa un Arduino Mega).
-        @paral errore codice di errore restituito da una delle funzioni sopra elencate.
+        @param errore codice di errore restituito da una delle funzioni sopra elencate.
+        @param contesto se `true` stampa il nome della classe e della funzione prima
+               dell'errore, ad es.:
+
+               - `contesto == true` -> RFM69: init: nessuna radio connessa
+               - `contesto == false` -> nessuna radio connessa
     */
-    void stampaErroreSerial(HardwareSerial &serial, int errore);
+    void stampaErroreSerial(HardwareSerial &serial, int errore, bool contesto = true);
 
 
     //!@}

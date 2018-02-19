@@ -622,10 +622,36 @@ bool RFM69::impostaPotenzaTx(int dBm) {
 
 
 
-void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore) {
+void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto) {
 
-    serial.print(F("RFM69: "));
+    if(contesto) {
 
+        switch(errore) {
+            case Errore::ok :
+            case Errore::errore :
+            break;
+
+            case Errore::initTroppeRadio :
+            case Errore::initInitSPIFallita :
+            case Errore::initNessunaRadioConnessa :
+            case Errore::initVersioneRadioNon0x24 :
+            case Errore::initPinInterruptNonValido :
+            case Errore::initErroreImpostazione :
+            serial.print(F("RFM69: init: ")); break;
+
+            case Errore::inviaMessaggioVuoto :
+            case Errore::inviaTimeoutTxPrecedente :
+            serial.print(F("RFM69: invia: ")); break;
+
+            case Errore::leggiNessunMessaggio :
+            case Errore::leggiArrayTroppoCorta :
+            serial.print(F("RFM69: leggi: ")); break;
+
+            case Errore::modImpossibile:
+            case Errore::modTimeout :
+            serial.print(F("RFM69: cambiaMod: ")); break;
+        }
+    }
     switch(errore) {
         case Errore::ok :
         serial.println(F("ok!")); break;
@@ -633,31 +659,31 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore) {
         serial.println(F("errore")); break;
 
         case Errore::initTroppeRadio :
-        serial.println(F("init: troppe radio")); break;
+        serial.println(F("troppe radio")); break;
         case Errore::initInitSPIFallita :
-        serial.println(F("init: init SPI fallita")); break;
+        serial.println(F("init SPI fallita")); break;
         case Errore::initNessunaRadioConnessa :
-        serial.println(F("init: nessuna radio connessa")); break;
+        serial.println(F("nessuna radio connessa")); break;
         case Errore::initVersioneRadioNon0x24 :
-        serial.println(F("init: versione radio non 0x24")); break;
+        serial.println(F("versione radio non 0x24")); break;
         case Errore::initPinInterruptNonValido :
-        serial.println(F("init: pin interrupt non valido")); break;
+        serial.println(F("pin interrupt non valido")); break;
         case Errore::initErroreImpostazione :
-        serial.println(F("init: errore impostazione")); break;
+        serial.println(F("errore impostazione")); break;
 
         case Errore::inviaMessaggioVuoto :
-        serial.println(F("invia: messaggio vuoto")); break;
+        serial.println(F("messaggio vuoto")); break;
         case Errore::inviaTimeoutTxPrecedente :
-        serial.println(F("Invia: il mess. prec. non è ancora partito")); break;
+        serial.println(F("il mess. prec. non è ancora partito")); break;
 
         case Errore::leggiNessunMessaggio :
-        serial.println(F("leggi: nessun messaggio")); break;
+        serial.println(F("nessun messaggio")); break;
         case Errore::leggiArrayTroppoCorta :
-        serial.println(F("leggi: array troppo corta")); break;
+        serial.println(F("array troppo corta")); break;
 
         case Errore::modImpossibile:
-        serial.println(F("cambiaMod: impossibile cambiare")); break;
+        serial.println(F("impossibile cambiare")); break;
         case Errore::modTimeout :
-        serial.println(F("cambiaMod: timeout")); break;
+        serial.println(F("timeout")); break;
     }
 }

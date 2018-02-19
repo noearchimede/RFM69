@@ -274,7 +274,6 @@ RFM69::~RFM69() {
 // Inizializzazione della radio
 // Cerca di inizializzare la radio e restituisce ErroreInit::ok (-> 0) se ci riesce
 //
-//
 int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
 
@@ -369,6 +368,15 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 }
 
 
+// Inizializza la radio e stampa il risultato dell'inizializzazione
+//
+int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio, HardwareSerial& serial) {
+    serial.print(F("Inizializzazione RFM69... "));
+    int errore = inizializza(lunghezzaMaxMessaggio);
+    if(!errore) serial.println(F("ok"));
+    else stampaErroreSerial(serial, errore, false);
+    return errore;
+}
 
 
 // Scrittura in tutti i registri della radio dei valori definiti nel file di

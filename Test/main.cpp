@@ -1,5 +1,5 @@
 /*! @file
-@brief Esempio semplice ma abbastanza completo dell'utilizzo della classe RFM69.
+@brief Esempio con il minimo di funzioni per permettere una comuniczione
 
 Questo programma stabilisce una comunicazione unidirezionale ma con ACK tra due
 radio.
@@ -43,14 +43,10 @@ void setup() {
     if(LED) pinMode(LED, OUTPUT);
 
     // Inizializza la radio. Deve essere chiamato una volta all'inizio del programma.
-    // Restituisce 0
-    int initFallita = radio.inizializza(4);
-    if(initFallita) {
-        // Stampa l'errore riscontrato (questa funzione pesa 0.5 kB)
-        radio.stampaErroreSerial(Serial, initFallita);
-        // Inizializzazione fallita, blocca il progrmma
-        while(true);
-    }
+    // Se come secondo argomento si fornisce un riferimento a Serial, la funzione
+    // stampa il risultato dell'inizializzazione (riuscita o no).
+    radio.inizializza(4, Serial);
+
 }
 
 
