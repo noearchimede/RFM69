@@ -1,0 +1,142 @@
+\section{Riferimenti per la classe Type\+Test}
+\label{struct_type_test}\index{Type\+Test@{Type\+Test}}
+
+
+Questa classe permette di ottenere informazioni sul tipo di una variabile.  
+
+
+
+
+{\ttfamily \#include $<$Type\+\_\+test.\+hpp$>$}
+
+\subsection*{Tipi pubblici}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{struct_type_test_a778746484056922a147aea7f653cee0c}} 
+enum {\bfseries Type\+Name} \{ \newline
+{\bfseries b}, 
+{\bfseries u8}, 
+{\bfseries u16}, 
+{\bfseries u32}, 
+\newline
+{\bfseries u64}, 
+{\bfseries i8}, 
+{\bfseries i16}, 
+{\bfseries i32}, 
+\newline
+{\bfseries i64}, 
+{\bfseries c}, 
+{\bfseries f}, 
+{\bfseries d}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Membri pubblici}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{struct_type_test_a98afeabaf99fd76d4e295227b3b8a3f9}} 
+{\bfseries Type\+Test} (bool)
+\item 
+\mbox{\label{struct_type_test_ad904c5ef2f36f4d5b2179b7bb167afa4}} 
+{\bfseries Type\+Test} (uint8\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_a04211d01a08d7a94ef96b61e38cf78b6}} 
+{\bfseries Type\+Test} (uint16\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_ab2a42fb5b3dbed8c0a20bbd6479e6441}} 
+{\bfseries Type\+Test} (uint32\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_a8aca5e04bc814711cf6c612d804920cd}} 
+{\bfseries Type\+Test} (uint64\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_acd7921deead6d5d46511d5072400f0ff}} 
+{\bfseries Type\+Test} (int8\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_a9aff83bb5af9d394b7ae935519239b3d}} 
+{\bfseries Type\+Test} (int16\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_ad4e8de230d3744f0538ff7311b73e4cc}} 
+{\bfseries Type\+Test} (int32\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_a53be9d194f47c887522f2a05bc4e436c}} 
+{\bfseries Type\+Test} (int64\+\_\+t)
+\item 
+\mbox{\label{struct_type_test_aa15c538922994f3bc7ee0f81d0180c15}} 
+{\bfseries Type\+Test} (char)
+\item 
+\mbox{\label{struct_type_test_a88fa06373675e1fdeeb27056bfcc002c}} 
+{\bfseries Type\+Test} (float x)
+\item 
+\mbox{\label{struct_type_test_aabb70efda0ea99c35c3d1514211b1281}} 
+{\bfseries Type\+Test} (double x)
+\end{DoxyCompactItemize}
+\subsection*{Attributi pubblici}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{struct_type_test_a1706a350c1f78c963698f9d0b5d80afb}} 
+Type\+Name {\bfseries name}
+\item 
+\mbox{\label{struct_type_test_adc26eb5ff7b8f3627f2e7730aa500f04}} 
+uint8\+\_\+t {\bfseries size}
+\item 
+\mbox{\label{struct_type_test_a195ad98e6ac25a1d9173db5703930763}} 
+bool {\bfseries is\+Bool}
+\item 
+\mbox{\label{struct_type_test_ab19fc53546386ac6f1a7fd9df14ea26f}} 
+bool {\bfseries is\+Integer}
+\item 
+\mbox{\label{struct_type_test_a3d89ed1787d73b5c184d81a4eed18572}} 
+bool {\bfseries is\+Signed}
+\item 
+\mbox{\label{struct_type_test_af439bfe0d6f56f517e85ec64ef16302e}} 
+bool {\bfseries is\+Character}
+\item 
+\mbox{\label{struct_type_test_acf779fb021ccb05f2bfbde73fcc5feb1}} 
+bool {\bfseries is\+Float}
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrizione dettagliata}
+Questa classe permette di ottenere informazioni sul tipo di una variabile. 
+
+Questa classe permette di ottenere informazioni sul tipo di una variabile. Per usarla basta crearne un\textquotesingle{}istanza passando come argomento al constructor la variabile su cui servono informazioni. Poi si possono ottenere alcune proprietà, il nome del tipo e/o la dimensione in byte. 
+\begin{DoxyCode}
+\textcolor{keywordtype}{int} x; \textcolor{comment}{//una variabile qualsiasi}
+
+TypeTest testX (x); \textcolor{comment}{//l'istanza testX è impostata per dare informazioni su int}
+
+testX.isBool                 ==  \textcolor{keyword}{false}
+testX.isInteger              ==  \textcolor{keyword}{true}
+testX.isSigned               ==  \textcolor{keyword}{true}
+testX.isCharacter            ==  \textcolor{keyword}{false}
+testX.isFloat                ==  \textcolor{keyword}{false}
+testX.isArithmetic           ==  \textcolor{keyword}{true}
+testX.name                   ==  TypeTest::TypeName::i16; \textcolor{comment}{//lista nomi: vedi sotto}
+testX.size                   ==  2
+\end{DoxyCode}
+
+
+I nomi dei tipi sono definiti nell\textquotesingle{}{\ttfamily enum} {\ttfamily Type\+Test\+::\+Type\+Name}\+: 
+\begin{DoxyCode}
+\textcolor{keyword}{enum} TypeName \{
+b,                   \textcolor{comment}{//bool}
+u8, u16, u32, u64,   \textcolor{comment}{//unsigned integers}
+i8, i16, i32, i64,   \textcolor{comment}{//integers}
+c,                   \textcolor{comment}{//character}
+f, d,                \textcolor{comment}{//float}
+\};
+\end{DoxyCode}
+
+
+\doxyref{Type\+Test}{pag.}{struct_type_test} funziona solo con i tipi aritmetici. Se la variabile passata al constructor è di un altro tipo il compilatore restituisce l\textquotesingle{}errore {\ttfamily no matching function for call to \textquotesingle{}Type\+Test\+::\+Type\+Test(\#\#)} dove \#\# è il tipo della variabile.
+
+Alla fine del file in un commento c\textquotesingle{}è un programma di test per provare il funzionamento della classe con qualsiasi tipo.
+
+Lo so, il file è in inglese, ma l\textquotesingle{}ho comunque scritto io! 
+
+Definizione alla linea 66 del file Type\+\_\+test.\+hpp.
+
+
+
+La documentazione per questa classe è stata generata a partire dal seguente file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+Debug/\+Debug/\textbf{ Type\+\_\+test.\+hpp}\end{DoxyCompactItemize}

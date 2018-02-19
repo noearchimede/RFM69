@@ -1,0 +1,280 @@
+\section{Riferimenti per la classe Debug}
+\label{class_debug}\index{Debug@{Debug}}
+
+
+Classe utile per il debug di un prgramma qualsiasi.  
+
+
+
+
+{\ttfamily \#include $<$Debug.\+hpp$>$}
+
+\subsection*{Tipi pubblici}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{class_debug_a9489727ab968e77199b313f124372a02}} 
+enum {\bfseries Livello} \{ \newline
+{\bfseries debug}, 
+{\bfseries informazione}, 
+{\bfseries avviso}, 
+{\bfseries errore}, 
+\newline
+{\bfseries niente}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Membri pubblici}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{class_debug_ad98adb03156e1c1b34a4668e4191efad}} 
+{\bfseries Debug} (Hardware\+Serial \&)
+\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Gestione classe}\par
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ begin} (long baud\+Serial)
+\item 
+\mbox{\label{class_debug_a78023cabf228def947898ee5fd8dd3bb}} 
+void {\bfseries begin} (long baud\+Serial, int pin\+Led)
+\item 
+void \textbf{ controlla\+Led} ()
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Log}\par
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ info} (int codice)
+\item 
+\mbox{\label{class_debug_abc3c2e45e0c054c76e52b9ed96197a7e}} 
+void {\bfseries info} (const String \&nome)
+\item 
+\mbox{\label{class_debug_a7270f6fdf27db238ff0b02038550ec2f}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries info} (int codice, T val)
+\item 
+\mbox{\label{class_debug_a501d2501d69379da2a8b98eddd1d0c07}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries info} (const String \&nome, T val)
+\item 
+void \textbf{ warn} (int codice)
+\item 
+\mbox{\label{class_debug_a31d43147005492ffc977e5dcb9fbc1c7}} 
+void {\bfseries warn} (const String \&nome)
+\item 
+\mbox{\label{class_debug_a62c0fbef59b6d9316968cd7e265672c3}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries warn} (int codice, T val)
+\item 
+\mbox{\label{class_debug_a8541c08e9881f1c87ae99c54dcc9f52e}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries warn} (const String \&nome, T val)
+\item 
+void \textbf{ err} (int codice)
+\item 
+\mbox{\label{class_debug_ac79a9cc7d7acd0a58c0fe94901fa613c}} 
+void {\bfseries err} (const String \&nome)
+\item 
+\mbox{\label{class_debug_a50e33c2fe2f086ffa662d58654d1ab78}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries err} (int codice, T val)
+\item 
+\mbox{\label{class_debug_a332f53388bd11eb25f29ede14e886c04}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries err} (const String \&nome, T val)
+\item 
+void \textbf{ linee\+Vuote} (int nr=1)
+\begin{DoxyCompactList}\small\item\em semplice funzione per lasciare una o più linee vuote sul monitor \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Debug}\par
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ err\+Fat} ()
+\item 
+void \textbf{ breakpoint} ()
+\item 
+\mbox{\label{class_debug_a45658982ed89107a443e032a951acb83}} 
+void {\bfseries breakpoint} (unsigned long attesa\+Massima)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ assegna\+Valore} (const String \&nome, T $\ast$pointer)
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Setters e getters}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{class_debug_ab03d23dad7fa932bf0c6838db3a5d142}} 
+void {\bfseries abilita\+Comunicazione} (bool x)
+\item 
+\mbox{\label{class_debug_a4ca82923658785f76171043e4eb2ee24}} 
+void {\bfseries abilita\+Led} (bool x)
+\item 
+\mbox{\label{class_debug_a58aaf4c3326841a1c2a6563333a85617}} 
+void {\bfseries imposta\+Livello} (Livello x)
+\item 
+\mbox{\label{class_debug_aea58af021d6edbdd4ff19109918134d4}} 
+void {\bfseries verbose} (bool x)
+\item 
+\mbox{\label{class_debug_a64ac40ab9c93c5a8e7f63eaa81adbd10}} 
+void {\bfseries ignora\+Val} (bool x)
+\item 
+\mbox{\label{class_debug_a624336a83c55db45970fe262e87db17c}} 
+void {\bfseries aspetta\+Fine\+Notica} (bool x)
+\item 
+\mbox{\label{class_debug_a11596537d7367a7a131123924757289f}} 
+void {\bfseries imposta\+Pin\+Led} (byte x)
+\item 
+\mbox{\label{class_debug_a8576f5bbb5564aa80a7befb3307b1ee9}} 
+void {\bfseries abilita\+Interrupt} (bool x)
+\item 
+void \textbf{ imposta\+Durata\+Luce} (unsigned long informazione, unsigned long avviso, unsigned long errore, unsigned long errore\+Fatale)
+\item 
+\mbox{\label{class_debug_a210722127dfc4e5c3b545625f2dd0d6e}} 
+void {\bfseries imposta\+Baud\+Comunicazione} (long x)
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Descrizione dettagliata}
+Classe utile per il debug di un prgramma qualsiasi. 
+
+Nel file header di questa classe viene dichiarate un\textquotesingle{}istanza {\ttfamily extern} disponibile globalmente chiamate {\ttfamily debug} e collegata a {\ttfamily Serial}. Non è necessario crearne altre istanze, e non ha senso farlo; il comportamento di due istanze di questa classe in uno stesso programma non è definito. 
+
+Definizione alla linea 36 del file Debug.\+hpp.
+
+
+
+\subsection{Documentazione delle funzioni membro}
+\mbox{\label{class_debug_a8ae9111a766ef45d390a87bdabdc8b23}} 
+\index{Debug@{Debug}!begin@{begin}}
+\index{begin@{begin}!Debug@{Debug}}
+\subsubsection{begin()}
+{\footnotesize\ttfamily void Debug\+::begin (\begin{DoxyParamCaption}\item[{long}]{baud\+Serial }\end{DoxyParamCaption})}
+
+L\textquotesingle{}inizializzazione completa ha due parametri\+: 
+\begin{DoxyParams}{Parametri}
+{\em serial\+Baud} & velocità della comunicazione seriale \\
+\hline
+{\em led\+Pin} & pin del led dedicato al debug\\
+\hline
+\end{DoxyParams}
+L\textquotesingle{}inizializzazione con un solo parametro inizializza in modo che non sia usato il led\+: 
+\begin{DoxyCode}
+debug.begin(115200);
+\end{DoxyCode}
+ equivale a 
+\begin{DoxyCode}
+debug.abilitaLed(\textcolor{keyword}{false});
+debug.begin(115200, 13);
+\end{DoxyCode}
+ 
+
+Definizione alla linea 50 del file Debug.\+cpp.
+
+\mbox{\label{class_debug_a63cf78c0389f81d066418c1c25d2d21d}} 
+\index{Debug@{Debug}!controlla\+Led@{controlla\+Led}}
+\index{controlla\+Led@{controlla\+Led}!Debug@{Debug}}
+\subsubsection{controlla\+Led()}
+{\footnotesize\ttfamily void Debug\+::controlla\+Led (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+controlla se il L\+ED deve essere spento. \begin{DoxyNote}{Nota}
+Se l\textquotesingle{}I\+SR è abilitata sarà suo compito chiamare questa funzione. 
+\end{DoxyNote}
+
+
+Definizione alla linea 71 del file Debug.\+cpp.
+
+\mbox{\label{class_debug_a9e8eec71718abfd7cca293c81bbd3409}} 
+\index{Debug@{Debug}!info@{info}}
+\index{info@{info}!Debug@{Debug}}
+\subsubsection{info()}
+{\footnotesize\ttfamily void Debug\+::info (\begin{DoxyParamCaption}\item[{int}]{codice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Le funzioni {\ttfamily info}, {\ttfamily warn} e {\ttfamily err} stampano dei messaggi sul monitor seriale e fanno accendere un led per un tempo che dipende dal tipo di messaggio. L\textquotesingle{}unica differenza tra di esse è il livello di importanza\+: i messaggi info possono essere disabilitati lasciando warn ed err, e warn lasciando err. Inoltre i messaggi err sono visivamente in rilievo nell\textquotesingle{}output.
+
+Ogni messaggi ha un nome o un codice. Il nome è una stringa di testo, il codice è un numero che rappresenta univocamente il messaggio. Conviene usare il nome se si ha abbastanza memoria a disposizione e altrimenti il codie, che evidentemente rende il file di log meno leggibile. Inoltre a ogni messaggio è possibile associare un valore di qualsiasi tipo aritmetico (bool, intero con o senza segno o decimale), che sarà stampato accanto al nome.
+
+Linee guida per la scelta delle funzioni\+:
+\begin{DoxyItemize}
+\item {\ttfamily info(...)}\+: informazione sul corretto svolgimento del programma, es.\+: svolto un certo calcolo, nuovo sensore connesso, ...
+\item {\ttfamily warn(...)}\+: avviso su un potenziale problema che non dovrebbe accadere ma non compromette irreversibilmente lo svolgimento del programma, es.\+: tentativo di connessione a un sensore già connesso, temperatura\+: -\/400°C
+\item {\ttfamily err(...)}\+: errore, cioè avvenimento indesiderato che compromette, o potrebbe verosimilmente compromettere il programma, es.\+: my\+Float è nan, divisione per 0 
+\end{DoxyItemize}
+
+Definizione alla linea 110 del file Debug.\+hpp.
+
+\mbox{\label{class_debug_a1874722488c45685e073fc564c853901}} 
+\index{Debug@{Debug}!warn@{warn}}
+\index{warn@{warn}!Debug@{Debug}}
+\subsubsection{warn()}
+{\footnotesize\ttfamily void Debug\+::warn (\begin{DoxyParamCaption}\item[{int}]{codice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+vedi \doxyref{info}{pag.}{class_debug_a9e8eec71718abfd7cca293c81bbd3409} 
+
+Definizione alla linea 119 del file Debug.\+hpp.
+
+\mbox{\label{class_debug_a8937e0f08ba09157f0d6660b2a0a02f1}} 
+\index{Debug@{Debug}!err@{err}}
+\index{err@{err}!Debug@{Debug}}
+\subsubsection{err()}
+{\footnotesize\ttfamily void Debug\+::err (\begin{DoxyParamCaption}\item[{int}]{codice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+vedi \doxyref{info}{pag.}{class_debug_a9e8eec71718abfd7cca293c81bbd3409} 
+
+Definizione alla linea 128 del file Debug.\+hpp.
+
+\mbox{\label{class_debug_ab2c42e6b9da7c48c624a3a8c71c0ef60}} 
+\index{Debug@{Debug}!linee\+Vuote@{linee\+Vuote}}
+\index{linee\+Vuote@{linee\+Vuote}!Debug@{Debug}}
+\subsubsection{linee\+Vuote()}
+{\footnotesize\ttfamily void Debug\+::linee\+Vuote (\begin{DoxyParamCaption}\item[{int}]{nr = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+semplice funzione per lasciare una o più linee vuote sul monitor 
+
+
+
+Definizione alla linea 138 del file Debug.\+hpp.
+
+\mbox{\label{class_debug_abe97a56741964a962add2db1e82731ad}} 
+\index{Debug@{Debug}!err\+Fat@{err\+Fat}}
+\index{err\+Fat@{err\+Fat}!Debug@{Debug}}
+\subsubsection{err\+Fat()}
+{\footnotesize\ttfamily void Debug\+::err\+Fat (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Segnala un errore fatale e blocca il programma. Il nome/codice dell\textquotesingle{}errore e il valore associato, se presenti, devono essere segnalati con la funzione {\ttfamily err} subito prima di chiamare questa funzione. 
+
+Definizione alla linea 172 del file Debug.\+cpp.
+
+\mbox{\label{class_debug_a3a24898e3ca48ef89e2029ab6e43665c}} 
+\index{Debug@{Debug}!breakpoint@{breakpoint}}
+\index{breakpoint@{breakpoint}!Debug@{Debug}}
+\subsubsection{breakpoint()}
+{\footnotesize\ttfamily void Debug\+::breakpoint (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Blocca il programma fino a quando l\textquotesingle{}utente invia un carattere qualsiasi sul monitor seriale. Il nome/codice del breakpoint e il valore associato, se presenti, devono essere segnalati con la funzione info. Opzionalmente si può specificare come parametro un tempo massimo di attesa dopo il quale il programma riprenderà come se l\textquotesingle{}utente avesse mandato un carattere. 
+
+Definizione alla linea 200 del file Debug.\+cpp.
+
+\mbox{\label{class_debug_aab7b40f35a2ea8070848b650f8d0bbbe}} 
+\index{Debug@{Debug}!assegna\+Valore@{assegna\+Valore}}
+\index{assegna\+Valore@{assegna\+Valore}!Debug@{Debug}}
+\subsubsection{assegna\+Valore()}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Debug\+::assegna\+Valore (\begin{DoxyParamCaption}\item[{const String \&}]{nome,  }\item[{T $\ast$}]{pointer }\end{DoxyParamCaption})}
+
+\doxyref{Assegna}{pag.}{class_assegna} un valore numerico naturale, intero o decimale o un valore booleano a una variabile del programma. La funzione richiede che sia specificato il nome della variabile (o comunque una stringa di testo che faccia capire all\textquotesingle{}utente di ceh variabile si tratta). 
+
+Definizione alla linea 379 del file Debug.\+hpp.
+
+\mbox{\label{class_debug_a65bc65d905d75d0ca765d81132f563c1}} 
+\index{Debug@{Debug}!imposta\+Durata\+Luce@{imposta\+Durata\+Luce}}
+\index{imposta\+Durata\+Luce@{imposta\+Durata\+Luce}!Debug@{Debug}}
+\subsubsection{imposta\+Durata\+Luce()}
+{\footnotesize\ttfamily void Debug\+::imposta\+Durata\+Luce (\begin{DoxyParamCaption}\item[{unsigned long}]{informazione,  }\item[{unsigned long}]{avviso,  }\item[{unsigned long}]{errore,  }\item[{unsigned long}]{errore\+Fatale }\end{DoxyParamCaption})}
+
+\begin{DoxyNote}{Nota}
+passare 0 nei parametri che non si vogliono modificare 
+\end{DoxyNote}
+
+
+Definizione alla linea 146 del file Debug.\+cpp.
+
+
+
+La documentazione per questa classe è stata generata a partire dai seguenti file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+Debug/\+Debug/\textbf{ Debug.\+hpp}\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+Debug/\+Debug/\textbf{ Debug.\+cpp}\end{DoxyCompactItemize}

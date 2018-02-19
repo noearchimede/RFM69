@@ -1,0 +1,89 @@
+\section{Riferimenti per la classe Assegna}
+\label{class_assegna}\index{Assegna@{Assegna}}
+
+
+Permette di assegnare un valore del tipo corretto a una qualsiasi variabile aritmetica.  
+
+
+
+
+{\ttfamily \#include $<$Assegna.\+hpp$>$}
+
+\subsection*{Membri pubblici}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{class_assegna_a66e1384a62510098ae980d2459dcc515}} 
+{\bfseries Assegna} (Hardware\+Serial \&hwserial)
+\item 
+\mbox{\label{class_assegna_af73ceecd7402d5f580d834a50da4ba02}} 
+void {\bfseries operator()} (bool $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_af2c057941eb9e36451cfbadd2870bf1e}} 
+void {\bfseries operator()} (uint8\+\_\+t $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_a617f396b9c6e0b57daf0c2260ec7045b}} 
+void {\bfseries operator()} (uint16\+\_\+t $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_aedc0e576f19a465cadf87923df1a815d}} 
+void {\bfseries operator()} (uint32\+\_\+t $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_abcf5180cd65bf7f837c0ad2f93240807}} 
+void {\bfseries operator()} (int8\+\_\+t $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_a0bb43f452e3de3e3600c108d3ac24dd2}} 
+void {\bfseries operator()} (int16\+\_\+t $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_acdac6628bc61b368ebc3498f7f841772}} 
+void {\bfseries operator()} (int32\+\_\+t $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_a5851ae575490d2589ee5cd3c8ec09d6f}} 
+void {\bfseries operator()} (char $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_a6d50cfe9292d81efef4da9ba8a8278e0}} 
+void {\bfseries operator()} (float $\ast$ptr)
+\item 
+\mbox{\label{class_assegna_a7636492e8c3fd23508f6a47b7e8a75ad}} 
+void {\bfseries operator()} (double $\ast$ptr)
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrizione dettagliata}
+Permette di assegnare un valore del tipo corretto a una qualsiasi variabile aritmetica. 
+
+I tipi accettati sono\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily bool}
+\item {\ttfamily uint8\+\_\+t}, {\ttfamily uint16\+\_\+t}, {\ttfamily uint32\+\_\+t}
+\item {\ttfamily int8\+\_\+t}, {\ttfamily int16\+\_\+t}, {\ttfamily int32\+\_\+t}
+\item {\ttfamily float}, {\ttfamily double}
+\end{DoxyItemize}
+
+Usando una volta questa classe (cioè chiamando il suo {\ttfamily operator =}) in un programma se ne aumenta considerevolmente la dimensione in memoria. Indicativamente\+:
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Elementi nel programma  }&\textbf{ Memoria necessaria   }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Elementi nel programma  }&\textbf{ Memoria necessaria   }\\\cline{1-2}
+\endhead
+programma vuoto  &464 bytes (1\%)   \\\cline{1-2}
+constructor (con Serial.\+begin())  &1400 bytes (4\%)   \\\cline{1-2}
+solo una chiamata (assegna\+Valore(\&x))  &6800 bytes (21\%)   \\\cline{1-2}
+chiamata di tutti gli operator= disponibili  &7100 bytes (22\%)   \\\cline{1-2}
+\end{longtabu}
+
+
+Definizione alla linea 47 del file Assegna.\+hpp.
+
+
+
+La documentazione per questa classe è stata generata a partire dai seguenti file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+Debug/\+Debug/\textbf{ Assegna.\+hpp}\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+Debug/\+Debug/\textbf{ Assegna.\+cpp}\end{DoxyCompactItemize}
