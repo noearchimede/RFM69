@@ -344,7 +344,7 @@ void RFM69::isr() {
             if(intest.bit.ack) {
 
                 // # Il messaggio è un ACK # //
-
+                durataUltimaAttesaAck = millis() - tempoUltimaTrasmissione;
                 attesaAck = false;
                 ackRicevuto = true;
                 cambiaModalita(modalitaDefault, false);

@@ -366,14 +366,52 @@ public:
     */
     //!@{
 
+    //! Restituisce la durata dell'ultima attesa di un ACK (ricevuto)
+    /*! Il valore restituito da questa funzione è il tempo in millisecondi impiegato
+        per svolgere le operazioni elencate di seguito l'ultima volta che sono state
+        eseguite _tutte_; se il messaggio non richiedeva ACK o comunque l'ACK non è
+        arrivato questa funzione darà il tempo relativo a un messaggio precedente che
+        ha avuto il suo ACK:
+
+        `[attesa ACK] = [trasmissione] + [decodificazione] + [TEMPO PRIMA DELLA CHIAMATA
+        ALLA FUNZIONE leggi()] + [trasmissione ACK]`
+
+        Il `[TEMPO PRIMA DELLA CHIAMATA ALLA FUNZIONE leggi()]` è il fattore più
+        variabile; è più basso se il codice della radio ricevente è scritto bene
+        (dal punto di vista di questa classe).
+    */
+    uint16_t ottieniAttesaAck() {return durataUltimaAttesaAck};
+
+    //! Restituisce la durata massima di attesa di un ACK (ricevuto)
+    /*! Restituisce lo stesso valore della funzione `durataAttesaAck()`, ma relativo
+        all'attesa più lunga dall'ultima inizializzazione al momento della chiamata.
+
+        Può essere usato per definire un tempo timeoutAck adeguato: chiamata dopo
+        aver eseguito il programma finale con un timeout arbitrariamente grande,
+        questa funzione restituirà il valore ideale del timeout: se ad es. restituisce
+        100 si consiglia un timeout
+    */
+    uint16_t ottieniAttesaMassimaAck() {return durataMassimaAttesaAck};
+
+    //! Restituisce la durata media di attesa di un ACK (ricevuto)
+    /*! Restituisce lo stesso valore della funzione `durataAttesaAck()`, ma anziché
+        riferirsi a un'attesa in particolare restituisce l'attesa media dall'ultima
+        inizializzazione al momento della chiamata.
+
+        Può essere un indice della buona scrittura del codice della radio ricevente:
+        più la funzione `leggi()` è chiamata (o pronta ad essere chiamata) regolarmente
+        e frequentemente più questo valore sarà basso.
+    */
+    uint16_t ottieniAttesaMediaAck() {return durataMediaAttesaAck};
+
     //! Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione
     /*! @return Il numero di messaggi inviati dopo l'ultima inizializzazione
     */
-    int nrMessaggiInviati() {return messaggiInviati;}
+    uint16_t nrMessaggiInviati() {return messaggiInviati;}
     //! Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione
     /*! @return Il numero di messaggi ricevuti dopo l'ultima inizializzazione
     */
-    int nrMessaggiRicevuti() {return messaggiRicevuti;}
+    uint16_t nrMessaggiRicevuti() {return messaggiRicevuti;}
 
 
     //! Stampa la descrizione di un errore sul monitor seriale
@@ -641,11 +679,8 @@ private:
     // Modalità usata quando non ne è specificata un'altra
     Modalita modalitaDefault = Modalita::standby;
 
-    // Tempo massimo di attesa dell'ACK (deve essere scelto in base alla frequenza
-    // con cui viene chiamata la funzione `leggi()` sull'altra radio
-    uint16_t timeoutAck = 250;
-
     // Dimensione massima dei messaggi in entrata
+    // costante dopo l'inizializzazione, può essere modificato da un'init. successiva
     uint8_t lungMaxMessEntrata;
 
 
@@ -665,6 +700,27 @@ private:
 
 
     // ### VARIABILI ###
+
+    // # Gestione ACK # //
+
+    // Tempo massimo di attesa dell'ACK (deve essere scelto in base alla frequenza
+    // con cui viene chiamata la funzione `leggi()` sull'altra radio;
+    // 250 è un valore arbitrario.
+    uint16_t timeoutAck = 250;
+    // Durata dell'ultima attesa di un ACK (non contano le attese terminate per timeout).
+    // [attesa ACK] = [trasmissione] + [decodificazione] + [TEMPO PRIMA DELLA CHIAMATA
+    // ALLA FUNZIONE leggi()] + [trasmissione ACK]
+    // Questa variabile ha un 'getter' pubblico
+    uint16_t durataUltimaAttesaAck;
+    // Durata media dell attesa di un ACK dopo l'ultima inizializzazione
+    // Questa variabile ha un 'getter' pubblico perché può essere un indice della
+    // buona formattazionje del codice della radio ricevente
+    uint16_t durataMediaAttesaAck;
+    // Durata massima dell'attesa di un ACK dall'ultima inizializzazione ad ora
+    // Questa variabile ha un 'getter' pubblico perché può essere usata per impostare
+    // `timeoutAck`
+    uint8_t durataMassimaAttesaAck;
+
 
     // Modalità in cui si trova attualmente la radio
     volatile Modalita modalita = Modalita::sleep;

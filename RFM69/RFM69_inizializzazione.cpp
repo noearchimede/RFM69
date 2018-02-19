@@ -279,6 +279,10 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
     // Questa versione della classe ha un'unica ISR, dichiarata come static,
     // quindi in un programma ne può esistere una sola instanza.
+    // Per aggiungerne altre bisogna aggiungere una o più altre funzioni isrCaller()
+    // (static void isrCaller1(); static void isrCaller2(); ...  ) e collegare
+    // ad ognuna di esse un'istanza differente (pointerRadio non sarà più uno solo
+    // ma uno per ogni isrCaller, e tutti diversi fra loro)
     if(nrIstanze > 1) return Errore::initTroppeRadio;
 
 
