@@ -27,7 +27,9 @@ struct \textbf{ Errore}
 {\em Funzione di inizializzazione della classe, da chiamare prima di qualsiasi altra }\begin{DoxyCompactItemize}
 \item 
 int \textbf{ inizializza} (uint8\+\_\+t lunghezza\+Max\+Messaggio)
-\begin{DoxyCompactList}\small\item\em Inizializza la radio. Deve essere chiamato all\textquotesingle{}inizio del programma. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Inizializza la radio. Deve essere chiamato all\textquotesingle{}inizio del programma. \end{DoxyCompactList}\item 
+int \textbf{ inizializza} (uint8\+\_\+t lunghezza\+Max\+Messaggio, Hardware\+Serial \&serial)
+\begin{DoxyCompactList}\small\item\em Inizializza la radio e stampa il risultato (ok o errore...) sul monitor seriale. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \end{Indent}
 \begin{Indent}\textbf{ Funzioni fondamentali}\par
 {\em Devono essere usate in ogni programma per permettere una comunicazione radio }\begin{DoxyCompactItemize}
@@ -81,7 +83,11 @@ void \textbf{ imposta\+Timeout\+Ack} (uint16\+\_\+t tempo\+Ms)
 int8\+\_\+t \textbf{ rssi} ()
 \begin{DoxyCompactList}\small\item\em Restituisce il valore R\+S\+SI per l\textquotesingle{}ultimo messaggio. \end{DoxyCompactList}\item 
 uint8\+\_\+t \textbf{ tempo\+Ricezione} ()
-\begin{DoxyCompactList}\small\item\em Restituisce l\textquotesingle{}\char`\"{}ora\char`\"{} della ricezione dell\textquotesingle{}ultimo messaggio. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Restituisce l\textquotesingle{}\char`\"{}ora\char`\"{} della ricezione dell\textquotesingle{}ultimo messaggio. \end{DoxyCompactList}\item 
+bool \textbf{ imposta\+Potenza\+Tx} (int d\+Bm)
+\begin{DoxyCompactList}\small\item\em Imposta la potenza di trasmissione. \end{DoxyCompactList}\item 
+bool \textbf{ sta\+Trasmettendo} ()
+\begin{DoxyCompactList}\small\item\em Controlla se c\textquotesingle{}è una trasmissione in corso. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \end{Indent}
 \begin{Indent}\textbf{ Log}\par
 {\em Funzioni utili per monitorare il funzionamento della radio }\begin{DoxyCompactItemize}
@@ -90,7 +96,7 @@ int \textbf{ nr\+Messaggi\+Inviati} ()
 \begin{DoxyCompactList}\small\item\em Restituisce il numero di messaggi inviati dopo l\textquotesingle{}ultima inizializzazione. \end{DoxyCompactList}\item 
 int \textbf{ nr\+Messaggi\+Ricevuti} ()
 \begin{DoxyCompactList}\small\item\em Restituisce il numero di messaggi ricevuti dopo l\textquotesingle{}ultima inizializzazione. \end{DoxyCompactList}\item 
-void \textbf{ stampa\+Errore\+Serial} (Hardware\+Serial \&serial, int errore)
+void \textbf{ stampa\+Errore\+Serial} (Hardware\+Serial \&serial, int errore, bool contesto=true)
 \begin{DoxyCompactList}\small\item\em Stampa la descrizione di un errore sul monitor seriale. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \end{Indent}
 \begin{Indent}\textbf{ Debug}\par
@@ -116,9 +122,9 @@ uint8\+\_\+t \textbf{ valore\+Registro} (uint8\+\_\+t indirizzo)
 \subsection{Descrizione dettagliata}
 Driver per i moduli radio R\+F\+M69. 
 
-Per una descrizione approfondita, cfr. la pagina \doxyref{Driver Arduino per i moduli radio R\+F\+M69}{pag.}{index} 
+Per una descrizione approfondita, cfr. la pagina \doxyref{index}{pag.}{index} 
 
-Definizione alla linea 32 del file R\+F\+M69.\+h.
+Definizione alla linea 30 del file R\+F\+M69.\+h.
 
 
 
@@ -197,7 +203,7 @@ Deleted perché non ha senso copiare una radio
 \mbox{\label{class_r_f_m69_ad3f48e5290ae7a04fcb82c79386eff68}} 
 \index{R\+F\+M69@{R\+F\+M69}!inizializza@{inizializza}}
 \index{inizializza@{inizializza}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{inizializza()}
+\subsubsection{inizializza()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily int R\+F\+M69\+::inizializza (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{lunghezza\+Max\+Messaggio }\end{DoxyParamCaption})}
 
 
@@ -232,7 +238,36 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 \end{DoxyReturn}
 
 
-Definizione alla linea 278 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+Definizione alla linea 277 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a2cc835a7a9122aacdefd035f1a0a333a}} 
+\index{R\+F\+M69@{R\+F\+M69}!inizializza@{inizializza}}
+\index{inizializza@{inizializza}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{inizializza()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int R\+F\+M69\+::inizializza (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{lunghezza\+Max\+Messaggio,  }\item[{Hardware\+Serial \&}]{serial }\end{DoxyParamCaption})}
+
+
+
+Inizializza la radio e stampa il risultato (ok o errore...) sul monitor seriale. 
+
+Questa funzione chima {\ttfamily \doxyref{inizializza(uint8\+\_\+t)}{pag.}{class_r_f_m69_ad3f48e5290ae7a04fcb82c79386eff68}} e {\ttfamily \doxyref{stampa\+Errore\+Serial()}{pag.}{class_r_f_m69_a42670b5f67f3a0f072e1c86c3ad66fea}}\+: 
+\begin{DoxyCode}
+\textcolor{keywordtype}{int} RFM69::inizializza(\textcolor{keywordtype}{int} lunghezzaMaxMessaggio, HardwareSerial& serial) \{
+    serial.print(F(\textcolor{stringliteral}{"Inizializzazione RFM69... "}));
+    \textcolor{keywordtype}{int} errore = inizializza(lunghezzaMaxMessaggio);
+    \textcolor{keywordflow}{if}(!errore) serial.println(F(\textcolor{stringliteral}{"ok"}));
+    \textcolor{keywordflow}{else} stampaErroreSerial(serial, errore);
+    \textcolor{keywordflow}{return} errore;
+\}
+\end{DoxyCode}
+
+
+\begin{DoxyReturn}{Restituisce}
+La funzione restituisce comunque il codice di errore restituito da {\ttfamily \doxyref{inizializza(uint8\+\_\+t)}{pag.}{class_r_f_m69_ad3f48e5290ae7a04fcb82c79386eff68}} 
+\end{DoxyReturn}
+
+
+Definizione alla linea 373 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}} 
 \index{R\+F\+M69@{R\+F\+M69}!invia@{invia}}
@@ -650,6 +685,53 @@ Il tempo in millisecondi dall\textquotesingle{}inizio del programma a cui è sta
 
 Definizione alla linea 236 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
+\mbox{\label{class_r_f_m69_a6d669858f310c67aa49a1ae09d3d6499}} 
+\index{R\+F\+M69@{R\+F\+M69}!imposta\+Potenza\+Tx@{imposta\+Potenza\+Tx}}
+\index{imposta\+Potenza\+Tx@{imposta\+Potenza\+Tx}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{imposta\+Potenza\+Tx()}
+{\footnotesize\ttfamily bool R\+F\+M69\+::imposta\+Potenza\+Tx (\begin{DoxyParamCaption}\item[{int}]{d\+Bm }\end{DoxyParamCaption})}
+
+
+
+Imposta la potenza di trasmissione. 
+
+Imposta la potenza di trasmissione della radio. Sono validi i valori interi compresi tra -\/2 e +20 d\+Bm.
+
+I valori non sono accurati, ma la relazione tra di essi è coerente.
+
+\begin{DoxyNote}{Nota}
+Alla potenza massima, +20d\+Bm, il segnale può in realtà rivelarsi meno forte o più disturbato che con una potenza di +19.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parametri}
+{\em Valore} & di potenza assoluta di trasmissione desiderato in d\+Bm [-\/2; +20]\\
+\hline
+{\em Codice} & di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Errore\+::\+Lista\+Errori}{pag.}{struct_r_f_m69_1_1_errore_a4dadb6af0e4d38eaac18d3afe26e5bcd} \\
+\hline
+\end{DoxyParams}
+
+
+Definizione alla linea 572 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_abc47406aadb1d0464f4a259fc38b782f}} 
+\index{R\+F\+M69@{R\+F\+M69}!sta\+Trasmettendo@{sta\+Trasmettendo}}
+\index{sta\+Trasmettendo@{sta\+Trasmettendo}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{sta\+Trasmettendo()}
+{\footnotesize\ttfamily bool R\+F\+M69\+::sta\+Trasmettendo (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Controlla se c\textquotesingle{}è una trasmissione in corso. 
+
+Questa funzione può essere utile se vicino alla radio si trova un dispsitivo sensibile alle onde elettromagnetiche della frequenza emessa dalla radio (ad es. un sensore che non è accurato in caso di forte disturbo attorno ai 433\+Mhz, nel caso il modulo radio usato sia europeo, potrebbe usare questa funzione per rimandare la propria misurazione a dopo la trasmissione del messaggio).
+
+\begin{DoxyReturn}{Restituisce}
+{\ttfamily true} se la radio sta trasmettendo un messaggio. 
+\end{DoxyReturn}
+
+
+Definizione alla linea 361 del file R\+F\+M69.\+h.
+
 \mbox{\label{class_r_f_m69_a7247bad24b8b3c040a35eb3b4fe84a7d}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Inviati@{nr\+Messaggi\+Inviati}}
 \index{nr\+Messaggi\+Inviati@{nr\+Messaggi\+Inviati}!R\+F\+M69@{R\+F\+M69}}
@@ -665,7 +747,7 @@ Il numero di messaggi inviati dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 332 del file R\+F\+M69.\+h.
+Definizione alla linea 372 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a510888edc4cf87dbe13d89433dd87dc7}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Ricevuti@{nr\+Messaggi\+Ricevuti}}
@@ -682,13 +764,13 @@ Il numero di messaggi ricevuti dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 336 del file R\+F\+M69.\+h.
+Definizione alla linea 376 del file R\+F\+M69.\+h.
 
-\mbox{\label{class_r_f_m69_a669f68c685ae70f7e42f00d1b659f3ab}} 
+\mbox{\label{class_r_f_m69_a42670b5f67f3a0f072e1c86c3ad66fea}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Errore\+Serial@{stampa\+Errore\+Serial}}
 \index{stampa\+Errore\+Serial@{stampa\+Errore\+Serial}!R\+F\+M69@{R\+F\+M69}}
 \subsubsection{stampa\+Errore\+Serial()}
-{\footnotesize\ttfamily void R\+F\+M69\+::stampa\+Errore\+Serial (\begin{DoxyParamCaption}\item[{Hardware\+Serial \&}]{serial,  }\item[{int}]{errore }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void R\+F\+M69\+::stampa\+Errore\+Serial (\begin{DoxyParamCaption}\item[{Hardware\+Serial \&}]{serial,  }\item[{int}]{errore,  }\item[{bool}]{contesto = {\ttfamily true} }\end{DoxyParamCaption})}
 
 
 
@@ -705,12 +787,20 @@ Siccome contiene alcune centinaia di caratteri, questa funzione \char`\"{}pesa\c
 \end{DoxyNote}
 
 \begin{DoxyParams}{Parametri}
-{\em serial} & un oggetto di {\ttfamily Hardware\+Serial}. Tipicamente sarà {\ttfamily Serial} (o ev. {\ttfamily Serial1} ecc. se si usa un Arduino Mega).  errore codice di errore restituito da una delle funzioni sopra elencate. \\
+{\em serial} & un oggetto di {\ttfamily Hardware\+Serial}. Tipicamente sarà {\ttfamily Serial} (o ev. {\ttfamily Serial1} ecc. se si usa un Arduino Mega). \\
+\hline
+{\em errore} & codice di errore restituito da una delle funzioni sopra elencate. \\
+\hline
+{\em contesto} & se {\ttfamily true} stampa il nome della classe e della funzione prima dell\textquotesingle{}errore, ad es.\+:\\
 \hline
 \end{DoxyParams}
 
+\begin{DoxyItemize}
+\item {\ttfamily contesto == true} -\/$>$ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69}\+: init\+: nessuna radio connessa
+\item {\ttfamily contesto == false} -\/$>$ nessuna radio connessa 
+\end{DoxyItemize}
 
-Definizione alla linea 569 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 625 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a7a65d533c452153744998ba3ae33196f}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Registri\+Serial@{stampa\+Registri\+Serial}}
@@ -724,7 +814,7 @@ Stampa il valore di tutti i registri della radio sul monitor seriale.
 
 Strampa il valore di tutti i registri della radio 
 
-Definizione alla linea 445 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+Definizione alla linea 453 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a34a9de7e3b90617f3cd036a3c85fe4ee}} 
 \index{R\+F\+M69@{R\+F\+M69}!valore\+Registro@{valore\+Registro}}
@@ -738,7 +828,7 @@ Leggi il valore di un registro della radio.
 
 
 
-Definizione alla linea 473 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+Definizione alla linea 481 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ae9bebf493b38a2e22350f49f70cf1016}} 
 \index{R\+F\+M69@{R\+F\+M69}!operator=@{operator=}}
@@ -754,6 +844,6 @@ Deleted perché non ha senso copiare una radio
 
 La documentazione per questa classe è stata generata a partire dai seguenti file\+:\begin{DoxyCompactItemize}
 \item 
-/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/\+R\+F\+M69/\textbf{ R\+F\+M69.\+h}\item 
-/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/\+R\+F\+M69/\textbf{ R\+F\+M69\+\_\+comunicazione.\+cpp}\item 
-/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/\+R\+F\+M69/\textbf{ R\+F\+M69\+\_\+inizializzazione.\+cpp}\end{DoxyCompactItemize}
+R\+F\+M69/\textbf{ R\+F\+M69.\+h}\item 
+R\+F\+M69/\textbf{ R\+F\+M69\+\_\+comunicazione.\+cpp}\item 
+R\+F\+M69/\textbf{ R\+F\+M69\+\_\+inizializzazione.\+cpp}\end{DoxyCompactItemize}
