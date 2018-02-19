@@ -262,7 +262,7 @@ public:
 
     //! Simula la ricezione di un ACK.
     /*!
-        @note Normalmente questza funzione non dovrebbe mai essere chiamata.
+        @note Normalmente questa funzione non dovrebbe mai essere chiamata.
 
         Questa funzione è chiamata automaticamente da aspettaAck() allo scadere
         del tempo massimo. Può essere usata dall'utente per terminare l'attesa
@@ -392,10 +392,12 @@ public:
         100 un timeout adeguato potrebbe essere 110 o 120. Se però la media
         ottieniAttesaMediaAck() fosse nettamente inferiore (ad es. 50) converrebbe
         probabilmente identificare il punto in cui il tempo di attesa è massimo
-        usando la funzione ottieniAttesaAck() 
+        usando la funzione ottieniAttesaAck() e eliminare la causa di tale ritardo
+        oppure aumentare momrntaneamente il timeout il quel punto.
     */
     uint16_t ottieniAttesaMassimaAck() {return durataMassimaAttesaAck};
 
+    implementare e testare!!
     //! Restituisce la durata media di attesa di un ACK (ricevuto)
     /*! Restituisce lo stesso valore della funzione `durataAttesaAck()`, ma anziché
         riferirsi a un'attesa in particolare restituisce l'attesa media dall'ultima
