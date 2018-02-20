@@ -1,20 +1,35 @@
 Driver Arduino per i moduli radio RFM69
 =======================================
+_Arduino RFM69 radio module driver_
 
 ---
 
-**Autore**:   Noè Archimede Pezzoli (noearchimede@gmail.com)<br>
-**Data**:  Febbraio 2018<br>
+**Autore**   Noè Archimede Pezzoli<br>
+**Data**  Febbraio 2018<br>
+
+**Contatto**  <noearchimede@gmail.com> <br>
 
 ---
 
 ### Introduzione ###
 
-La libreria RFM69 permette di collegare due microcontrollori tramite una coppia di moduli radio
-della famiglia RFM69 di HopeRF, in particolare del modello
+La libreria RFM69 permette di collegare due microcontrollori tramite una coppia
+di moduli radio della famiglia RFM69 di HopeRF, in particolare del modello
 [RFM69HCW](http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html).
 
-Il codice della libreria è ampiamente commentato in italiano. I commenti normali (`// ...`), presenti soprattutto nei files di implementazione (`.cpp`), forniscono dettagli sull'implementazione. I commenti "speciali" (`//! ...` o `/*! ... */`) sono concentrati nel file header e costituiscono una documentazione per l'utilizzatore della libreria che non desidera conoscere i dettagli del suo funzionamento. Questa documentazione può essere riunita da Doxygen in un unico file o pagina html; la versione html più recente è consultabile [qui](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html).
+Il codice della libreria è ampiamente commentato in italiano. I commenti normali
+(`// ...`), presenti soprattutto nei files di implementazione (`.cpp`), forniscono
+dettagli sull'implementazione. I commenti "speciali" (`//! ...` o `/*! ... */`)
+sono concentrati nel file header e costituiscono una documentazione per l'utilizzatore
+della libreria che non desidera conoscere i dettagli del suo funzionamento.
+Questa documentazione può essere riunita da Doxygen in un unico file o pagina html;
+la versione html più recente è consultabile
+[qui](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html).
+
+_**English note** This library is written and commented in Italian. If you'd like
+to use it but don't understand that language please contact me (<noearchimede@gmail.com>),
+I'll provide a tanslated version of my code with class member names and documentation
+in English._
 
 ---
 
