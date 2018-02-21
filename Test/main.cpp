@@ -12,7 +12,7 @@ radio.
 // #define MODULO_1 o MODULO_2 per compilare uno dei due programmi
 //------------------------------------------------------------------------------
 //#define MODULO_1
- #define MODULO_2
+ #define MODULO_1
 //------------------------------------------------------------------------------
 
 
@@ -60,7 +60,6 @@ void loop(){
     uint8_t lung = 4;
     uint8_t mess[lung] = {0,0x13, 0x05, 0x98};
 
-    unsigned long t;
     bool ok;
 
     while(true) {
@@ -71,9 +70,6 @@ void loop(){
         Serial.print("Invio...");
         if(LED) digitalWrite(LED, HIGH);
 
-        // Registra tempo di invio
-        t = millis();
-
         // Invia
         radio.inviaConAck(mess, lung);
         // Aspetta fino alla ricezione di un ack o al timeout impostato nella classe
@@ -81,17 +77,19 @@ void loop(){
         // Controlla se è arrivato un Ack (l'attesa può finire anche senza ack, per timeout)
         if(radio.ricevutoAck()) ok = true;  else ok = false;
 
-        // calcola il tempo trascorso dall'invio
-        t = millis() - t;
-
         if(LED) digitalWrite(LED, LOW);
 
         if(ok) {
             Serial.print(" mess #");
             Serial.print(radio.nrMessaggiInviati());
             Serial.print(" trasmesso in ");
-            Serial.print(t);
+            Serial.print(radio.ottieniAttesaAck());
             Serial.print(" ms");
+            Serial.print(" (media: ");
+            Serial.print(radio.ottieniAttesaMediaAck());
+            Serial.print(", massima: ");
+            Serial.print(radio.ottieniAttesaMassimaAck());
+            Serial.print(")");
         }
         else {
             Serial.print(" messaggio #");
@@ -118,7 +116,7 @@ void loop(){
 
     // aspetta un messaggio
     while(!radio.nuovoMessaggio());
-
+    delay(micros()%50);
     if(LED) digitalWrite(LED, HIGH);
 
     // ottieni la dimensione del messaggio ricevuto
