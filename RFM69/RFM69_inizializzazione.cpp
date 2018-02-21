@@ -276,7 +276,6 @@ RFM69::~RFM69() {
 //
 int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
-
     // Questa versione della classe ha un'unica ISR, dichiarata come static,
     // quindi in un programma ne può esistere una sola instanza.
     // Per aggiungerne altre bisogna aggiungere una o più altre funzioni isrCaller()
@@ -366,6 +365,11 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
     messaggiInviati = 0;
     messaggiRicevuti = 0;
+
+    durataUltimaAttesaAck = 0;
+    durataMassimaAttesaAck = 0;
+    sommaAtteseAck = 0;
+    nrAckRicevuti = 0;
 
     return Errore::ok;
 

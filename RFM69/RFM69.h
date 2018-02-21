@@ -380,7 +380,7 @@ public:
         variabile; è più basso se il codice della radio ricevente è scritto bene
         (dal punto di vista di questa classe).
     */
-    uint16_t ottieniAttesaAck() {return durataUltimaAttesaAck};
+    uint16_t ottieniAttesaAck() {return durataUltimaAttesaAck;}
 
     //! Restituisce la durata massima di attesa di un ACK (ricevuto)
     /*! Restituisce lo stesso valore della funzione `durataAttesaAck()`, ma relativo
@@ -395,9 +395,8 @@ public:
         usando la funzione ottieniAttesaAck() e eliminare la causa di tale ritardo
         oppure aumentare momrntaneamente il timeout il quel punto.
     */
-    uint16_t ottieniAttesaMassimaAck() {return durataMassimaAttesaAck};
+    uint16_t ottieniAttesaMassimaAck() {return durataMassimaAttesaAck;}
 
-    implementare e testare!!
     //! Restituisce la durata media di attesa di un ACK (ricevuto)
     /*! Restituisce lo stesso valore della funzione `durataAttesaAck()`, ma anziché
         riferirsi a un'attesa in particolare restituisce l'attesa media dall'ultima
@@ -407,7 +406,7 @@ public:
         più la funzione `leggi()` è chiamata (o pronta ad essere chiamata) regolarmente
         e frequentemente più questo valore sarà basso.
     */
-    uint16_t ottieniAttesaMediaAck() {return durataMediaAttesaAck};
+    uint16_t ottieniAttesaMediaAck() {return (sommaAtteseAck/nrAckRicevuti);}
 
     //! Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione
     /*! @return Il numero di messaggi inviati dopo l'ultima inizializzazione
@@ -717,14 +716,16 @@ private:
     // ALLA FUNZIONE leggi()] + [trasmissione ACK]
     // Questa variabile ha un 'getter' pubblico
     uint16_t durataUltimaAttesaAck;
-    // Durata media dell attesa di un ACK dopo l'ultima inizializzazione
-    // Questa variabile ha un 'getter' pubblico perché può essere un indice della
-    // buona formattazionje del codice della radio ricevente
-    uint16_t durataMediaAttesaAck;
     // Durata massima dell'attesa di un ACK dall'ultima inizializzazione ad ora
     // Questa variabile ha un 'getter' pubblico perché può essere usata per impostare
     // `timeoutAck`
-    uint8_t durataMassimaAttesaAck;
+    uint16_t durataMassimaAttesaAck;
+    // Durata media dell attesa di un ACK dopo l'ultima inizializzazione
+    // La media ha un 'getter' pubblico perché può essere un indice della
+    // buona formattazionje del codice della radio ricevente.
+    uint32_t sommaAtteseAck;
+    // Numero di ACK ricevuti, serve nel calcolo della media
+    uint16_t nrAckRicevuti;
 
 
     // Modalità in cui si trova attualmente la radio

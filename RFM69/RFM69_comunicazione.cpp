@@ -344,7 +344,17 @@ void RFM69::isr() {
             if(intest.bit.ack) {
 
                 // # Il messaggio è un ACK # //
+
+                // Calcola attesa attuale, ...
                 durataUltimaAttesaAck = millis() - tempoUltimaTrasmissione;
+                // ... massima ...
+                if(durataUltimaAttesaAck > durataMassimaAttesaAck) {
+                    durataMassimaAttesaAck = durataUltimaAttesaAck;
+                }
+                // ... e media
+                nrAckRicevuti++;
+                sommaAtteseAck += durataUltimaAttesaAck;
+
                 attesaAck = false;
                 ackRicevuto = true;
                 cambiaModalita(modalitaDefault, false);
@@ -685,5 +695,10 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto
         serial.println(F("impossibile cambiare")); break;
         case Errore::modTimeout :
         serial.println(F("timeout")); break;
+        default:
+        serial.print(F("Errore sconosciuto ["));
+        serial.print(errore);
+        serial.println(F("]"));
+        break;
     }
 }
