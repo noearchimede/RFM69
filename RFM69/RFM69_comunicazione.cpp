@@ -556,16 +556,16 @@ int  RFM69::sleep() {
     return cambiaModalita(Modalita::sleep);
 }
 
-void RFM69::sleepDefault() {
+void RFM69::defaultSleep() {
     modalitaDefault = Modalita::sleep;
 }
-void RFM69::standbyDefault() {
+void RFM69::defaultStandby() {
     modalitaDefault = Modalita::standby;
 }
-void RFM69::listenDefault() {
+void RFM69::defaultListen() {
     modalitaDefault = Modalita::listen;
 }
-void RFM69::rxDefault() {
+void RFM69::defaultRx() {
     modalitaDefault = Modalita::rx;
 }
 

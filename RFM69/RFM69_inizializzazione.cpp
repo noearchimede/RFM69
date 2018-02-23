@@ -348,8 +348,6 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
     if(!caricaImpostazioni()) return Errore::initErroreImpostazione;
 
-    standby();
-
 
 
     // ## INIZIALIZZAZIONE DI VARIABILI ## //
@@ -370,6 +368,9 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
     durataMassimaAttesaAck = 0;
     sommaAtteseAck = 0;
     nrAckRicevuti = 0;
+
+    defaultStandby();
+    standby();
 
     return Errore::ok;
 

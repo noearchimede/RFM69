@@ -307,13 +307,13 @@ public:
     /*! Questa funzione non cambia la modalità attuale!\n
         Ad es.`sleepDefault();` non corrisponde a `sleepDefault(); sleep();`
     */
-    void sleepDefault();
-    //! @copydoc sleepDefault()
-    void standbyDefault();
-    //! @copydoc sleepDefualt()
-    void listenDefault();
-    //! @copydoc sleepDefualt()
-    void rxDefault();
+    void defaultSleep();
+    //! @copydoc defaultSleep()
+    void defaultStandby();
+    //! @copydoc defaultSleep()
+    void defaultListen();
+    //! @copydoc defaultSleep()
+    void defaultRx();
 
     //! Imposta il tempo d'attesa massimo per un ACK
     /*! @param tempoMs Tempo di attesa in millisecondi per la funzione `aspettaAck()`.
@@ -681,7 +681,7 @@ private:
     // ## Specifiche di ogni radio ##
 
     // Modalità usata quando non ne è specificata un'altra
-    Modalita modalitaDefault = Modalita::standby;
+    Modalita modalitaDefault;
 
     // Dimensione massima dei messaggi in entrata
     // costante dopo l'inizializzazione, può essere modificato da un'init. successiva
