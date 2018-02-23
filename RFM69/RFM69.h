@@ -313,7 +313,7 @@ public:
     //! @copydoc defaultSleep()
     void defaultListen();
     //! @copydoc defaultSleep()
-    void defaultRx();
+    void defaultRicezione();
 
     //! Imposta il tempo d'attesa massimo per un ACK
     /*! @param tempoMs Tempo di attesa in millisecondi per la funzione `aspettaAck()`.

@@ -565,7 +565,7 @@ void RFM69::defaultStandby() {
 void RFM69::defaultListen() {
     modalitaDefault = Modalita::listen;
 }
-void RFM69::defaultRx() {
+void RFM69::defaultRicezione() {
     modalitaDefault = Modalita::rx;
 }
 
