@@ -12,27 +12,45 @@ radio.
 // #define MODULO_1 o MODULO_2 per compilare uno dei due programmi
 //------------------------------------------------------------------------------
 //#define MODULO_1
- #define MODULO_1
+#define MODULO_1
 //------------------------------------------------------------------------------
 
 
+// Impostazioni
+//------------------------------------------------------------------------------
+
+// Numero medio di messaggi che ogni radio invierà ogni minuto
+uint16_t messPerMin = 30;
 
 
 // t
 #ifdef MODULO_1
-// Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(2, 3);
-// Un LED, 0 per non usarlo
-#define LED 4
+RFM69 radio(2, 3); // Pin SS, pin Interrupt, (eventualmente pin Reset)
+#define LED_TX 4 // Led rosso
+#define LED_RX 5 // Led giallo
 #endif
 
 // q
 #ifdef MODULO_2
-// Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(A2, 3, A3);
-// Un LED, 0 per non usarlo
-#define LED 7
+RFM69 radio(A2, 3, A3); // Pin SS, pin Interrupt, (eventualmente pin Reset)
+#define LED_TX 8 // Led giallo
+#define LED_RX 7 // Led rosso
 #endif
+//------------------------------------------------------------------------------
+
+
+
+// ### Variabili, costanti e  prototipi ###
+
+const int lunghezzaMessaggi = 4;
+uint32_t tAccensioneRx, tAccensioneTx;
+
+uint16_t messInviati = 0, messNonInviati = 0;
+
+void invia();
+void leggi();
+void accendiLed(uint8_t);
+void spegniLed();
 
 
 
@@ -40,84 +58,75 @@ RFM69 radio(A2, 3, A3);
 void setup() {
 
     Serial.begin(115200);
-    if(LED) pinMode(LED, OUTPUT);
+
+    Serial.println("\nEsempio RFM69 - programma simmetrico\n");
+
+    if(LED_TX) pinMode(LED_TX, OUTPUT);
+    if(LED_RX) pinMode(LED_RX, OUTPUT);
 
     // Inizializza la radio. Deve essere chiamato una volta all'inizio del programma.
     // Se come secondo argomento si fornisce un riferimento a Serial, la funzione
     // stampa il risultato dell'inizializzazione (riuscita o no).
-    radio.inizializza(4, Serial);
+    radio.inizializza(lunghezzaMessaggi, Serial);
 
-}
+    // con `defaultRicezione()` basta chiamare una volta sola `iniziaRicezione()`
+    radio.defaultRicezione();
 
-
-
-#ifdef MODULO_1
-
-
-void loop(){
-
-    // crea un messaggio
-    uint8_t lung = 4;
-    uint8_t mess[lung] = {0,0x13, 0x05, 0x98};
-
-    bool ok;
-
-    while(true) {
-
-        // Aggiorna messaggio
-        mess[0] = (uint8_t)radio.nrMessaggiInviati();
-
-        Serial.print("Invio...");
-        if(LED) digitalWrite(LED, HIGH);
-
-        // Invia
-        radio.inviaConAck(mess, lung);
-        // Aspetta fino alla ricezione di un ack o al timeout impostato nella classe
-        while(radio.aspettaAck());
-        // Controlla se è arrivato un Ack (l'attesa può finire anche senza ack, per timeout)
-        if(radio.ricevutoAck()) ok = true;  else ok = false;
-
-        if(LED) digitalWrite(LED, LOW);
-
-        if(ok) {
-            Serial.print(" mess #");
-            Serial.print(radio.nrMessaggiInviati());
-            Serial.print(" trasmesso in ");
-            Serial.print(radio.ottieniAttesaAck());
-            Serial.print(" ms");
-            Serial.print(" (media: ");
-            Serial.print(radio.ottieniAttesaMediaAck());
-            Serial.print(", massima: ");
-            Serial.print(radio.ottieniAttesaMassimaAck());
-            Serial.print(")");
-        }
-        else {
-            Serial.print(" messaggio #");
-            Serial.print(radio.nrMessaggiInviati());
-            Serial.print(" perso");
-        }
-        Serial.println();
-
-        delay(1000);
-    }
-}
-
-#endif
-
-
-
-#ifdef MODULO_2
-
-
-void loop(){
-
-    // metti la radio in modalità ricezione
     radio.iniziaRicezione();
+}
 
-    // aspetta un messaggio
-    while(!radio.nuovoMessaggio());
-    delay(micros()%50);
-    if(LED) digitalWrite(LED, HIGH);
+
+bool novita = false;
+
+void loop() {
+
+    leggi();
+    if((((micros() >> 3) + (micros() << 3)) % 60000) < messPerMin) invia();
+
+    if(novita) {
+        novita = false;
+        Serial.print("ok: ");
+        Serial.print(messInviati);
+        Serial.print(", persi: ");
+        Serial.print(messNonInviati);
+        Serial.print(" - Successo: ");
+        Serial.print((float)messInviati * 100 / (messInviati + messNonInviati));
+        Serial.print("%");
+        Serial.println();
+    }
+
+    spegniLed();
+    delay(1);
+}
+
+
+void invia() {
+    novita = true;
+    // crea un messaggio
+    uint8_t mess[lunghezzaMessaggi] = {1,2,3,4};
+
+    // Invia
+    radio.inviaConAck(mess, lunghezzaMessaggi);
+    while(radio.aspettaAck());
+    if(radio.ricevutoAck()) {
+        messInviati++;
+        accendiLed(LED_TX);
+    }
+    else {
+        messNonInviati++;
+    }
+
+}
+
+
+void leggi() {
+
+    // c'è un nuovo messaggio? se non c'è return
+    if(!radio.nuovoMessaggio()) return;
+
+    novita = true;
+
+    accendiLed(LED_RX);
 
     // ottieni la dimensione del messaggio ricevuto
     uint8_t lung = radio.dimensioneMessaggio();
@@ -125,31 +134,20 @@ void loop(){
     uint8_t mess[lung];
     // leggi il messaggio
     int erroreLettura = radio.leggi(mess, lung);
-    // ora `mess` contiene il messaggio e `lung` corrisponde alla lunghezza del
-    // messaggio (in questo caso corrispondeve anche prima, ma avrebbe anche
-    // potuto essere più grande, ad. es. se mess. fosse stato un buffer generico
-    // già allocato alla dimensione del messaggio più lungo possibile)
 
-    if (erroreLettura) {
-        Serial.print("Errore lettura");
-    }
-    else {
-        Serial.print("Messaggio (");
-        Serial.print(lung);
-        Serial.print(" bytes): ");
-        for(int i = 0; i < lung; i++) {
-            Serial.print(" 0x");
-            Serial.print(mess[i], HEX);
-        }
-        Serial.print("  rssi: ");
-
-        // Ottieni il valore RSSI del segnale che ha portato questo messaggio
-        Serial.print(radio.rssi());
-    }
-    Serial.println();
-
-    delay(50);
-    if(LED) digitalWrite(LED, LOW);
+    // stampa un eventuale errore
+    if(erroreLettura) radio.stampaErroreSerial(Serial, erroreLettura);
 
 }
-#endif
+
+
+void accendiLed(uint8_t led) {
+    if (led) digitalWrite(led, HIGH);
+    if(led == LED_TX) tAccensioneTx = millis();
+    if(led == LED_RX) tAccensioneRx = millis();
+}
+
+void spegniLed() {
+    if(millis() - tAccensioneRx > 50) digitalWrite(LED_RX, LOW);
+    if(millis() - tAccensioneTx > 50) digitalWrite(LED_TX, LOW);
+}
