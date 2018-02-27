@@ -77,7 +77,7 @@ void loop(){
         // Invia
         radio.inviaConAck(mess, lung);
         // Aspetta fino alla ricezione di un ack o al timeout impostato nella classe
-        while(radio.aspettaAck());
+        while(radio.ackInSospeso());
         // Controlla se è arrivato un Ack (l'attesa può finire anche senza ack, per timeout)
         if(radio.ricevutoAck()) ok = true;  else ok = false;
 
