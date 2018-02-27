@@ -229,28 +229,28 @@ public:
     /*! @return `true` se la classe sta aspettando un ack, cioé se ha inviato un
             messaggio con richiesta di ACK e non lo ha ancora ricevuto.
 
-        Questa funzione contiene un sistema di timeout. Dopo lo scadere del tempo
-        restituisce `false` anche se non ha ricevuto nessun ack.
+        Questa funzione contiene un sistema di timeout. Se chiamata dopo lo scadere
+        del tempo chiama `rinunciaAck()` e restituisce `false`.
 
         @warning `false` ha due signifcati opposti:
               1. L'ACK è stato ricevuto
               2. L'ACK non è arrivato, ma il tempo massimo di attesa ê scaduto.
             Per questo è necessario chiamare _sempore_ anche ricevutoAck().
     */
-    bool aspettaAck();
+    bool ackInSospeso();
 
     //! Restituisce true se la radio ha ricevuto un ACK
     /*! @return `true` se la radio ha ricevuto un ACK per l'ultimo messaggio inviato
 
         Questa funzione non aspetta l'ACK, dice solo se è arrivato, quindi chiamata
         immediatamente dopo `invia()` restituisce sempre `false`. Normalmente è
-        perciò usata insieme a aspettaAck() (cioé subito dopo di essa).
+        perciò usata insieme a ackInSospeso() (cioé subito dopo di essa).
 
         Esempio:
         ~~~{.cpp}
         for(int i = 0; i < 3; i++) {
             invia();
-            aspettaAck();
+            while(ackInSospeso());
             if(ricevutoAck()) break;
         }
         if(!ricevutoAck()) {
@@ -264,7 +264,7 @@ public:
     /*!
         @note Normalmente questa funzione non dovrebbe mai essere chiamata.
 
-        Questa funzione è chiamata automaticamente da aspettaAck() allo scadere
+        Questa funzione è chiamata automaticamente da ackInSospeso() allo scadere
         del tempo massimo. Può essere usata dall'utente per terminare l'attesa
         prima di quella scadenza.
             In caso di invio di un secondo messaggio prima della ricezione dell'ACK
@@ -316,7 +316,7 @@ public:
     void rxDefault();
 
     //! Imposta il tempo d'attesa massimo per un ACK
-    /*! @param tempoMs Tempo di attesa in millisecondi per la funzione `aspettaAck()`.
+    /*! @param tempoMs Tempo di attesa in millisecondi per la funzione `ackInSospeso()`.
                Dopo aver atteso per questo tempo la funzione terminerà senza
                aver ricevuto un ACK.
     */

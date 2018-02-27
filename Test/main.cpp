@@ -1,14 +1,23 @@
+<<<<<<< Updated upstream
 /*! @file
 @brief Esempio con il minimo di funzioni per permettere una comuniczione
 
 Questo programma stabilisce una comunicazione unidirezionale ma con ACK tra due
 radio.
 */
+=======
 
-#include <Arduino.h>
-#include "RFM69.h"
+// L'elenco di `#include` seguente permettere di compilare qualsiasi dei programmi
+// di test o di esempio presenti nella cartella RFM69/Esempi.
+// Chiaramente è possibile selezionare un solo programma alla volta.
+
+// Numero del programma da compilare
+#define PROGRAMMA 2
+>>>>>>> Stashed changes
 
 
+
+<<<<<<< Updated upstream
 // #define MODULO_1 o MODULO_2 per compilare uno dei due programmi
 //------------------------------------------------------------------------------
 //#define MODULO_1
@@ -152,4 +161,15 @@ void loop(){
     if(LED) digitalWrite(LED, LOW);
 
 }
+=======
+#if PROGRAMMA == 1
+#include "../Esempi/Esempio_base.cpp"
+#endif
+
+#if PROGRAMMA == 2
+#include "../Esempi/Test_collisioni_master.cpp"
+#endif
+#if PROGRAMMA == 3
+#include "../Esempi/Test_collisioni_assistente.cpp"
+>>>>>>> Stashed changes
 #endif

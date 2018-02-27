@@ -47,6 +47,7 @@ int RFM69::inviaConAck(const uint8_t messaggio[], uint8_t lunghezza, uint8_t tit
 // un ACK all'altra radio
 //
 int RFM69::inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo) {
+
     Intestazione intestazione;
     intestazione.bit.richiestaAck = 1;
     if(titolo > valMaxTitolo) titolo = 0;
@@ -59,11 +60,12 @@ int RFM69::inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t 
         errore = inviaMessaggio(messaggio, lunghezza, intestazione.byte);
         if(errore != Errore::ok) return errore;
         // attesa di al massimo `timeoutAck` millisecondi
-        aspettaAck();
+        while(ackInSospeso());
         // controllo
         if(ricevutoAck()) break;
     }
 
+    if(!ricevutoAck()) return Errore::errore;
     tentativi = i;
     return Errore::ok;
 }
@@ -246,11 +248,11 @@ uint8_t RFM69::tempoRicezione() {
 // ### 3. ACK ### //
 
 
-// Restituisce true se la classe sta asettando un ack
+// Restituisce true se la classe sta aspettando un ack
 //
-bool RFM69::aspettaAck() {
+bool RFM69::ackInSospeso() {
     if(attesaAck) {
-        if(tempoUltimaTrasmissione < millis() - timeoutAck) {
+        if(millis() - tempoUltimaTrasmissione  > timeoutAck) {
             // timeout, termina l'attesa senza aver ricevuto l'ACK
             rinunciaAck();
         }
@@ -695,10 +697,5 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto
         serial.println(F("impossibile cambiare")); break;
         case Errore::modTimeout :
         serial.println(F("timeout")); break;
-        default:
-        serial.print(F("Errore sconosciuto ["));
-        serial.print(errore);
-        serial.println(F("]"));
-        break;
     }
 }
