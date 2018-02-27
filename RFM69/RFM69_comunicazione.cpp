@@ -142,6 +142,9 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
 
     // Nessun messaggio in entrata
     if(!messaggioRicevuto) return Errore::leggiNessunMessaggio;
+
+    messaggioRicevuto = false;
+
     // Messaggio troppo lungo per questa radio
     if(lungMaxMessEntrata < ultimoMessaggio.dimensione) return Errore::messaggioTroppoLungo;
     // Messaggio troppo lungo per l'array dell'utente
@@ -162,8 +165,6 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
     else {
         cambiaModalita(modalitaDefault);
     }
-
-    messaggioRicevuto = false;
 
     return Errore::ok;
 }
@@ -558,16 +559,16 @@ int  RFM69::sleep() {
     return cambiaModalita(Modalita::sleep);
 }
 
-void RFM69::sleepDefault() {
+void RFM69::defaultSleep() {
     modalitaDefault = Modalita::sleep;
 }
-void RFM69::standbyDefault() {
+void RFM69::defaultStandby() {
     modalitaDefault = Modalita::standby;
 }
-void RFM69::listenDefault() {
+void RFM69::defaultListen() {
     modalitaDefault = Modalita::listen;
 }
-void RFM69::rxDefault() {
+void RFM69::defaultRicezione() {
     modalitaDefault = Modalita::rx;
 }
 

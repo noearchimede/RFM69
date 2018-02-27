@@ -165,6 +165,14 @@ public:
     */
     int inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0);
 
+    //! Versione di `inviaFinoAck` senza restituzione del numero di tentativi
+    /*! Questa funzione corrisponde ad `inviaFinoAck(uint16_t&, const uin8_t, uint8_t, uint8_t)`
+        ma il suo primo argomento non è una 'reference'; può essere usata se non
+        si è interessati a sapere il numero di tentativi effettuati oppure
+        se si passa come argomentoun valore e non una variabile.
+    */
+    int inviaFinoAck(const uint16_t &&tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0) {uint16_t t = tentativi; return inviaFinoAck(t, &messaggio[0], lunghezza, titolo);}
+
     //! Restituisce un messaggio, se ce n'è uno da leggere
     /*! Il messaggio è trasferito dalla radio al microcontrollore già nell'isr().
         Questa funzione restituisce all'utente il contenuto del buffer della classe
@@ -307,13 +315,13 @@ public:
     /*! Questa funzione non cambia la modalità attuale!\n
         Ad es.`sleepDefault();` non corrisponde a `sleepDefault(); sleep();`
     */
-    void sleepDefault();
-    //! @copydoc sleepDefault()
-    void standbyDefault();
-    //! @copydoc sleepDefualt()
-    void listenDefault();
-    //! @copydoc sleepDefualt()
-    void rxDefault();
+    void defaultSleep();
+    //! @copydoc defaultSleep()
+    void defaultStandby();
+    //! @copydoc defaultSleep()
+    void defaultListen();
+    //! @copydoc defaultSleep()
+    void defaultRicezione();
 
     //! Imposta il tempo d'attesa massimo per un ACK
     /*! @param tempoMs Tempo di attesa in millisecondi per la funzione `ackInSospeso()`.
@@ -681,7 +689,7 @@ private:
     // ## Specifiche di ogni radio ##
 
     // Modalità usata quando non ne è specificata un'altra
-    Modalita modalitaDefault = Modalita::standby;
+    Modalita modalitaDefault;
 
     // Dimensione massima dei messaggi in entrata
     // costante dopo l'inizializzazione, può essere modificato da un'init. successiva
