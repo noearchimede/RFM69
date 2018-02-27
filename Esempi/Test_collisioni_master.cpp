@@ -209,7 +209,7 @@ void invia() {
     // Invia
     accendiLed(LED_TX);
     radio.inviaConAck(mess, lunghezzaMessaggi);
-    while(radio.aspettaAck());
+    while(radio.ackInSospeso());
 
     if(radio.ricevutoAck()) {
         messInviati++;
