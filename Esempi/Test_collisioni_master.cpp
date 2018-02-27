@@ -114,16 +114,25 @@ void setup() {
 
     Serial.println("Questa radio conduce l'esperimento.");
     Serial.println();
-    Serial.print("Aspetto altra radio... ");
+    Serial.print("Aspetto altra radio..");
     // Aspetta per 30 secondi che l'altra radio risponda (10 tentativi, uno al secondo)
     uint8_t mess[2] = {0,0};
-    radio.impostaTimeoutAck(1000);
-    int x = radio.inviaFinoAck(30, mess, 2);
-    radio.stampaErroreSerial(Serial,x);
-    if(x != 0) {
-        Serial.println("nessuna radio trovata.");
+    bool connessioneOk = false;
+    for(int i = 0; i < 20; i++) {
+        Serial.print(".");
+        radio.inviaConAck(mess, 2);
+        delay(1000);
+        if(radio.ricevutoAck()) {
+            connessioneOk = true;
+            break;
+        }
+    }
+
+    if(!connessioneOk) {
+        Serial.println(" nessuna radio trovata.");
         while(true);
     }
+
     Serial.print("ok, inizio... ");
     for(int i = 3; i; i--) {
         Serial.print(i);
@@ -144,6 +153,8 @@ void setup() {
     delay(100);
     radio.inviaConAck(mess, 2);
     delay(100);
+
+    randomSeed(micros());
 }
 
 
@@ -186,13 +197,11 @@ void invia() {
     // frequenza di invio `messAlMinuto`.
 
     // Tempo trascorso dall'ultima chiamata ad `invia()`, in microsecondi
-    uint32_t deltaT = (micros() - microsInviaPrec);
-    // Numero casuale compreso tra 0 e 60 milioni (60'000'000 microsecondi = 1 minuto)
-    uint32_t n = (micros() * microsInviaPrec + micros()) % 60000000;
-    // Non servirà più, aggiorna il tempo
-    microsInviaPrec = micros();
+    uint32_t t = micros();
+    uint32_t deltaT = (t - microsInviaPrec);
+    microsInviaPrec = t;
     // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
-    bool decisione = ((messPerMin * deltaT) > n);
+    bool decisione = ((messPerMin * deltaT) > random(60000000));
 
     if(!decisione) return;
 

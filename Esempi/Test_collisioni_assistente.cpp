@@ -84,10 +84,10 @@ void setup() {
     radio.impostaTimeoutAck(timeoutAck);
 
     Serial.print("Aspetto un messaggio... ");
-    bool statoLed;
+    bool statoLed = true;
     uint32_t t = millis();
     while(!radio.nuovoMessaggio()) {
-        if(millis() - t > 200) {
+        if(millis() - t > 1000) {
             digitalWrite(LED_ACK, statoLed);
             digitalWrite(LED_TX, !statoLed);
             statoLed = !statoLed;
@@ -99,6 +99,8 @@ void setup() {
     digitalWrite(LED_TX, LOW);
 
     Serial.println("ricevuto, inizio test.\n\n");
+
+    randomSeed(micros());
 
 }
 
@@ -125,19 +127,18 @@ void loop() {
 void invia() {
 
 
-        // Decidi  caso se inviare o no, con una probabilità tale da avvicinarsi alla
-        // frequenza di invio `messAlMinuto`.
+    // Decidi a caso se inviare o no, con una probabilità tale da avvicinarsi alla
+    // frequenza di invio `messAlMinuto`.
 
-        // Tempo trascorso dall'ultima chiamata ad `invia()`, in microsecondi
-        uint32_t deltaT = (micros() - microsInviaPrec);
-        // Numero casuale compreso tra 0 e 60 milioni (60'000'000 microsecondi = 1 minuto)
-        uint32_t n = (micros() * microsInviaPrec + micros()) % 60000000;
-        // Non servirà più, aggiorna il tempo
-        microsInviaPrec = micros();
-        // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
-        bool decisione = ((messPerMin * deltaT) > n);
+    // Tempo trascorso dall'ultima chiamata ad `invia()`, in microsecondi
+    uint32_t t = micros();
+    uint32_t deltaT = (t - microsInviaPrec);
+    microsInviaPrec = t;
+    // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
+    bool decisione = ((messPerMin * deltaT) > random(60000000));
 
-        if(!decisione) return;
+    Serial.println(decisione);
+    if(!decisione) return;
 
     Serial.print("tx | mess/minuto: ");
     Serial.println(messPerMin);
