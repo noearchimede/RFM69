@@ -47,7 +47,7 @@ RFM69 radio(2, 3);
 // a questo si aggiunge il preamble che è lungo per default 4 bytes
 const uint8_t lunghezzaMessaggi = 4;
 // Tempo massimo di attesa per un ACK
-const uint8_t timeoutAck = 50;
+const uint8_t timeoutAck = 100;
 
 
 //------------------------------------------------------------------------------
@@ -55,13 +55,13 @@ const uint8_t timeoutAck = 50;
 //------------------------------------------------------------------------------
 
 // Più è piccolo più il test sarà preciso (e lungo)
-const uint16_t tolleranza = 600;
+const uint16_t tolleranza = 800;
 // Durata minima del test di una singola frequenza
 const uint32_t durataMinimaTest = 30000;
 // Frequenza di trasmissione iniziale (messaggi al minuto)
 const uint16_t frequenzaTxIniziale = 50;
 // Incremento della frequenza ad ogni test
-const uint16_t incrementoFrequenzaTx = 50;
+const uint16_t incrementoFrequenzaTx = 25;
 // Numero massimo di test
 const uint8_t nrTestMax = 50;
 
@@ -86,6 +86,8 @@ uint16_t indiceSuccesso = 0;
 uint8_t  nrElaborazioni = 0;
 uint16_t indiciSuccessoPrec[10];
 uint32_t messPerMin, messPerMinEffettivi;
+uint32_t tUltimoMessaggio = 0;
+
 float deriv;
 uint8_t nrTest = 0;
 uint16_t riassunto[nrTestMax][5];
@@ -106,6 +108,7 @@ void stampaNovita();
 void elaboraStatistiche();
 void salvaStatistiche();
 void imposta(uint32_t);
+void pausa();
 bool numeroCasuale(uint32_t);
 void stampaRiassunto();
 void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
@@ -132,11 +135,6 @@ void setup() {
     // stampa il risultato dell'inizializzazione (riuscita o no).
     radio.inizializza(lunghezzaMessaggi, Serial);
 
-    // con `defaultRicezione()` basta chiamare una volta sola `iniziaRicezione()`
-    radio.defaultRicezione();
-
-    radio.iniziaRicezione();
-
 
     Serial.println("Questa radio conduce l'esperimento.");
     Serial.println();
@@ -159,7 +157,8 @@ void setup() {
         while(true);
     }
 
-    Serial.print("ok, inizio... ");
+    Serial.println(" ok");
+    Serial.print("Inizio test... ");
     for(int i = 3; i; i--) {
         Serial.print(i);
         Serial.print(" ");
@@ -171,14 +170,6 @@ void setup() {
     radio.impostaTimeoutAck(timeoutAck);
 
     imposta(frequenzaTxIniziale);
-
-    //Invia alcuni messaggi per "svegliare" l'altra radio
-    radio.inviaConAck(mess, 2);
-    delay(100);
-    radio.inviaConAck(mess, 2);
-    delay(100);
-    radio.inviaConAck(mess, 2);
-    delay(100);
 
     randomSeed(micros());
 }
@@ -208,6 +199,7 @@ void loop() {
 
     spegniLed();
     delay(1);
+    pausa();
 }
 
 
@@ -261,6 +253,8 @@ void leggi() {
 
     // c'è un nuovo messaggio? se non c'è return
     if(!radio.nuovoMessaggio()) return;
+
+    tUltimoMessaggio  = millis();
 
     messaggiRicevuti++;
 
@@ -316,8 +310,50 @@ void imposta(uint32_t mpm) {
     Serial.println(mpm);
     Serial.println();
 
+    // con `defaultRicezione()` basta chiamare una volta sola `iniziaRicezione()`
+    radio.defaultRicezione();
+    radio.iniziaRicezione();
+
+    uint8_t mess[2] = {mpm << 8, mpm};
+    radio.inviaConAck(mess, 2);
+    delay(100);
+    radio.inviaConAck(mess, 2);
+    delay(100);
+    radio.inviaConAck(mess, 2);
+    delay(100);
     tInizio = millis();
 
+}
+
+
+
+
+
+
+void pausa() {
+    if(millis() - tUltimoMessaggio < 5000) return;
+
+    Serial.println("-- Aspetto altra radio --");
+
+    radio.iniziaRicezione();
+    bool statoLed = true;
+    uint32_t tLed = millis();
+    uint8_t i = 0;
+    while(!radio.nuovoMessaggio()) {
+        if(millis() - tLed > 200) {
+            digitalWrite(LED_ACK, statoLed);
+            digitalWrite(LED_TX, !statoLed);
+            statoLed = !statoLed;
+            tLed = millis();
+            i++;
+        }
+        if(i == 10) break;
+    }
+    tUltimoMessaggio = millis();
+    digitalWrite(LED_ACK, LOW);
+    digitalWrite(LED_TX, LOW);
+
+    leggi();
 }
 
 
@@ -376,7 +412,7 @@ void salvaStatistiche()  {
 
     nrTest++;
 
-    if(indiceSuccesso == 0 || nrTest == nrTestMax)
+    if(indiceSuccesso < 500 || nrTest == nrTestMax || messPerMinEffettivi < messPerMin - 50)
     fineTest = true;
 }
 
@@ -435,7 +471,13 @@ void stampaRiassunto() {
     Serial.print(frequenzaTxIniziale);
     Serial.print(" e ");
     Serial.print(mpmMax);
-    Serial.print(" messaggi al minuto");
+    Serial.print(" messaggi al minuto.");
+    Serial.println();
+    Serial.println();
+    Serial.print("Attesa ACK: media = ");
+    Serial.print(radio.ottieniAttesaMediaAck());
+    Serial.print(", massima = ");
+    Serial.print(radio.ottieniAttesaMassimaAck());
     Serial.println();
 
     Serial.println();
@@ -478,7 +520,7 @@ void stampaRiassunto() {
 
     // Stampa grafico percentuale/frequenzaTx
 
-    const uint8_t larghezza = 60;
+    const uint8_t larghezza = 70;
     const uint16_t mpmMaxGrafico = mpmMax + (50 - (mpmMax%50));
     const uint8_t altezza = 16; // multiplo di 2, 3 o 4 (meglio 4)
     uint8_t divisoreAltezza;
@@ -497,7 +539,9 @@ void stampaRiassunto() {
         Serial.print(" | ");
 
         for(int x = 0, test = 0; x < larghezza; x++) {
-            bool punto;
+
+            bool punto = false;
+
             // Controlla se uno qualsiasi dei test è stato effettuato ai mpm su questa ascissa
             for(int i = 0; i < nrTest; i++) {
                 uint8_t ascissa = larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMaxGrafico;
@@ -512,11 +556,9 @@ void stampaRiassunto() {
                 }
             }
 
-            if(!punto)
-            Serial.print(" ");
-
-            test++;
+            if(!punto) Serial.print(" ");
         }
+
         Serial.println();
     }
 
@@ -543,13 +585,11 @@ void stampaRiassunto() {
         distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
     }
 
-    for(int x = 1; x * distanzaPunti < larghezza; x++) {
+    for(int x = 1; x * distanzaPunti < larghezza + 5; x++) {
         for(int i = 0; i < distanzaPunti - 3; i++)
         Serial.print(" ");
         stampaLarghezzaFissa(x * moltiplicatore, 3);
     }
-    Serial.print("  ");
-    Serial.print(mpmMaxGrafico);
 
 
     Serial.println();

@@ -46,7 +46,7 @@ RFM69 radio(A2, 3, A3);
 // a questo si aggiunge il preamble che è lungo per default 4 bytes
 const uint8_t lunghezzaMessaggi = 4;
 // Tempo massimo di attesa per un ACK
-const uint8_t timeoutAck = 50;
+const uint8_t timeoutAck = 100;
 
 
 //******************************************************************************
@@ -122,17 +122,11 @@ void setup() {
 
 
 void loop() {
-
     leggi();
     invia();
     spegniLed();
     delay(1);
-
-    // Visto che questo test termina dopo la compromissione dell'unico canale di
-    // comunicazione tra le due radio, ogni tanto è necessario che questa radio
-    // smetta di trasmettere per sapere se il test è ancora in corso e se si a
-    // che velocita.
-    if(millis() - tUltimoMessaggio > 5000) pausa();
+    pausa();
 }
 
 
@@ -223,17 +217,25 @@ void spegniLed() {
 
 
 void pausa() {
+    if(millis() - tUltimoMessaggio < 5000) return;
+
+    Serial.println("-- Aspetto altra radio --");
+
     radio.iniziaRicezione();
     bool statoLed = true;
-    uint32_t t = millis();
+    uint32_t tLed = millis();
+    uint8_t i = 0;
     while(!radio.nuovoMessaggio()) {
-        if(millis() - t > 200) {
+        if(millis() - tLed > 200) {
             digitalWrite(LED_ACK, statoLed);
             digitalWrite(LED_TX, !statoLed);
             statoLed = !statoLed;
-            t = millis();
+            tLed = millis();
+            i++;
         }
+        if(i == 10) break;
     }
+    tUltimoMessaggio = millis();
     digitalWrite(LED_ACK, LOW);
     digitalWrite(LED_TX, LOW);
 

@@ -294,6 +294,69 @@ public:
     int standby();
 
     //!@}
+    /*! @name Funzioni di impostazione
+    Impostazioni nel file di impostazione che possono essere modificate anche nel
+    programma
+    */
+    //!@{
+
+    //! Imposta la bit rate di trasmissione
+    /*! @note Con la bit rate conviene modificare anche la Frequency Deviation,
+              se si utilizza la modulazione FSK (default per questa classe).
+              Vedi il commento a `impostaBitRate()` per più dettagli.
+
+        @warning La bit rate deve essere identica per entrambe le radio
+
+        @param BitRate bit rate in bit al secondo, compresa tra 1'200 e 300'000
+               per la modulazione FSK e tra 1'200 e 32'768 per OOK
+
+        @return Errore secondo l'`enum` `Errore::ListaErrori` (1 se c'è un errore
+                e 0 se tutto va bene).
+    */
+    int impostaBitRate(uint32_t bitRate);
+
+    //! Imposta la Frequency Deviation per la modulazione FSK
+    /*! Con la Frequency Deviation conviene modificare anche la bit rate.
+        Si tenga sempre presente che:
+
+        - (1/5) * bitRate < freqDev < 5 * bitRate
+        - 600 < freqDev < 500'000 - (bitRate / 2)
+
+        Si potrebbero applicare molte altre forumle, che nn sono riportate qui
+        (vedi ad ed. il teorema di Shannon–Hartley).
+
+        @warning La Frequency Deviation deve essere identica per entrambe le radio
+
+        @note Questa impostazione non ha alcun effetto se la modulazione scelta
+              nel file RFM69_impostazioni.h è OOK
+
+        @param freqDev Frequency deviation, in Hertz, compresa tra 600 e 300'000
+
+        @return Errore secondo l'`enum` `Errore::ListaErrori` (1 se c'è un errore
+                e 0 se tutto va bene).
+    */
+    int impostaFreqDev(uint32_t freqDev);
+
+    //! Imposta la frequenza di comunicazione
+    /*! Imposta la frequenza della trasmissione radio.
+        @note La funzione non impone limiti al valore ricevuto. Esistono però due
+              limiti:
+
+              - Il limite del modulo, che esiste in 4 varianti diverse con ciascuna
+                una banda di frequenze possibili diversa;
+              - La legge, che regola l'utilizzo dello spettro elettromagnetico
+                lasciando alcune bande ben definite a moduli a bassa potenza come
+                questo.
+
+        @param freq La frequenza di trasmissione in Hertz
+
+        @return Errore secondo l'`enum` `Errore::ListaErrori` (1 se c'è un errore
+                e 0 se tutto va bene).
+    */
+    int impostaFrequenzaMHz(uint32_t freq);
+
+    
+    //!@}
     /*! @name Funzioni ausiliarie
     Utili ma non indispensabili
     */

@@ -453,8 +453,144 @@ bool RFM69::caricaImpostazioni() {
 
 
 
+// ### 6. Impostazioni modificabili in runtime ### //
 
-// ### 6. Debug ### //
+
+
+
+
+//Imposta la potenza di trasmissione del segnale radio
+//
+bool RFM69::impostaPotenzaTx(int dBm) {
+
+
+    // Controlla che la potenza sia all'interno dei limiti
+    if(dBm < -18) return false;
+    if(dBm > 20) return false;
+
+    bool pa0, pa1, pa2;
+    int outPow; //solo i primi 5 bit possono essere usati.
+
+
+    if(dBm <= -2) {      //opzione 1
+        pa0 = 1;
+        pa1 = 0;
+        pa2 = 0;
+        outPow = dBm + 18;
+        highPower = false;
+    }
+    else if(dBm <= 13) { //opzione 2
+        pa0 = 0;
+        pa1 = 1;
+        pa2 = 0;
+        outPow = dBm + 18;
+        highPower = false;
+    }
+    else if(dBm <= 17) { //opzione 3
+        pa0 = 0;
+        pa1 = 1;
+        pa2 = 1;
+        outPow = dBm + 14;
+        highPower = false;
+    }
+    else if(dBm <= 20) { //opzione 4
+        pa0 = 0;
+        pa1 = 1;
+        pa2 = 1;
+        outPow = dBm + 11;
+        highPower = true;
+    }
+
+    //prepara il byte che sarà scritto nel registro e invia alla radio
+    uint8_t paLevel = 0;
+    paLevel = (pa0 << 7) | (pa1 << 6) | (pa2 << 5) | outPow;
+
+    spi.scriviRegistro(RFM69_11_PA_LEVEL, paLevel);
+
+    return true;
+}
+
+
+
+// Imposta la bit rate della comunicazione radio (bit al secondo)
+//
+int RFM69::impostaBitRate(uint32_t bitRate) {
+
+    //Controlla che non si eccedano i limiti PER FSK (!!per ook il limite
+    // superiore è più basso, 32'768!!)
+    if((1200 > bitRate) || (300000 < bitRate)) return Errore::errore;
+
+    // La bitrate si imposta nei registri 0x03 (MSB) e 0x04 (LSB) secondo la
+    // formula [valoreRegistri = Fxosc/BitRate], con [Fxosc = 32'000'000]
+
+    // Lo 0.5 aggiunto alla fine serve per migliorare l'approssimazione.
+    uint16_t val = (32000000.00 / (float)bitRate) + 0.5;
+
+    // Scrivi i registri
+    spi.scriviRegistro(RFM69_03_BITRATE_MSB, val >> 8);
+    spi.scriviRegistro(RFM69_04_BITRATE_LSB, val);
+
+    if(bitRate == ((uint16_t)spi.leggiRegistro(RFM69_03_BITRATE_MSB) << 8) | spi.leggiRegistro(RFM69_04_BITRATE_LSB))
+    return Errore::ok;
+
+    return Errore::errore;
+}
+
+
+
+// Imposta la frequency deviation per la modulazione FSK
+//
+int RFM69::impostaFreqDev(uint32_t freqDev) {
+
+    // La Frequency Deviation per la modulazione FSK si imposta nei registri
+    // 0x05 (MSB) e 0x06 (LSB) secondo la formula
+    // [valoreRegistri = Fdev/Fstep], con [Fstep = Fxosc/2^19 = 32'000'000/2^19]
+
+    // Lo 0.5 aggiunto alla fine serve per migliorare l'approssimazione.
+    uint16_t val = (freqDev / (32000000.0 / 524288.0) ) + 0.5;
+
+    // Scrivi i registri e assicurati che sianon stati scritti correttamente
+    spi.scriviRegistro(RFM69_05_FDEV_MSB, val << 8);
+    spi.scriviRegistro(RFM69_06_FDEF_LSB, val);
+
+    if(freqDev == ((uint16_t)spi.leggiRegistro(RFM69_05_FDEV_MSB) << 8) | spi.leggiRegistro(RFM69_06_FDEF_LSB))
+    return Errore::ok;
+
+    return Errore::errore;
+}
+
+
+
+// Imposta la frequenza del segnale radio
+//
+int RFM69::impostaFrequenzaMHz(uint32_t freq) {
+
+    // Divide il valore come indicato alla p. 17 del datasheet del modulo RFM69HCW:
+    // [Valore nei registri = FreqRadioHz / Fstep] dove [Fstep = Fxosc / 2^19]
+    // con  [Fxosc = 32MHz].
+    freq /= 32000000 / 524288;
+
+    // Scrive il valore ottenuto nei registri
+    //Registro RegFrfMsb
+    spi.scriviRegistro(RFM69_07_FRF_MSB, freq >> 16);
+    //Registro RegFrfMid
+    spi.scriviRegistro(RFM69_08_FRF_MID, freq >> 8);
+    //Registro RegFrfLsb
+    spi.scriviRegistro(RFM69_09_FRF_LSB, freq);
+
+    if(freq = ((uint32_t)spi.leggiRegistro(RFM69_07_FRF_MSB) << 16) | (spi.leggiRegistro(RFM69_08_FRF_MID) << 8) | (spi.leggiRegistro(RFM69_09_FRF_LSB)))
+    return Errore::ok;
+
+    return Errore::errore;
+}
+
+
+
+
+
+
+
+// ### 7. Debug ### //
 
 
 

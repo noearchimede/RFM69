@@ -40,7 +40,8 @@ la versione html più recente è consultabile
 [3. Collisioni](#3)<br>
 [4. Hardware](#4)<br>
 [5. Struttura dei messaggi](#5)<br>
-[6. Esempio di utilizzo](#6)<br>
+[6. Impostazioni](#6)<br>
+[7. Esempio di utilizzo](#7)<br>
 
 [Documentazione](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html)
 
@@ -257,10 +258,19 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 - `crc` è un Cyclic Redundancy Checksum generato dalla radio.
 
 
+<br><div id='7'/>
 
-<br><div id='6'/>
+## 6. Impostazioni ##
 
-## 6. Esempio di utilizzo ##
+Il modulo RFM69 offre all'utente ampie possibilità di impostazione.
+Alcune di queste impostazioni sono richieste dalla classe, come ad esempio il
+modo di trasmissione dei dati (che deve essere "a pacchetti"). La maggior parte
+resta però a disposizione dell'utente.
+
+
+<br><div id='7'/>
+
+## 7. Esempio di utilizzo ##
 
 ```cpp
 

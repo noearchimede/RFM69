@@ -55,9 +55,7 @@ dell'implementazione della classe RFM69).
 //  1) (1/5)*BIT_RATE < FREQ_DEV < 5*BIT_RATE
 //  2) 600 < FREQ_DEV < 500'000 - (BIT_RATE / 2)
 #define FREQ_DEV                        38400
-
 // [Modulation index = (2 * FREQ_DEV) / BIT_RATE]
-
 
 // [0x7, 0x8, 0x9] RF carrier frequency
 // x [auto] ; 433Mhz module: 424 e 510 MHz
@@ -65,10 +63,10 @@ dell'implementazione della classe RFM69).
 // [0x11] Impostazione automatica della potenza (preprocessor)
 // x [auto] = potenza Tx in dBm, max: 20
 #define POTENZA_TX                      15
+
 // [0x29] RSSI trigger level for Rssi interrupt
 // x [auto] ; x in dBm ed è obbligatoriamente negativo
 #define RSSI_TRESH                      -118
-
 // [0x2] Modulation scheme
 // _FSK, _OOK
 #define MODULATION                      MODULATION_FSK
@@ -155,13 +153,14 @@ dell'implementazione della classe RFM69).
 
 // [0x19] Channel filter bandwidth
 // x ; 2'600 - 500'000 ; ~[2 * bitRate] (trovato sperimentalmente)
-#define RX_BW                           18000
+// limite: BitRate < 2 x RxBw)
+#define RX_BW                           BIT_RATE * 2
 // [0x19] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // _16, _8, _4, _2, _1, _0_5, _0_25, _0_125
 #define DCC_FREQ                        DCC_FREQ_0_125
 // [0x1A] Channel filter bandwidth used during AFC
 // x ; 2'600 - 500'000
-#define RX_BW_AFC                       18000
+#define RX_BW_AFC                       BIT_RATE * 2
 // [0x1A] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // DCC_FREQ: _16, _8, _4, _2, _1, _0_5, _0_25, _0_125
 #define DCC_FREQ_AFC                    DCC_FREQ_0_125
