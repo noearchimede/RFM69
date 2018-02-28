@@ -23,19 +23,34 @@ non genera statistiche. Non è quindi necessario collegarla a un monitor seriale
 #include "RFM69.h"
 
 
-// Impostazioni
-//------------------------------------------------------------------------------
+//**************************  +--------------+  ********************************
+//**************************  | IMPOSTAZIONI |  ********************************
+//**************************  +--------------+  ********************************
 
-const uint8_t lunghezzaMessaggi = 4; // deve essere uguale sull'altra radio
-const uint8_t timeoutAck = 50;       // deve essere uguale sull'altra radio
+//------------------------------------------------------------------------------
+//----------------- Descrizione dell'hardware di questa radio ------------------
+//------------------------------------------------------------------------------
 
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
 RFM69 radio(A2, 3, A3);
 
 #define LED_TX 8
 #define LED_ACK 7
+
+//------------------------------------------------------------------------------
+// ## Impostszioni che devono essere identiche sulle due radio ## //
 //------------------------------------------------------------------------------
 
+// Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
+// 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
+// a questo si aggiunge il preamble che è lungo per default 4 bytes
+const uint8_t lunghezzaMessaggi = 4;
+// Tempo massimo di attesa per un ACK
+const uint8_t timeoutAck = 50;
+
+
+//******************************************************************************
+//******************************************************************************
 
 
 
@@ -45,7 +60,6 @@ uint32_t tAccensioneRx, tAccensioneTx;
 uint32_t microsInviaPrec = 0;
 uint32_t messPerMin = 0;
 uint32_t tUltimoMessaggio = 0;
-
 
 
 // ### Prototipi ### //
@@ -58,7 +72,8 @@ void pausa();
 void fineProgramma();
 
 
-// ### Funzioni ### //
+//******************************************************************************
+//******************************************************************************
 
 
 void setup() {
@@ -137,7 +152,6 @@ void invia() {
     // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
     bool decisione = ((messPerMin * deltaT) > random(60000000));
 
-    Serial.println(decisione);
     if(!decisione) return;
 
     Serial.print("tx | mess/minuto: ");
@@ -209,7 +223,7 @@ void spegniLed() {
 
 
 void pausa() {
-
+    radio.iniziaRicezione();
     bool statoLed = true;
     uint32_t t = millis();
     while(!radio.nuovoMessaggio()) {

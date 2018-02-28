@@ -24,22 +24,13 @@ necessario connettere un monitor seriale a questa radio (a 115200 Baud).
 #include "RFM69.h"
 
 
-// Impostazioni
+//**************************  +--------------+  ********************************
+//**************************  | IMPOSTAZIONI |  ********************************
+//**************************  +--------------+  ********************************
+
 //------------------------------------------------------------------------------
-
-const uint8_t lunghezzaMessaggi = 4; // deve essere uguale sull'altra radio
-const uint8_t timeoutAck = 50;       // deve essere uguale sull'altra radio
-
-// Più è piccolo più il test sarà preciso (e lungo)
-const uint16_t tolleranza = 6000;
-// Durata minima del test di una singola frequenza
-const uint32_t durataMinimaTest = 300;
-// Frequenza di trasmissione iniziale (messaggi al minuto)
-const uint16_t frequenzaTxIniziale = 50;
-// Incremento della frequenza ad ogni test
-const uint16_t incrementoFrequenzaTx = 50;
-// Numero massimo di test
-const uint8_t nrTestMax = 50;
+//----------------- Descrizione dell'hardware di questa radio ------------------
+//------------------------------------------------------------------------------
 
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
 RFM69 radio(2, 3);
@@ -48,12 +39,45 @@ RFM69 radio(2, 3);
 #define LED_ACK 4
 
 //------------------------------------------------------------------------------
+// ## Impostszioni che devono essere identiche sulle due radio ## //
+//------------------------------------------------------------------------------
+
+// Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
+// 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
+// a questo si aggiunge il preamble che è lungo per default 4 bytes
+const uint8_t lunghezzaMessaggi = 4;
+// Tempo massimo di attesa per un ACK
+const uint8_t timeoutAck = 50;
+
+
+//------------------------------------------------------------------------------
+//---------- Impostazioni del test, da regolare solo su questa radio -----------
+//------------------------------------------------------------------------------
+
+// Più è piccolo più il test sarà preciso (e lungo)
+const uint16_t tolleranza = 600;
+// Durata minima del test di una singola frequenza
+const uint32_t durataMinimaTest = 30000;
+// Frequenza di trasmissione iniziale (messaggi al minuto)
+const uint16_t frequenzaTxIniziale = 50;
+// Incremento della frequenza ad ogni test
+const uint16_t incrementoFrequenzaTx = 50;
+// Numero massimo di test
+const uint8_t nrTestMax = 50;
+
+
+//******************************************************************************
+//******************************************************************************
+
+
+
+
 
 
 
 // ### Variabili e costanti globali ### //
 
-
+// Le variabili non sono ordinate, cfr. l'implementazione per il loro significato
 uint32_t tAccensioneRx, tAccensioneTx;
 uint32_t tInizio;
 uint32_t microsInviaPrec;
@@ -63,19 +87,17 @@ uint8_t  nrElaborazioni = 0;
 uint16_t indiciSuccessoPrec[10];
 uint32_t messPerMin, messPerMinEffettivi;
 float deriv;
-
 uint8_t nrTest = 0;
-//uint16_t riassunto[nrTestMax][5];
+uint16_t riassunto[nrTestMax][5];
 enum class elemRiass {mpmPrevisti,mpmEffettivi,messTot,durata,successo};
-
 bool novita = false;
 bool statStabili = false;
 bool fineTest = false;
 
 
-
 // ### Prototipi ### //
 
+// I prototipi rispettano l'ordine di apparizione delle relative implementazioni
 void invia();
 void leggi();
 void accendiLed(uint8_t);
@@ -89,51 +111,16 @@ void stampaRiassunto();
 void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
 void fineProgramma();
 
-// ### Funzioni ### //
 
- uint16_t riassunto[17][5] = {
- {50,95,6,3,10000},
- {100,83,16,11,9375},
- {150,258,6,1,10000},
- {200,105,6,3,10000},
- {250,580,6,0,10000},
- {300,344,98,17,8061},
- {350,411,10,1,6000},
- {400,677,6,0,10000},
- {450,390,150,23,7400},
- {500,468,151,19,7350},
- {550,470,36,4,5277},
- {600,661,61,5,6393},
- {650,498,57,6,5964},
- {700,627,35,3,4571},
- {750,811,44,3,4772},
- {800,880,73,4,547},
- {850,980,6,0,0}};
+
+
+//******************************************************************************
+//******************************************************************************
+
 
 void setup() {
 
     Serial.begin(115200);
-
-
-
-    nrTest = 16;
-    messPerMinEffettivi = 980;
-
-    stampaRiassunto();
-
-
-    while(true);
-
-
-
-
-
-
-
-
-
-
-
 
     Serial.println("\n\n\n\nRFM69 - Test collisione messaggi\n\n\n");
 
@@ -203,7 +190,6 @@ void loop() {
     leggi();
     invia();
 
-
     if(novita) {
         novita = false;
         elaboraStatistiche();
@@ -219,8 +205,6 @@ void loop() {
         }
         imposta(messPerMin += incrementoFrequenzaTx);
     }
-
-
 
     spegniLed();
     delay(1);
@@ -489,9 +473,13 @@ void stampaRiassunto() {
     Serial.println("Percentuale di successo per frequenza di trasmissione");
     Serial.println();
 
+
+
+
     // Stampa grafico percentuale/frequenzaTx
 
     const uint8_t larghezza = 60;
+    const uint16_t mpmMaxGrafico = mpmMax + (50 - (mpmMax%50));
     const uint8_t altezza = 16; // multiplo di 2, 3 o 4 (meglio 4)
     uint8_t divisoreAltezza;
     if      (altezza % 4 == 0) divisoreAltezza = 25;
@@ -509,21 +497,22 @@ void stampaRiassunto() {
         Serial.print(" | ");
 
         for(int x = 0, test = 0; x < larghezza; x++) {
-
+            bool punto;
             // Controlla se uno qualsiasi dei test è stato effettuato ai mpm su questa ascissa
             for(int i = 0; i < nrTest; i++) {
-                uint8_t ascissa = larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMax;
+                uint8_t ascissa = larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMaxGrafico;
 
                 if(x == ascissa) {
                     // Se siamo nel punto in cui i dati sono maggiori per quella ascissa
                     if(y == (altezza * (riassunto[i][(int)elemRiass::successo] / 100)) /100) {
                         // Stampa un punto
                         Serial.print("*");
+                        punto = true;
                     }
                 }
             }
 
-            // se non è stato stampato il punto
+            if(!punto)
             Serial.print(" ");
 
             test++;
@@ -540,18 +529,18 @@ void stampaRiassunto() {
     uint8_t distanzaPunti;
     uint16_t moltiplicatore;
     moltiplicatore = 50;
-    distanzaPunti = larghezza *  moltiplicatore / mpmMax;
+    distanzaPunti = larghezza *  moltiplicatore / mpmMaxGrafico;
     if(distanzaPunti < 7) {
         moltiplicatore = 100;
-        distanzaPunti = larghezza * moltiplicatore / mpmMax;
+        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
     }
     if(distanzaPunti < 7) {
         moltiplicatore = 200;
-        distanzaPunti = larghezza * moltiplicatore / mpmMax;
+        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
     }
     if(distanzaPunti < 7) {
         moltiplicatore = 500;
-        distanzaPunti = larghezza * moltiplicatore / mpmMax;
+        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
     }
 
     for(int x = 1; x * distanzaPunti < larghezza; x++) {
@@ -559,9 +548,17 @@ void stampaRiassunto() {
         Serial.print(" ");
         stampaLarghezzaFissa(x * moltiplicatore, 3);
     }
+    Serial.print("  ");
+    Serial.print(mpmMaxGrafico);
 
-    /*
+
     Serial.println();
+    Serial.println();
+    Serial.println();
+    Serial.println();
+
+    Serial.println("Array dei dati raccolti da questo test, nell'ordine:");
+    Serial.println("mpm previsti - mpm effettivi - messaggi tot - durata - successo");
     Serial.println();
     Serial.print("{");
     for(int a = 0; a < nrTest; a++) {
@@ -571,12 +568,9 @@ void stampaRiassunto() {
             if(b < 4) Serial.print(",");
         }
         Serial.print("}");
-        if(b < nrTest - 1) Serial.print(",");
+        if(a < nrTest - 1) Serial.print(",");
     }
     Serial.print("}");
-    Serial.println();
-    Serial.println();
-    */
     Serial.println();
     Serial.println();
     Serial.println();
