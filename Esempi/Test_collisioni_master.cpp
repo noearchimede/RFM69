@@ -482,13 +482,14 @@ void stampaRiassunto() {
 
     Serial.println();
     Serial.println();
-    Serial.println("Risultati");
+    Serial.println("   Risultati");
     Serial.println();
     //             0---------1---------2---------3---------4---------5---------6---------7
     //             -123456789-123456789-123456789-123456789-123456789-123456789-123456789-
     Serial.println("   | #  | durata | mess inviati | mess/min | m/m esatti | successo |");
 
-    for(int i = 0; i < 68; i++) Serial.print('-'); Serial.println();
+    Serial.print("   ");
+    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
     for(int i = 0; i < nrTest; i++) {
         Serial.print("   | ");
         stampaLarghezzaFissa(i+1, 2);
@@ -507,12 +508,13 @@ void stampaRiassunto() {
         Serial.print(" |");
         Serial.println();
     }
-    for(int i = 0; i < 68; i++) Serial.print('-'); Serial.println();
+    Serial.print("   ");
+    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
 
     Serial.println();
     Serial.println();
     Serial.println();
-    Serial.println("Percentuale di successo per frequenza di trasmissione");
+    Serial.println("   Percentuale di successo per frequenza di trasmissione");
     Serial.println();
 
 

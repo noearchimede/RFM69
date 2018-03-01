@@ -1,8 +1,18 @@
+**1 marzo 2018**
+#Risultato del test *Collisioni*
 
-Questo file contiene tutto il testo generato dalla radio durante il test effettuato il 1 marzo.
 
-Dopo le 7'500 linee di rapporto dei messaggi inviati si trova il riassunto, riportato qui:
+Questo file contiene tutto il testo generato dalla radio durante il test effettuato il 1 marzo 2018.<br>
+Il codice utilizzato si trova al commit `31ac8af15762fcd8c6f80e95ff1be19ce5895cca` del repository
+git di questa libreria.
 
+Riassunto
+---------
+
+Dopo le 7'500 linee di rapporto dei messaggi inviati si trova il riassunto, riportato qui.
+
+
+```
 Test completato in 27 minuti e 49 secondi.
 Questa radio ha inviato 7524 messaggi di 4 bytes a 22 frequenze di
 trasmissione diverse comprese tra 50 e 538 messaggi al minuto.
@@ -61,24 +71,27 @@ Attesa ACK: media = 19, massima = 104
     |                                                                      *
   0 +----------------------------------------------------------------------  mess/min
     0         100         200         300         400         500         600
-
+```
 
 
 
 I dati presentati nella tabella e nel grafico sono salvati nella seguente array bidimensionale ([21][5]) nell'ordine:
 mpm previsti - mpm effettivi - messaggi tot - durata - successo
 
+```
 {{50,51,52,60,9230},{75,78,197,150,7563},{100,101,174,102,8563},{125,119,218,109,8440},{150,132,121,54,9338},{175,170,305,107,8393},{200,207,498,143,7851},{225,234,475,121,7915},{250,240,419,104,7040},{275,284,390,82,7230},{300,303,402,79,7114},{325,356,625,105,6896},{350,344,212,36,6179},{375,347,191,33,6439},{400,420,325,46,6523},{425,461,251,32,5537},{450,464,234,30,4529},{475,549,297,32,4276},{500,500,419,50,2840},{525,514,926,107,1825},{550,544,522,57,996},{575,538,271,30,442}}
+```
 
 
-
-
-
+<br><br>
+Impostazioni
+------------
 
 Il test è stato effettuato con le seguenti impostazioni:
 
-File RFM69_impostazioni.h:
+File `RFM69_impostazioni.h`:
 
+```
 #define BIT_RATE                        19200
 #define FREQ_DEV                        38400
 #define RADIO_FREQ                      434000000
@@ -123,10 +136,11 @@ File RFM69_impostazioni.h:
 #define INTER_PACKET_RX_DELAY           0
 #define AES_EN                          OFF
 #define AES_KEY  0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb,0xc,0xd,0xe,0xf
-
+```
 
 Opzioni del test:
 
+```
 lunghezzaMessaggi = 4;
 timeoutAck = 100;
 tolleranza = 800;
@@ -134,13 +148,25 @@ durataMinimaTest = 30000;
 frequenzaTxIniziale = 50;
 incrementoFrequenzaTx = 25;
 nrTestMax = 50;
+```
+
+
+Il programma utilizzato si trova nel commit `31ac8af15762fcd8c6f80e95ff1be19ce5895cca` nel repository git di questa libreria
 
 
 
+
+
+<br><br>
+Output
+------
+
+Output competo della radio che ha gestito il test
+
+```
 
 
 RFM69 - Test collisione messaggi
-
 
 
 Inizializzazione RFM69... ok
@@ -7855,3 +7881,4 @@ Spengo questa radio...  spenta.
 
  Fine test collisioni messaggi.
 
+```
