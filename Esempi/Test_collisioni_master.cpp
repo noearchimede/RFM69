@@ -118,8 +118,9 @@ void fineProgramma();
 
 
 
-//******************************************************************************
-//******************************************************************************
+////////////////////////////////////////////////////////////////////////////////
+// Inizializzazione
+////////////////////////////////////////////////////////////////////////////////
 
 
 void setup() {
@@ -177,6 +178,12 @@ void setup() {
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Loop principale
+////////////////////////////////////////////////////////////////////////////////
+
+
 void loop() {
 
     leggi();
@@ -206,6 +213,10 @@ void loop() {
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Comunicazione
+////////////////////////////////////////////////////////////////////////////////
 
 
 void invia() {
@@ -249,8 +260,6 @@ void invia() {
 
 
 
-
-
 void leggi() {
 
     // c'è un nuovo messaggio? se non c'è return
@@ -278,6 +287,10 @@ void leggi() {
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// LED
+////////////////////////////////////////////////////////////////////////////////
+
 
 void accendiLed(uint8_t led) {
     if (led) digitalWrite(led, HIGH);
@@ -294,6 +307,12 @@ void spegniLed() {
     if(millis() - tAccensioneTx > 10) digitalWrite(LED_ACK, LOW);
 }
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Funzioni specifiche del test
+////////////////////////////////////////////////////////////////////////////////
 
 
 void imposta(uint32_t mpm) {
@@ -420,225 +439,6 @@ void salvaStatistiche()  {
 
 
 
-void stampaNovita() {
-
-    if(millis() - tUltimaStampa < 5000) return;
-
-    tUltimaStampa = millis();
-
-    Serial.print("tx: ");
-    stampaLarghezzaFissa((messInviati + messNonInviati), 4);
-    Serial.print("  |  ");
-    Serial.print("rx: ");
-    stampaLarghezzaFissa(messaggiRicevuti, 4);
-    Serial.print("  |  ");
-
-    Serial.print("t: ");
-    stampaLarghezzaFissa((millis() - tInizio)/1000, 3);
-    Serial.print("s  |  ack: ");
-    stampaLarghezzaFissa(messInviati, 3);
-    Serial.print("  |  mess/min:");
-    stampaLarghezzaFissa(messPerMinEffettivi, 5);
-    Serial.print(" -> ");
-    stampaLarghezzaFissa(messPerMin, 5);
-    Serial.print("  |  % ack: ");
-    Serial.print((float)indiceSuccesso/100);
-    Serial.println("%");
-}
-
-
-
-
-void stampaRiassunto() {
-
-    for(int i = 6; i; i--) Serial.println();
-    for(int i = 71; i; i--) Serial.print('*');
-    Serial.println();
-
-    // Calcolo totali
-    uint32_t tTot = 0;
-    for(int i = 0; i < nrTest; i++) tTot += riassunto[i][(int)elemRiass::durata];
-    uint32_t messTot = 0;
-    for(int i = 0; i < nrTest; i++) messTot += riassunto[i][(int)elemRiass::messTot];
-    const uint16_t mpmMax = messPerMinEffettivi;
-
-    Serial.print("Test completato in ");
-    Serial.print(tTot/60);
-    Serial.print(" minuti e ");
-    Serial.print(tTot%60);
-    Serial.print(" secondi.");
-    Serial.println();
-    Serial.print("Questa radio ha inviato ");
-    Serial.print(messTot);
-    Serial.print(" messaggi di ");
-    Serial.print(lunghezzaMessaggi);
-    Serial.print(" bytes a ");
-    Serial.print(nrTest);
-    Serial.print(" frequenze di\ntrasmissione diverse comprese tra ");
-    Serial.print(frequenzaTxIniziale);
-    Serial.print(" e ");
-    Serial.print(mpmMax);
-    Serial.print(" messaggi al minuto.");
-    Serial.println();
-    Serial.println();
-    Serial.print("Attesa ACK: media = ");
-    Serial.print(radio.ottieniAttesaMediaAck());
-    Serial.print(", massima = ");
-    Serial.print(radio.ottieniAttesaMassimaAck());
-    Serial.println();
-
-    Serial.println();
-    Serial.println();
-    Serial.println("   Risultati");
-    Serial.println();
-    //             0---------1---------2---------3---------4---------5---------6---------7
-    //             -123456789-123456789-123456789-123456789-123456789-123456789-123456789-
-    Serial.println("   | #  | durata | mess inviati | mess/min | m/m esatti | successo |");
-
-    Serial.print("   ");
-    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
-    for(int i = 0; i < nrTest; i++) {
-        Serial.print("   | ");
-        stampaLarghezzaFissa(i+1, 2);
-        Serial.print(" | ");
-        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::durata], 4);
-        Serial.print(" s | ");
-        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::messTot], 12);
-        Serial.print(" | ");
-        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::mpmPrevisti], 8);
-        Serial.print(" | ");
-        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::mpmEffettivi], 10);
-        Serial.print(" | ");
-        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::successo] / 100, 5);
-        Serial.print(".");
-        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::successo] % 100, 2, '0');
-        Serial.print(" |");
-        Serial.println();
-    }
-    Serial.print("   ");
-    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
-
-    Serial.println();
-    Serial.println();
-    Serial.println();
-    Serial.println("   Percentuale di successo per frequenza di trasmissione");
-    Serial.println();
-
-
-
-
-    // Stampa grafico percentuale/frequenzaTx
-
-    const uint8_t larghezza = 70;
-    const uint16_t mpmMaxGrafico = mpmMax + (50 - (mpmMax%50));
-    const uint8_t altezza = 16; // multiplo di 2, 3 o 4 (meglio 4)
-    uint8_t divisoreAltezza;
-    if      (altezza % 4 == 0) divisoreAltezza = 25;
-    else if (altezza % 3 == 0) divisoreAltezza = 33;
-    else if (altezza % 2 == 0) divisoreAltezza = 50;
-
-    Serial.println("    %");
-
-    // Stampa grafico
-    for(int y = altezza; y > 0; y--) {
-
-        if((y * 100 / altezza) % divisoreAltezza == 0 || y == altezza)
-        stampaLarghezzaFissa(y * 100 / altezza, 3);
-        else Serial.print("   ");
-        Serial.print(" | ");
-
-        for(int x = 0, test = 0; x < larghezza; x++) {
-
-            bool punto = false;
-
-            // Controlla se uno qualsiasi dei test è stato effettuato ai mpm su questa ascissa
-            for(int i = 0; i < nrTest; i++) {
-                uint8_t ascissa = larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMaxGrafico;
-
-                if(x == ascissa) {
-                    // Se siamo nel punto in cui i dati sono maggiori per quella ascissa
-                    if(y == (altezza * (riassunto[i][(int)elemRiass::successo] / 100)) /100) {
-                        // Stampa un punto
-                        Serial.print("*");
-                        punto = true;
-                    }
-                }
-            }
-
-            if(!punto) Serial.print(" ");
-        }
-
-        Serial.println();
-    }
-
-    Serial.print("  0 +");
-    for(int x = 0; x < larghezza; x++) Serial.print("-");
-    Serial.println("  mess/min");
-
-    Serial.print("    0");
-
-    uint8_t distanzaPunti;
-    uint16_t moltiplicatore;
-    moltiplicatore = 50;
-    distanzaPunti = larghezza *  moltiplicatore / mpmMaxGrafico;
-    if(distanzaPunti < 7) {
-        moltiplicatore = 100;
-        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
-    }
-    if(distanzaPunti < 7) {
-        moltiplicatore = 200;
-        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
-    }
-    if(distanzaPunti < 7) {
-        moltiplicatore = 500;
-        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
-    }
-
-    for(int x = 1; x * distanzaPunti < larghezza + 5; x++) {
-        for(int i = 0; i < distanzaPunti - 3; i++)
-        Serial.print(" ");
-        stampaLarghezzaFissa(x * moltiplicatore, 3);
-    }
-
-
-    Serial.println();
-    Serial.println();
-    Serial.println();
-    Serial.println();
-
-    Serial.println("Array dei dati raccolti da questo test, nell'ordine:");
-    Serial.println("mpm previsti - mpm effettivi - messaggi tot - durata - successo");
-    Serial.println();
-    Serial.print("{");
-    for(int a = 0; a < nrTest; a++) {
-        Serial.print("{");
-        for(int b = 0; b < 5; b++) {
-            Serial.print(riassunto[a][b]);
-            if(b < 4) Serial.print(",");
-        }
-        Serial.print("}");
-        if(a < nrTest - 1) Serial.print(",");
-    }
-    Serial.print("}");
-    Serial.println();
-    Serial.println();
-    Serial.println();
-    Serial.println();
-}
-
-
-
-
-void stampaLarghezzaFissa(uint32_t numero, uint8_t larghezza, char riempimento) {
-    char str[10]; // 10 è il numero massimo di cifre in un uint32_t
-    itoa (numero, str, 10);
-    int cifre = strlen(str);
-    for(int i = 0; i < (larghezza - cifre); i++) Serial.print(riempimento);
-    Serial.print(str);
-}
-
-
-
 void fineProgramma() {
 
     Serial.println();
@@ -681,4 +481,244 @@ void fineProgramma() {
             t = millis();
         }
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Stampa dei dati
+////////////////////////////////////////////////////////////////////////////////
+
+
+void stampaNovita() {
+
+    if(millis() - tUltimaStampa < 5000) return;
+
+    tUltimaStampa = millis();
+
+
+    // Esempio:
+    // tx:   45  |  rx:  266  |  t:  28s  |  ack:  33  |  mess/min:   94 ->   100  |  % ack: 73.33%
+
+    Serial.print("tx: ");
+    stampaLarghezzaFissa((messInviati + messNonInviati), 4);
+    Serial.print("  |  ");
+    Serial.print("rx: ");
+    stampaLarghezzaFissa(messaggiRicevuti, 4);
+    Serial.print("  |  ");
+
+    Serial.print("t: ");
+    stampaLarghezzaFissa((millis() - tInizio)/1000, 3);
+    Serial.print("s  |  ack: ");
+    stampaLarghezzaFissa(messInviati, 3);
+    Serial.print("  |  mess/min:");
+    stampaLarghezzaFissa(messPerMinEffettivi, 5);
+    Serial.print(" -> ");
+    stampaLarghezzaFissa(messPerMin, 5);
+    Serial.print("  |  % ack: ");
+    Serial.print((float)indiceSuccesso/100);
+    Serial.print("%");
+    Serial.println();
+
+}
+
+
+
+
+void stampaRiassunto() {
+
+    //########################## Dati generali ###############################//
+
+    // Calcolo totali
+    uint32_t tTot = 0;
+    for(int i = 0; i < nrTest; i++) tTot += riassunto[i][(int)elemRiass::durata];
+    uint32_t messTot = 0;
+    for(int i = 0; i < nrTest; i++) messTot += riassunto[i][(int)elemRiass::messTot];
+    const uint16_t mpmMax = messPerMinEffettivi;
+
+    for(int i = 6; i; i--) Serial.println();
+    for(int i = 71; i; i--) Serial.print('*');
+    Serial.println();
+    Serial.print("Test completato in ");
+    Serial.print(tTot/60);
+    Serial.print(" minuti e ");
+    Serial.print(tTot%60);
+    Serial.print(" secondi.");
+    Serial.println();
+    Serial.print("Questa radio ha inviato ");
+    Serial.print(messTot);
+    Serial.print(" messaggi di ");
+    Serial.print(lunghezzaMessaggi);
+    Serial.print(" bytes a ");
+    Serial.print(nrTest);
+    Serial.print(" frequenze di\ntrasmissione diverse comprese tra ");
+    Serial.print(frequenzaTxIniziale);
+    Serial.print(" e ");
+    Serial.print(mpmMax);
+    Serial.print(" messaggi al minuto.");
+    Serial.println();
+    Serial.println();
+    Serial.print("Attesa ACK: media = ");
+    Serial.print(radio.ottieniAttesaMediaAck());
+    Serial.print(", massima = ");
+    Serial.print(radio.ottieniAttesaMassimaAck());
+    Serial.println();
+
+
+
+    //################################ Tabella #################################
+
+
+    Serial.println();
+    Serial.println();
+    Serial.println("   Risultati");
+    Serial.println();
+    Serial.println("   | #  | durata | mess inviati | mess/min | m/m esatti | successo |");
+
+    Serial.print("   ");
+    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
+    for(int i = 0; i < nrTest; i++) {
+        Serial.print("   | ");
+        stampaLarghezzaFissa(i+1, 2);
+        Serial.print(" | ");
+        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::durata], 4);
+        Serial.print(" s | ");
+        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::messTot], 12);
+        Serial.print(" | ");
+        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::mpmPrevisti], 8);
+        Serial.print(" | ");
+        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::mpmEffettivi], 10);
+        Serial.print(" | ");
+        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::successo] / 100, 5);
+        Serial.print(".");
+        stampaLarghezzaFissa(riassunto[i][(int)elemRiass::successo] % 100, 2, '0');
+        Serial.print(" |");
+        Serial.println();
+    }
+    Serial.print("   ");
+    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
+
+
+
+
+    //############################### Grafico ##################################
+
+
+    // Impostazioni grafico
+    const uint8_t larghezza = 70;
+    const uint8_t altezza = 16; // multiplo di 2, 3 o 4 (meglio 4)
+
+    uint16_t mpmMaxGrafico = mpmMax + (50 - (mpmMax%50));
+    uint8_t divisoreAltezza;
+    if      (altezza % 4 == 0) divisoreAltezza = 25;
+    else if (altezza % 3 == 0) divisoreAltezza = 33;
+    else if (altezza % 2 == 0) divisoreAltezza = 50;
+
+
+    Serial.println();
+    Serial.println();
+    Serial.println("   Percentuale di successo per frequenza di trasmissione");
+    Serial.println();
+
+    // Stampa grafico
+    Serial.println("    %");
+
+    for(int y = altezza; y > 0; y--) {
+
+        if((y * 100 / altezza) % divisoreAltezza == 0 || y == altezza)
+        stampaLarghezzaFissa(y * 100 / altezza, 3);
+        else Serial.print("   ");
+        Serial.print(" | ");
+
+        for(int x = 0, test = 0; x < larghezza; x++) {
+
+            bool punto = false;
+
+            // Controlla se uno qualsiasi dei test è stato effettuato ai mpm su questa ascissa
+            for(int i = 0; i < nrTest; i++) {
+                uint8_t ascissa = larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMaxGrafico;
+
+                if(x == ascissa) {
+                    // Se siamo nel punto in cui i dati sono maggiori per quella ascissa
+                    if(y == (altezza * (riassunto[i][(int)elemRiass::successo] / 100)) /100) {
+                        // Stampa un punto
+                        Serial.print("*");
+                        punto = true;
+                    }
+                }
+            }
+
+            if(!punto) Serial.print(" ");
+        }
+
+        Serial.println();
+    }
+    Serial.print("  0 +");
+    for(int x = 0; x < larghezza; x++) Serial.print("-");
+    Serial.print("  mess/min");
+    Serial.println();
+    Serial.print("    0");
+
+    // Stampa linea orizzontale inferiore
+    uint8_t distanzaPunti;
+    uint16_t moltiplicatore;
+    moltiplicatore = 50;
+    distanzaPunti = larghezza *  moltiplicatore / mpmMaxGrafico;
+    if(distanzaPunti < 7) {
+        moltiplicatore = 100;
+        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
+    }
+    if(distanzaPunti < 7) {
+        moltiplicatore = 200;
+        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
+    }
+    if(distanzaPunti < 7) {
+        moltiplicatore = 500;
+        distanzaPunti = larghezza * moltiplicatore / mpmMaxGrafico;
+    }
+
+    for(int x = 1; x * distanzaPunti < larghezza + 5; x++) {
+        for(int i = 0; i < distanzaPunti - 3; i++)
+        Serial.print(" ");
+        stampaLarghezzaFissa(x * moltiplicatore, 3);
+    }
+
+
+
+    // ############################# Array #####################################
+
+
+    Serial.println();
+    Serial.println();
+    Serial.println();
+    Serial.println();
+    Serial.println("Array dei dati raccolti da questo test, nell'ordine:");
+    Serial.println("mpm previsti - mpm effettivi - messaggi tot - durata - successo");
+    Serial.println();
+    Serial.print("{");
+    for(int a = 0; a < nrTest; a++) {
+        Serial.print("{");
+        for(int b = 0; b < 5; b++) {
+            Serial.print(riassunto[a][b]);
+            if(b < 4) Serial.print(",");
+        }
+        Serial.print("}");
+        if(a < nrTest - 1) Serial.print(",");
+    }
+    Serial.print("}");
+    Serial.println();
+    Serial.println();
+    Serial.println();
+    Serial.println();
+
+}
+
+
+
+
+void stampaLarghezzaFissa(uint32_t numero, uint8_t larghezza, char riempimento) {
+    char str[10]; // 10 è il numero massimo di cifre in un uint32_t
+    itoa (numero, str, 10);
+    int cifre = strlen(str);
+    for(int i = 0; i < (larghezza - cifre); i++) Serial.print(riempimento);
+    Serial.print(str);
 }

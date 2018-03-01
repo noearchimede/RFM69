@@ -4,7 +4,7 @@ Risultato del test *Collisioni*
 ===============================
 
 Questo file contiene tutto il testo generato dalla radio durante il test effettuato il 1 marzo 2018.<br>
-Il codice utilizzato si trova al commit #31ac8af15762fcd8c6f80e95ff1be19ce5895cca del repository
+Il codice utilizzato si trova al commit `1ac8af15762fcd8c6f80e95ff1be19ce5895cca` del repository
 git di questa libreria.
 
 Riassunto
@@ -157,7 +157,7 @@ nrTestMax               = 50
 ```
 
 
-Il programma utilizzato si trova nel commit #31ac8af15762fcd8c6f80e95ff1be19ce5895cca nel repository git di questa libreria
+Il programma utilizzato si trova nel commit `31ac8af15762fcd8c6f80e95ff1be19ce5895cca` nel repository git di questa libreria
 
 
 
