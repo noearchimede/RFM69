@@ -1,9 +1,10 @@
 **1 marzo 2018**
-#Risultato del test *Collisioni*
 
+Risultato del test *Collisioni*
+===============================
 
 Questo file contiene tutto il testo generato dalla radio durante il test effettuato il 1 marzo 2018.<br>
-Il codice utilizzato si trova al commit `31ac8af15762fcd8c6f80e95ff1be19ce5895cca` del repository
+Il codice utilizzato si trova al commit #31ac8af15762fcd8c6f80e95ff1be19ce5895cca del repository
 git di questa libreria.
 
 Riassunto
@@ -138,20 +139,25 @@ File `RFM69_impostazioni.h`:
 #define AES_KEY  0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb,0xc,0xd,0xe,0xf
 ```
 
-Opzioni del test:
+Altre impostazioni della classe:
 
 ```
-lunghezzaMessaggi = 4;
-timeoutAck = 100;
-tolleranza = 800;
-durataMinimaTest = 30000;
-frequenzaTxIniziale = 50;
-incrementoFrequenzaTx = 25;
-nrTestMax = 50;
+Lunghezza messaggi    4    ->   inizializza(4);
+Timeout ACK           100  ->   impostaTimeoutACK(100);
+```
+
+Impostazioni del test:
+
+```
+tolleranza              = 800
+durataMinimaTest        = 30000
+frequenzaTxIniziale     = 50
+incrementoFrequenzaTx   = 25
+nrTestMax               = 50
 ```
 
 
-Il programma utilizzato si trova nel commit `31ac8af15762fcd8c6f80e95ff1be19ce5895cca` nel repository git di questa libreria
+Il programma utilizzato si trova nel commit #31ac8af15762fcd8c6f80e95ff1be19ce5895cca nel repository git di questa libreria
 
 
 
