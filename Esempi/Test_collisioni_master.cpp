@@ -87,6 +87,7 @@ uint8_t  nrElaborazioni = 0;
 uint16_t indiciSuccessoPrec[10];
 uint32_t messPerMin, messPerMinEffettivi;
 uint32_t tUltimoMessaggio = 0;
+uint32_t tUltimaStampa = 0;
 
 float deriv;
 uint8_t nrTest = 0;
@@ -180,6 +181,7 @@ void loop() {
 
     leggi();
     invia();
+    stampaNovita();
 
     if(novita) {
         novita = false;
@@ -333,7 +335,7 @@ void imposta(uint32_t mpm) {
 void pausa() {
     if(millis() - tUltimoMessaggio < 5000) return;
 
-    Serial.println("-- Aspetto altra radio --");
+    //Serial.println("-- Aspetto altra radio --");
 
     radio.iniziaRicezione();
     bool statoLed = true;
@@ -419,6 +421,11 @@ void salvaStatistiche()  {
 
 
 void stampaNovita() {
+
+    if(millis() - tUltimaStampa < 5000) return;
+
+    tUltimaStampa = millis();
+
     Serial.print("tx: ");
     stampaLarghezzaFissa((messInviati + messNonInviati), 4);
     Serial.print("  |  ");

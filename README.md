@@ -219,28 +219,26 @@ casuali ma in media ad una stessa frequenza. La tabella è stata generata dal pr
 *Test collisioni* (composto dai file `Esempi/Test_collisioni_master.cpp` e
 `Esempi/Test_collisioni_assistente.cpp`, uno per ciascuna radio).
 
-Percentuale di successo per frequenza di trasmissione
-
 ```
  %
 100 |                                                                       
- |                                                                       
- |       *         *                                                     
- |             *  *     *                                                
-75 |          *                *  *                                        
- |                               *     * *                               
- |                                             **       *                
- |                                            *                          
-50 |                                                           *           
- |                                                            *          
- |                                                                      *
- |                                                                       
-25 |                                                                *      
- |                                                                       
- |                                                                  *    
- |                                                                      *
-0 +----------------------------------------------------------------------  mess/min
- 0         100         200         300         400         500         600
+    |                                                                       
+    |       *         *                                                     
+    |             *  *     *                                                
+ 75 |          *                *  *                                        
+    |                               *     * *                               
+    |                                             **       *                
+    |                                            *                          
+ 50 |                                                           *           
+    |                                                            *          
+    |                                                                      *
+    |                                                                       
+ 25 |                                                                *      
+    |                                                                       
+    |                                                                  *    
+    |                                                                      *
+  0 +----------------------------------------------------------------------  mess/min
+    0         100         200         300         400         500         600
 
 ```
 
