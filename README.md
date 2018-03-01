@@ -203,6 +203,47 @@ in cui non si può o non si dovrebbe trasmetterne altri.
     - [`3`]: I messaggi inviati qui saranno persi. È un difetto dei messaggi senza ACK.
 
 
+<br>
+Per costruire un sistema di trasmissione di dati bidirezionale e continua, dunque,
+è necessario creare un sistema di gestione di queste possibili collisioni, cercando
+di evitarle il più possibile. Invece i un programma che utilizza la radio solo di
+tanto in tanto è sufficiente tenere presente la possibilità di perdere un messaggio
+(quindi ad es. controllarne la ricezione tramite il sistema di ACK ed eventualmente
+reinviarlo).
+
+La probabilità di perdere un messaggio è relativamente bassa. Il grafico sottostante
+raffigura la percentuale di messaggi trasmessi con successo rispetto al numero medio
+di messaggi inviati in un minuto, in un sistema in cui due radio si inviano reciprocamente
+messaggi di 12 bytes (4 bytes di dati) con richiesta di ACK ad intervalli di tempo
+casuali ma in media ad una stessa frequenza. La tabella è stata generata dal programma
+*Test collisioni* (composto dai file `Esempi/Test_collisioni_master.cpp` e
+`Esempi/Test_collisioni_assistente.cpp`, uno per ciascuna radio).
+
+Percentuale di successo per frequenza di trasmissione
+
+```
+ %
+100 |                                                                       
+ |                                                                       
+ |       *         *                                                     
+ |             *  *     *                                                
+75 |          *                *  *                                        
+ |                               *     * *                               
+ |                                             **       *                
+ |                                            *                          
+50 |                                                           *           
+ |                                                            *          
+ |                                                                      *
+ |                                                                       
+25 |                                                                *      
+ |                                                                       
+ |                                                                  *    
+ |                                                                      *
+0 +----------------------------------------------------------------------  mess/min
+ 0         100         200         300         400         500         600
+
+```
+
 <br><div id='4'/>
 
 ## 4. Hardware ##
