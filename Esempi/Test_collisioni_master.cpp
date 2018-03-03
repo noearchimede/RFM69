@@ -55,7 +55,7 @@ const uint8_t timeoutAck = 100;
 //------------------------------------------------------------------------------
 
 // Più è piccolo più il test sarà preciso (e lungo)
-const uint16_t tolleranza = 800;
+const uint16_t tolleranza = 600;
 // Durata minima del test di una singola frequenza
 const uint32_t durataMinimaTest = 30000;
 // Frequenza di trasmissione iniziale (messaggi al minuto)
@@ -84,7 +84,7 @@ uint32_t microsInviaPrec;
 uint16_t messInviati = 0, messNonInviati = 0, messaggiRicevuti = 0;
 uint16_t indiceSuccesso = 0;
 uint8_t  nrElaborazioni = 0;
-uint16_t indiciSuccessoPrec[10];
+uint16_t indiciSuccessoPrec[8];
 uint32_t messPerMin, messPerMinEffettivi;
 uint32_t tUltimoMessaggio = 0;
 uint32_t tUltimaStampa = 0;
@@ -393,13 +393,17 @@ void elaboraStatistiche() {
     // Determinazione della situazione di stabilità (usa il metodo Savitzky–Golay
     // per calcolare la derivata della funzione del successo nel tempo)
     deriv = 0;
-    if(nrElaborazioni >= 5) {
-        deriv += (float)indiciSuccessoPrec[0] *  1;
-        deriv += (float)indiciSuccessoPrec[1] * -8;
-        //deriv += indiciSuccessoPrec[2] * 0;
-        deriv += (float)indiciSuccessoPrec[3] *  8;
-        deriv += (float)indiceSuccesso        * -1;
-        deriv /= 12;
+    if(nrElaborazioni >= 9) {
+        deriv += (float)indiciSuccessoPrec[0] *   86;
+        deriv += (float)indiciSuccessoPrec[1] * -142;
+        deriv += (float)indiciSuccessoPrec[2] * -193;
+        deriv += (float)indiciSuccessoPrec[3] * -126;
+        //deriv += indiciSuccessoPrec[4] * 0;
+        deriv += (float)indiciSuccessoPrec[5] *  126;
+        deriv += (float)indiciSuccessoPrec[6] *  193;
+        deriv += (float)indiciSuccessoPrec[7] *  142;
+        deriv += (float)indiceSuccesso        *  -86;
+        deriv /= 1188.0;
         deriv /= 1000/(float)messPerMin;
         if(deriv < 0) deriv = -deriv;
 
@@ -409,9 +413,9 @@ void elaboraStatistiche() {
 
 
     // Aggiornamento dell'array
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 7; i++)
     indiciSuccessoPrec[i] = indiciSuccessoPrec[i+1];
-    indiciSuccessoPrec[4] = indiceSuccesso;
+    indiciSuccessoPrec[7] = indiceSuccesso;
 
 
     nrElaborazioni++;
