@@ -87,6 +87,7 @@ uint8_t  nrElaborazioni = 0;
 uint16_t indiciSuccessoPrec[10];
 uint32_t messPerMin, messPerMinEffettivi;
 uint32_t tUltimoMessaggio = 0;
+uint32_t tUltimaStampa = 0;
 
 float deriv;
 uint8_t nrTest = 0;
@@ -718,50 +719,4 @@ void stampaLarghezzaFissa(uint32_t numero, uint8_t larghezza, char riempimento) 
     int cifre = strlen(str);
     for(int i = 0; i < (larghezza - cifre); i++) Serial.print(riempimento);
     Serial.print(str);
-}
-
-
-
-void fineProgramma() {
-
-    Serial.println();
-    Serial.print("Spengo l'altra radio..");
-        // Per al massimo 10 secondi cerca di spegnere l'altra radio
-    uint8_t mess[3] = {0,0,0x7B};
-    bool ok = false;
-    for(int i = 0; i < 20; i++) {
-        Serial.print(".");
-        radio.inviaConAck(mess, 3);
-        delay(1000);
-        if(radio.ricevutoAck()) {
-            ok = true;
-            break;
-        }
-    }
-    if (ok) {
-        Serial.println(" spenta, spengo questa... ");
-    }
-    else {
-        Serial.println(" comunicazione intrrotta, spegnere l'altra radio manualmente.");
-        Serial.print("Spengo questa radio... ");
-    }
-
-    radio.sleep();
-
-    Serial.println(" spenta.");
-
-    Serial.println();
-    Serial.println();
-    Serial.println(" Fine test collisioni messaggi.");
-    Serial.println();
-    bool statoLed = true;
-    uint32_t t = millis();
-    while(true) {
-        if(millis() - t > 2000) {
-            digitalWrite(LED_ACK, statoLed);
-            digitalWrite(LED_TX, !statoLed);
-            statoLed = !statoLed;
-            t = millis();
-        }
-    }
 }
