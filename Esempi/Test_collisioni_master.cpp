@@ -24,9 +24,9 @@ necessario connettere un monitor seriale a questa radio (a 115200 Baud).
 #include "RFM69.h"
 
 
-//**************************  +--------------+  ********************************
-//**************************  | IMPOSTAZIONI |  ********************************
-//**************************  +--------------+  ********************************
+// **************************  +--------------+  *******************************
+// **************************  | IMPOSTAZIONI |  *******************************
+// **************************  +--------------+  *******************************
 
 //------------------------------------------------------------------------------
 //----------------- Descrizione dell'hardware di questa radio ------------------
@@ -47,7 +47,7 @@ RFM69 radio(2, 3);
 // a questo si aggiunge il preamble che è lungo per default 4 bytes
 const uint8_t lunghezzaMessaggi = 4;
 // Tempo massimo di attesa per un ACK
-const uint8_t timeoutAck = 100;
+const uint8_t timeoutAck = 25;
 
 
 //------------------------------------------------------------------------------
@@ -55,19 +55,19 @@ const uint8_t timeoutAck = 100;
 //------------------------------------------------------------------------------
 
 // Più è piccolo più il test sarà preciso (e lungo)
-const uint16_t tolleranza = 600;
+const uint16_t tolleranza = 200;
 // Durata minima del test di una singola frequenza
-const uint32_t durataMinimaTest = 30000;
+const uint32_t durataMinimaTest = 40000;
 // Frequenza di trasmissione iniziale (messaggi al minuto)
-const uint16_t frequenzaTxIniziale = 50;
+const uint16_t frequenzaTxIniziale = 25;
 // Incremento della frequenza ad ogni test
 const uint16_t incrementoFrequenzaTx = 25;
 // Numero massimo di test
-const uint8_t nrTestMax = 50;
+const uint8_t nrTestMax = 100;
 
 
-//******************************************************************************
-//******************************************************************************
+// *****************************************************************************
+// *****************************************************************************
 
 
 
@@ -109,12 +109,10 @@ void stampaNovita();
 void elaboraStatistiche();
 void salvaStatistiche();
 void imposta(uint32_t);
-void pausa();
 bool numeroCasuale(uint32_t);
 void stampaRiassunto();
 void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
 void fineProgramma();
-
 
 
 
@@ -135,7 +133,7 @@ void setup() {
     // Inizializza la radio. Deve essere chiamato una volta all'inizio del programma.
     // Se come secondo argomento si fornisce un riferimento a Serial, la funzione
     // stampa il risultato dell'inizializzazione (riuscita o no).
-    radio.inizializza(lunghezzaMessaggi, Serial);
+    if(radio.inizializza(lunghezzaMessaggi, Serial) != 0) while(true);
 
 
     Serial.println("Questa radio conduce l'esperimento.");
@@ -193,7 +191,6 @@ void loop() {
     if(novita) {
         novita = false;
         elaboraStatistiche();
-        stampaNovita();
     }
 
     if(statStabili) {
@@ -208,7 +205,6 @@ void loop() {
 
     spegniLed();
     delay(1);
-    pausa();
 }
 
 
@@ -228,12 +224,11 @@ void invia() {
     uint32_t t = micros();
     uint32_t deltaT = (t - microsInviaPrec);
     microsInviaPrec = t;
+
     // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
-    bool decisione = ((messPerMin * deltaT) > random(60000000));
+    bool decisione = (messPerMin * deltaT > random(60000000));
 
     if(!decisione) return;
-
-    invia();
 
     novita = true;
 
@@ -349,37 +344,6 @@ void imposta(uint32_t mpm) {
 
 
 
-
-
-void pausa() {
-    if(millis() - tUltimoMessaggio < 5000) return;
-
-    //Serial.println("-- Aspetto altra radio --");
-
-    radio.iniziaRicezione();
-    bool statoLed = true;
-    uint32_t tLed = millis();
-    uint8_t i = 0;
-    while(!radio.nuovoMessaggio()) {
-        if(millis() - tLed > 200) {
-            digitalWrite(LED_ACK, statoLed);
-            digitalWrite(LED_TX, !statoLed);
-            statoLed = !statoLed;
-            tLed = millis();
-            i++;
-        }
-        if(i == 10) break;
-    }
-    tUltimoMessaggio = millis();
-    digitalWrite(LED_ACK, LOW);
-    digitalWrite(LED_TX, LOW);
-
-    leggi();
-}
-
-
-
-
 void elaboraStatistiche() {
 
     // Calcolo messaggi al minuto
@@ -400,7 +364,7 @@ void elaboraStatistiche() {
         deriv += (float)indiciSuccessoPrec[3] * -126;
         //deriv += indiciSuccessoPrec[4] * 0;
         deriv += (float)indiciSuccessoPrec[5] *  126;
-        deriv += (float)indiciSuccessoPrec[6] *  193;
+        deriv += (float)indiciSuccessoPrec[6] *  193; // Usato come risultato finale
         deriv += (float)indiciSuccessoPrec[7] *  142;
         deriv += (float)indiceSuccesso        *  -86;
         deriv /= 1188.0;
@@ -419,6 +383,8 @@ void elaboraStatistiche() {
 
 
     nrElaborazioni++;
+    if(millis() - tInizio > durataMinimaTest)
+    statStabili = true;
 }
 
 
@@ -433,11 +399,15 @@ void salvaStatistiche()  {
     // Durata del test
     riassunto[nrTest][(int)elemRiass::durata] = (millis() - tInizio) / 1000;
     // Percentuale successo
-    riassunto[nrTest][(int)elemRiass::successo] = indiceSuccesso;
+    // l'elemento 6 di quest'array ha il peso maggiore nel calsolo della stabilità
+    riassunto[nrTest][(int)elemRiass::successo] = indiciSuccessoPrec[6];
 
     nrTest++;
 
-    if(indiceSuccesso < 500 || nrTest == nrTestMax || messPerMinEffettivi < messPerMin - 50)
+    bool mpmNonRaggiunti = false;
+    if(messPerMin > 100) mpmNonRaggiunti = (messPerMinEffettivi < messPerMin - 100);
+
+    if(indiceSuccesso < 100 || nrTest == nrTestMax || mpmNonRaggiunti)
     fineTest = true;
 }
 
@@ -446,7 +416,7 @@ void salvaStatistiche()  {
 void fineProgramma() {
 
     Serial.println();
-    Serial.print("Spengo l'altra radio..");
+    Serial.print(F("Spengo l'altra radio.."));
         // Per al massimo 10 secondi cerca di spegnere l'altra radio
     uint8_t mess[3] = {0,0,0x7B};
     bool ok = false;
@@ -460,20 +430,20 @@ void fineProgramma() {
         }
     }
     if (ok) {
-        Serial.println(" spenta, spengo questa... ");
+        Serial.println(F(" spenta, spengo questa... "));
     }
     else {
-        Serial.println(" comunicazione intrrotta, spegnere l'altra radio manualmente.");
-        Serial.print("Spengo questa radio... ");
+        Serial.println(F(" comunicazione intrrotta, spegnere l'altra radio manualmente."));
+        Serial.print(F("Spengo questa radio... "));
     }
 
     radio.sleep();
 
-    Serial.println(" spenta.");
+    Serial.println(F(" spenta."));
 
     Serial.println();
     Serial.println();
-    Serial.println(" Fine test collisioni messaggi.");
+    Serial.println(F(" Fine test collisioni messaggi."));
     Serial.println();
     bool statoLed = true;
     uint32_t t = millis();
@@ -529,41 +499,51 @@ void stampaNovita() {
 
 
 void stampaRiassunto() {
-
-    //########################## Dati generali ###############################//
+    // Variabili globali usate:
+    // - nrTest = Numero di test effettuati - 1
+    // - Riassunto[nrTest][5] =  risultati ottenuti
 
     // Calcolo totali
+
     uint32_t tTot = 0;
-    for(int i = 0; i < nrTest; i++) tTot += riassunto[i][(int)elemRiass::durata];
+    for(int i = 0; i < nrTest; i++)
+    tTot += riassunto[i][(int)elemRiass::durata];
+
     uint32_t messTot = 0;
-    for(int i = 0; i < nrTest; i++) messTot += riassunto[i][(int)elemRiass::messTot];
-    const uint16_t mpmMax = messPerMinEffettivi;
+    for(int i = 0; i < nrTest; i++)
+    messTot += riassunto[i][(int)elemRiass::messTot];
+
+    uint16_t mpmMax = 0;
+    for(int i = 0; i < nrTest; i++)
+    if(mpmMax < riassunto[i][(int)elemRiass::mpmEffettivi])
+    mpmMax = riassunto[i][(int)elemRiass::mpmEffettivi];
+
 
     for(int i = 6; i; i--) Serial.println();
     for(int i = 71; i; i--) Serial.print('*');
     Serial.println();
-    Serial.print("Test completato in ");
+    Serial.print(F("Test completato in "));
     Serial.print(tTot/60);
-    Serial.print(" minuti e ");
+    Serial.print(F(" minuti e "));
     Serial.print(tTot%60);
-    Serial.print(" secondi.");
+    Serial.print(F(" secondi."));
     Serial.println();
-    Serial.print("Questa radio ha inviato ");
+    Serial.print(F("Questa radio ha inviato "));
     Serial.print(messTot);
-    Serial.print(" messaggi di ");
+    Serial.print(F(" messaggi di "));
     Serial.print(lunghezzaMessaggi);
-    Serial.print(" bytes a ");
+    Serial.print(F(" bytes a "));
     Serial.print(nrTest);
-    Serial.print(" frequenze di\ntrasmissione diverse comprese tra ");
+    Serial.print(F(" frequenze di\ntrasmissione diverse comprese tra "));
     Serial.print(frequenzaTxIniziale);
-    Serial.print(" e ");
+    Serial.print(F(" e "));
     Serial.print(mpmMax);
-    Serial.print(" messaggi al minuto.");
+    Serial.print(F(" messaggi al minuto."));
     Serial.println();
     Serial.println();
-    Serial.print("Attesa ACK: media = ");
+    Serial.print(F("Attesa ACK: media = "));
     Serial.print(radio.ottieniAttesaMediaAck());
-    Serial.print(", massima = ");
+    Serial.print(F(", massima = "));
     Serial.print(radio.ottieniAttesaMassimaAck());
     Serial.println();
 
@@ -574,9 +554,9 @@ void stampaRiassunto() {
 
     Serial.println();
     Serial.println();
-    Serial.println("   Risultati");
+    Serial.println(F("   Risultati"));
     Serial.println();
-    Serial.println("   | #  | durata | mess inviati | mess/min | m/m esatti | successo |");
+    Serial.println(F("   | #  | durata | mess inviati | mess/min | m/m esatti | successo |"));
 
     Serial.print("   ");
     for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
@@ -608,8 +588,8 @@ void stampaRiassunto() {
 
 
     // Impostazioni grafico
-    const uint8_t larghezza = 70;
-    const uint8_t altezza = 16; // multiplo di 2, 3 o 4 (meglio 4)
+    const uint8_t larghezza = 90;
+    const uint8_t altezza = 20; // multiplo di 2, 3 o 4 (meglio 4)
 
     uint16_t mpmMaxGrafico = mpmMax + (50 - (mpmMax%50));
     uint8_t divisoreAltezza;
@@ -620,8 +600,11 @@ void stampaRiassunto() {
 
     Serial.println();
     Serial.println();
-    Serial.println("   Percentuale di successo per frequenza di trasmissione");
+    Serial.println(F("   Percentuale di successo per frequenza di trasmissione"));
     Serial.println();
+
+    // Stampa grafico
+    Serial.println("    %");
 
     // Stampa grafico
     Serial.println("    %");
@@ -633,13 +616,13 @@ void stampaRiassunto() {
         else Serial.print("   ");
         Serial.print(" | ");
 
-        for(int x = 0, test = 0; x < larghezza; x++) {
+        for(int x = 0; x < larghezza; x++) {
 
             bool punto = false;
 
             // Controlla se uno qualsiasi dei test è stato effettuato ai mpm su questa ascissa
             for(int i = 0; i < nrTest; i++) {
-                uint8_t ascissa = larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMaxGrafico;
+                uint16_t ascissa = (uint32_t)larghezza * riassunto[i][(int)elemRiass::mpmEffettivi] / mpmMaxGrafico;
 
                 if(x == ascissa) {
                     // Se siamo nel punto in cui i dati sono maggiori per quella ascissa
@@ -656,11 +639,11 @@ void stampaRiassunto() {
 
         Serial.println();
     }
-    Serial.print("  0 +");
+    Serial.print(F("  0 +"));
     for(int x = 0; x < larghezza; x++) Serial.print("-");
-    Serial.print("  mess/min");
+    Serial.print(F("  mess/min"));
     Serial.println();
-    Serial.print("    0");
+    Serial.print(F("    0"));
 
     // Stampa linea orizzontale inferiore
     uint8_t distanzaPunti;
@@ -695,10 +678,12 @@ void stampaRiassunto() {
     Serial.println();
     Serial.println();
     Serial.println();
-    Serial.println("Array dei dati raccolti da questo test, nell'ordine:");
-    Serial.println("mpm previsti - mpm effettivi - messaggi tot - durata - successo");
+    Serial.println(F("Array dei dati raccolti da questo test, nell'ordine:"));
+    Serial.println(F("mpm previsti - mpm effettivi - messaggi tot - durata - successo"));
     Serial.println();
-    Serial.print("{");
+    Serial.print(F("uint16_t array["));
+    Serial.print(nrTest);
+    Serial.print(F("][5] = {"));
     for(int a = 0; a < nrTest; a++) {
         Serial.print("{");
         for(int b = 0; b < 5; b++) {
@@ -708,7 +693,7 @@ void stampaRiassunto() {
         Serial.print("}");
         if(a < nrTest - 1) Serial.print(",");
     }
-    Serial.print("}");
+    Serial.print("};");
     Serial.println();
     Serial.println();
     Serial.println();

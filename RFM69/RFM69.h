@@ -337,6 +337,9 @@ public:
     */
     int impostaFreqDev(uint32_t freqDev);
 
+    //! Imposta la bandwidth del channel filter
+    /*!
+    */
     //! Imposta la frequenza di comunicazione
     /*! Imposta la frequenza della trasmissione radio.
         @note La funzione non impone limiti al valore ricevuto. Esistono però due
@@ -355,7 +358,7 @@ public:
     */
     int impostaFrequenzaMHz(uint32_t freq);
 
-    
+
     //!@}
     /*! @name Funzioni ausiliarie
     Utili ma non indispensabili

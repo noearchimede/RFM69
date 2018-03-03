@@ -154,13 +154,13 @@ dell'implementazione della classe RFM69).
 // [0x19] Channel filter bandwidth
 // x ; 2'600 - 500'000 ; ~[2 * bitRate] (trovato sperimentalmente)
 // limite: BitRate < 2 x RxBw)
-#define RX_BW                           BIT_RATE * 2
+#define RX_BW                           FREQ_DEV * 2
 // [0x19] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // _16, _8, _4, _2, _1, _0_5, _0_25, _0_125
 #define DCC_FREQ                        DCC_FREQ_0_125
 // [0x1A] Channel filter bandwidth used during AFC
 // x ; 2'600 - 500'000
-#define RX_BW_AFC                       BIT_RATE * 2
+#define RX_BW_AFC                       FREQ_DEV * 2
 // [0x1A] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // DCC_FREQ: _16, _8, _4, _2, _1, _0_5, _0_25, _0_125
 #define DCC_FREQ_AFC                    DCC_FREQ_0_125

@@ -226,14 +226,14 @@ void pausa() {
     uint32_t tLed = millis();
     uint8_t i = 0;
     while(!radio.nuovoMessaggio()) {
-        if(millis() - tLed > 200) {
+        if(millis() - tLed > 20) {
             digitalWrite(LED_ACK, statoLed);
             digitalWrite(LED_TX, !statoLed);
             statoLed = !statoLed;
             tLed = millis();
             i++;
         }
-        if(i == 10) break;
+        if(i == 5) break;
     }
     tUltimoMessaggio = millis();
     digitalWrite(LED_ACK, LOW);
