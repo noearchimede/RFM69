@@ -23,6 +23,7 @@ for the JavaScript code in this file
 */
 var menudata={children:[
 {text:"Pagina Principale",url:"index.html"},
+{text:"Pagine collegate",url:"pages.html"},
 {text:"Classi",url:"annotated.html",children:[
 {text:"Elenco dei tipi composti",url:"annotated.html"},
 {text:"Indice dei tipi composti",url:"classes.html"},

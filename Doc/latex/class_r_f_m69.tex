@@ -40,6 +40,8 @@ int \textbf{ invia\+Con\+Ack} (const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t 
 \begin{DoxyCompactList}\small\item\em Invia un messaggio con richiesta di A\+CK. \end{DoxyCompactList}\item 
 int \textbf{ invia\+Fino\+Ack} (uint16\+\_\+t \&tentativi, const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza, uint8\+\_\+t titolo=0)
 \begin{DoxyCompactList}\small\item\em Invia un messaggio ripetutamente fino alla ricezione di un A\+CK. \end{DoxyCompactList}\item 
+int \textbf{ invia\+Fino\+Ack} (const uint16\+\_\+t \&\&tentativi, const uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t lunghezza, uint8\+\_\+t titolo=0)
+\begin{DoxyCompactList}\small\item\em Versione di {\ttfamily invia\+Fino\+Ack} senza restituzione del numero di tentativi. \end{DoxyCompactList}\item 
 int \textbf{ leggi} (uint8\+\_\+t messaggio[$\,$], uint8\+\_\+t \&lunghezza)
 \begin{DoxyCompactList}\small\item\em Restituisce un messaggio, se ce n\textquotesingle{}è uno da leggere. \end{DoxyCompactList}\item 
 int \textbf{ inizia\+Ricezione} ()
@@ -54,7 +56,7 @@ uint8\+\_\+t \textbf{ dimensione\+Messaggio} ()
 \begin{DoxyCompactList}\small\item\em Restituisce la dimensione dell\textquotesingle{}ultimo mesasggio. \end{DoxyCompactList}\item 
 uint8\+\_\+t \textbf{ titolo\+Messaggio} ()
 \begin{DoxyCompactList}\small\item\em Restituisce il titolo dell\textquotesingle{}ultimo messaggio. \end{DoxyCompactList}\item 
-bool \textbf{ aspetta\+Ack} ()
+bool \textbf{ ack\+In\+Sospeso} ()
 \begin{DoxyCompactList}\small\item\em Restituisce true se la classe sta aspettando un A\+CK. \end{DoxyCompactList}\item 
 bool \textbf{ ricevuto\+Ack} ()
 \begin{DoxyCompactList}\small\item\em Restituisce true se la radio ha ricevuto un A\+CK. \end{DoxyCompactList}\item 
@@ -63,6 +65,16 @@ void \textbf{ rinuncia\+Ack} ()
 int \textbf{ standby} ()
 \begin{DoxyCompactList}\small\item\em Mette la radio in standby (richiederà 1.\+25mA di corrente) \end{DoxyCompactList}\end{DoxyCompactItemize}
 \end{Indent}
+\begin{Indent}\textbf{ Funzioni di impostazione}\par
+{\em Impostazioni nel file di impostazione che possono essere modificate anche nel programma }\begin{DoxyCompactItemize}
+\item 
+int \textbf{ imposta\+Bit\+Rate} (uint32\+\_\+t bit\+Rate)
+\begin{DoxyCompactList}\small\item\em Imposta la bit rate di trasmissione. \end{DoxyCompactList}\item 
+int \textbf{ imposta\+Freq\+Dev} (uint32\+\_\+t freq\+Dev)
+\begin{DoxyCompactList}\small\item\em Imposta la Frequency Deviation per la modulazione F\+SK. \end{DoxyCompactList}\item 
+int \textbf{ imposta\+Frequenza\+M\+Hz} (uint32\+\_\+t freq)
+\begin{DoxyCompactList}\small\item\em Imposta la bandwidth del channel filter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
 \begin{Indent}\textbf{ Funzioni ausiliarie}\par
 {\em Utili ma non indispensabili }\begin{DoxyCompactItemize}
 \item 
@@ -70,14 +82,14 @@ int \textbf{ listen} ()
 \begin{DoxyCompactList}\small\item\em Mette la radio in modalità {\ttfamily listen} \end{DoxyCompactList}\item 
 int \textbf{ sleep} ()
 \begin{DoxyCompactList}\small\item\em Mette la radio in modalità sleep (richiederà 0.\+1uA di corrente) \end{DoxyCompactList}\item 
-void \textbf{ sleep\+Default} ()
+void \textbf{ default\+Sleep} ()
 \begin{DoxyCompactList}\small\item\em Imposta la modalità di default della radio. \end{DoxyCompactList}\item 
-void \textbf{ standby\+Default} ()
+void \textbf{ default\+Standby} ()
 \begin{DoxyCompactList}\small\item\em Imposta la modalità di default della radio. \end{DoxyCompactList}\item 
-void \textbf{ listen\+Default} ()
-\item 
-void \textbf{ rx\+Default} ()
-\item 
+void \textbf{ default\+Listen} ()
+\begin{DoxyCompactList}\small\item\em Imposta la modalità di default della radio. \end{DoxyCompactList}\item 
+void \textbf{ default\+Ricezione} ()
+\begin{DoxyCompactList}\small\item\em Imposta la modalità di default della radio. \end{DoxyCompactList}\item 
 void \textbf{ imposta\+Timeout\+Ack} (uint16\+\_\+t tempo\+Ms)
 \begin{DoxyCompactList}\small\item\em Imposta il tempo d\textquotesingle{}attesa massimo per un A\+CK. \end{DoxyCompactList}\item 
 int8\+\_\+t \textbf{ rssi} ()
@@ -92,9 +104,15 @@ bool \textbf{ sta\+Trasmettendo} ()
 \begin{Indent}\textbf{ Log}\par
 {\em Funzioni utili per monitorare il funzionamento della radio }\begin{DoxyCompactItemize}
 \item 
-int \textbf{ nr\+Messaggi\+Inviati} ()
+uint16\+\_\+t \textbf{ ottieni\+Attesa\+Ack} ()
+\begin{DoxyCompactList}\small\item\em Restituisce la durata dell\textquotesingle{}ultima attesa di un A\+CK (ricevuto) \end{DoxyCompactList}\item 
+uint16\+\_\+t \textbf{ ottieni\+Attesa\+Massima\+Ack} ()
+\begin{DoxyCompactList}\small\item\em Restituisce la durata massima di attesa di un A\+CK (ricevuto) \end{DoxyCompactList}\item 
+uint16\+\_\+t \textbf{ ottieni\+Attesa\+Media\+Ack} ()
+\begin{DoxyCompactList}\small\item\em Restituisce la durata media di attesa di un A\+CK (ricevuto) \end{DoxyCompactList}\item 
+uint16\+\_\+t \textbf{ nr\+Messaggi\+Inviati} ()
 \begin{DoxyCompactList}\small\item\em Restituisce il numero di messaggi inviati dopo l\textquotesingle{}ultima inizializzazione. \end{DoxyCompactList}\item 
-int \textbf{ nr\+Messaggi\+Ricevuti} ()
+uint16\+\_\+t \textbf{ nr\+Messaggi\+Ricevuti} ()
 \begin{DoxyCompactList}\small\item\em Restituisce il numero di messaggi ricevuti dopo l\textquotesingle{}ultima inizializzazione. \end{DoxyCompactList}\item 
 void \textbf{ stampa\+Errore\+Serial} (Hardware\+Serial \&serial, int errore, bool contesto=true)
 \begin{DoxyCompactList}\small\item\em Stampa la descrizione di un errore sul monitor seriale. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -267,7 +285,7 @@ La funzione restituisce comunque il codice di errore restituito da {\ttfamily \d
 \end{DoxyReturn}
 
 
-Definizione alla linea 373 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+Definizione alla linea 382 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}} 
 \index{R\+F\+M69@{R\+F\+M69}!invia@{invia}}
@@ -335,7 +353,7 @@ Definizione alla linea 38 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 \mbox{\label{class_r_f_m69_af2ea878aed6c1cce272d63c8c6d39322}} 
 \index{R\+F\+M69@{R\+F\+M69}!invia\+Fino\+Ack@{invia\+Fino\+Ack}}
 \index{invia\+Fino\+Ack@{invia\+Fino\+Ack}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{invia\+Fino\+Ack()}
+\subsubsection{invia\+Fino\+Ack()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily int R\+F\+M69\+::invia\+Fino\+Ack (\begin{DoxyParamCaption}\item[{uint16\+\_\+t \&}]{tentativi,  }\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza,  }\item[{uint8\+\_\+t}]{titolo = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 
@@ -364,6 +382,20 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 
 Definizione alla linea 49 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
+\mbox{\label{class_r_f_m69_a6d87e1e9b25fbdd5b9a0c4ee4c405021}} 
+\index{R\+F\+M69@{R\+F\+M69}!invia\+Fino\+Ack@{invia\+Fino\+Ack}}
+\index{invia\+Fino\+Ack@{invia\+Fino\+Ack}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{invia\+Fino\+Ack()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int R\+F\+M69\+::invia\+Fino\+Ack (\begin{DoxyParamCaption}\item[{const uint16\+\_\+t \&\&}]{tentativi,  }\item[{const uint8\+\_\+t}]{messaggio[$\,$],  }\item[{uint8\+\_\+t}]{lunghezza,  }\item[{uint8\+\_\+t}]{titolo = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Versione di {\ttfamily invia\+Fino\+Ack} senza restituzione del numero di tentativi. 
+
+Questa funzione corrisponde ad {\ttfamily invia\+Fino\+Ack(uint16\+\_\+t\&, const uin8\+\_\+t, uint8\+\_\+t, uint8\+\_\+t)} ma il suo primo argomento non è una \textquotesingle{}reference\textquotesingle{}; può essere usata se non si è interessati a sapere il numero di tentativi effettuati oppure se si passa come argomentoun valore e non una variabile. 
+
+Definizione alla linea 174 del file R\+F\+M69.\+h.
+
 \mbox{\label{class_r_f_m69_ade25e9bc296b574729d8136f88815384}} 
 \index{R\+F\+M69@{R\+F\+M69}!leggi@{leggi}}
 \index{leggi@{leggi}!R\+F\+M69@{R\+F\+M69}}
@@ -388,7 +420,7 @@ Codice di errore definito nell\textquotesingle{}enum \doxyref{R\+F\+M69\+::\+Err
 \end{DoxyReturn}
 
 
-Definizione alla linea 139 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 141 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a6b17f375887fff59187de5984045a212}} 
 \index{R\+F\+M69@{R\+F\+M69}!inizia\+Ricezione@{inizia\+Ricezione}}
@@ -402,7 +434,7 @@ Attiva la radio in modo che possa ricevere dei messaggi.
 
 Per riceve la radio deve essere in modalità ricezione. Nelle altre modalità non si accorgerà nemmeno di aver ricevuto un messaggio. Quindi se non si chiama questa funzione sulla radio ricevente tutti i messaggi inviatile andranno persi. 
 
-Definizione alla linea 199 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 202 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ab4ed0d38db090722fb9ef1bb7592bd31}} 
 \index{R\+F\+M69@{R\+F\+M69}!nuovo\+Messaggio@{nuovo\+Messaggio}}
@@ -419,7 +451,7 @@ Controlla se c\textquotesingle{}è un nuovo messaggio.
 \end{DoxyReturn}
 
 
-Definizione alla linea 211 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 214 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a969d07c431bf5cdfd295ffdef380b497}} 
 \index{R\+F\+M69@{R\+F\+M69}!dimensione\+Messaggio@{dimensione\+Messaggio}}
@@ -436,7 +468,7 @@ la dimensione dell\textquotesingle{}utlimo messaggio ricevuto in bytes
 \end{DoxyReturn}
 
 
-Definizione alla linea 219 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 222 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a5995c4fa211e5cf869782b777bc7fa2f}} 
 \index{R\+F\+M69@{R\+F\+M69}!titolo\+Messaggio@{titolo\+Messaggio}}
@@ -455,13 +487,13 @@ il titolo dell\textquotesingle{}ultimo messaggio
 \end{DoxyReturn}
 
 
-Definizione alla linea 225 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 228 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
-\mbox{\label{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950}} 
-\index{R\+F\+M69@{R\+F\+M69}!aspetta\+Ack@{aspetta\+Ack}}
-\index{aspetta\+Ack@{aspetta\+Ack}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{aspetta\+Ack()}
-{\footnotesize\ttfamily bool R\+F\+M69\+::aspetta\+Ack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+\mbox{\label{class_r_f_m69_a9ebfacf21a3b7999e1edc9e080ddb329}} 
+\index{R\+F\+M69@{R\+F\+M69}!ack\+In\+Sospeso@{ack\+In\+Sospeso}}
+\index{ack\+In\+Sospeso@{ack\+In\+Sospeso}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{ack\+In\+Sospeso()}
+{\footnotesize\ttfamily bool R\+F\+M69\+::ack\+In\+Sospeso (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
@@ -470,7 +502,7 @@ Restituisce true se la classe sta aspettando un A\+CK.
 \begin{DoxyReturn}{Restituisce}
 {\ttfamily true} se la classe sta aspettando un ack, cioé se ha inviato un messaggio con richiesta di A\+CK e non lo ha ancora ricevuto.
 \end{DoxyReturn}
-Questa funzione contiene un sistema di timeout. Dopo lo scadere del tempo restituisce {\ttfamily false} anche se non ha ricevuto nessun ack.
+Questa funzione contiene un sistema di timeout. Se chiamata dopo lo scadere del tempo chiama {\ttfamily \doxyref{rinuncia\+Ack()}{pag.}{class_r_f_m69_a7e9a828d5c3f3c82a27b5e15c11b4dde}} e restituisce {\ttfamily false}.
 
 \begin{DoxyWarning}{Avvertimento}
 {\ttfamily false} ha due signifcati opposti\+:
@@ -481,7 +513,7 @@ Questa funzione contiene un sistema di timeout. Dopo lo scadere del tempo restit
 \end{DoxyWarning}
 
 
-Definizione alla linea 251 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 254 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ad1dac77e3fee1b9c1c1f519a603f9132}} 
 \index{R\+F\+M69@{R\+F\+M69}!ricevuto\+Ack@{ricevuto\+Ack}}
@@ -496,13 +528,13 @@ Restituisce true se la radio ha ricevuto un A\+CK.
 \begin{DoxyReturn}{Restituisce}
 {\ttfamily true} se la radio ha ricevuto un A\+CK per l\textquotesingle{}ultimo messaggio inviato
 \end{DoxyReturn}
-Questa funzione non aspetta l\textquotesingle{}A\+CK, dice solo se è arrivato, quindi chiamata immediatamente dopo {\ttfamily \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}} restituisce sempre {\ttfamily false}. Normalmente è perciò usata insieme a \doxyref{aspetta\+Ack()}{pag.}{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950} (cioé subito dopo di essa).
+Questa funzione non aspetta l\textquotesingle{}A\+CK, dice solo se è arrivato, quindi chiamata immediatamente dopo {\ttfamily \doxyref{invia()}{pag.}{class_r_f_m69_aaaa68e53a33554a638cefe55089e2295}} restituisce sempre {\ttfamily false}. Normalmente è perciò usata insieme a \doxyref{ack\+In\+Sospeso()}{pag.}{class_r_f_m69_a9ebfacf21a3b7999e1edc9e080ddb329} (cioé subito dopo di essa).
 
 Esempio\+: 
 \begin{DoxyCode}
 \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 3; i++) \{
     invia();
-    aspettaAck();
+    \textcolor{keywordflow}{while}(ackInSospeso());
     \textcolor{keywordflow}{if}(ricevutoAck()) \textcolor{keywordflow}{break};
 \}
 \textcolor{keywordflow}{if}(!ricevutoAck()) \{
@@ -511,7 +543,7 @@ Esempio\+:
 \end{DoxyCode}
  
 
-Definizione alla linea 267 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 270 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a7e9a828d5c3f3c82a27b5e15c11b4dde}} 
 \index{R\+F\+M69@{R\+F\+M69}!rinuncia\+Ack@{rinuncia\+Ack}}
@@ -524,13 +556,13 @@ Definizione alla linea 267 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 Simula la ricezione di un A\+CK. 
 
 \begin{DoxyNote}{Nota}
-Normalmente questza funzione non dovrebbe mai essere chiamata.
+Normalmente questa funzione non dovrebbe mai essere chiamata.
 \end{DoxyNote}
-Questa funzione è chiamata automaticamente da \doxyref{aspetta\+Ack()}{pag.}{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950} allo scadere del tempo massimo. Può essere usata dall\textquotesingle{}utente per terminare l\textquotesingle{}attesa prima di quella scadenza. In caso di invio di un secondo messaggio prima della ricezione dell\textquotesingle{}A\+CK (ad es. per trasmettere un\textquotesingle{}informazione urgente) è chiamata automaticamente.
+Questa funzione è chiamata automaticamente da \doxyref{ack\+In\+Sospeso()}{pag.}{class_r_f_m69_a9ebfacf21a3b7999e1edc9e080ddb329} allo scadere del tempo massimo. Può essere usata dall\textquotesingle{}utente per terminare l\textquotesingle{}attesa prima di quella scadenza. In caso di invio di un secondo messaggio prima della ricezione dell\textquotesingle{}A\+CK (ad es. per trasmettere un\textquotesingle{}informazione urgente) è chiamata automaticamente.
 
 Se il vero A\+CK dovesse arrivare dopo l\textquotesingle{}esecuzione di questa funzione non avrà nessun effetto. 
 
-Definizione alla linea 274 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 277 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a641eb4b586c56cba627a73cc6006a63e}} 
 \index{R\+F\+M69@{R\+F\+M69}!standby@{standby}}
@@ -544,7 +576,106 @@ Mette la radio in standby (richiederà 1.\+25mA di corrente)
 
 La modalità {\ttfamily standby} serve per mettere la radio in pausa per qualche secondo. Per pause più lunghe conviene usare {\ttfamily \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544}}, soprattutto se l\textquotesingle{}intero dispositivo deve essere messo in standby per un certo periodo. Se invece il dispositivo utilizza relativamente tanta corrente durante lo standby della radio (ad es. ha accesi diversi L\+ED, un motore, ...) la differenza tra {\ttfamily \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544}} e {\ttfamily \doxyref{standby()}{pag.}{class_r_f_m69_a641eb4b586c56cba627a73cc6006a63e}} non è rilevante. 
 
-Definizione alla linea 542 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 555 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a0764053e5601fbd866bc458c6b641445}} 
+\index{R\+F\+M69@{R\+F\+M69}!imposta\+Bit\+Rate@{imposta\+Bit\+Rate}}
+\index{imposta\+Bit\+Rate@{imposta\+Bit\+Rate}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{imposta\+Bit\+Rate()}
+{\footnotesize\ttfamily int R\+F\+M69\+::imposta\+Bit\+Rate (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{bit\+Rate }\end{DoxyParamCaption})}
+
+
+
+Imposta la bit rate di trasmissione. 
+
+\begin{DoxyNote}{Nota}
+Con la bit rate conviene modificare anche la Frequency Deviation, se si utilizza la modulazione F\+SK (default per questa classe). Vedi il commento a {\ttfamily \doxyref{imposta\+Bit\+Rate()}{pag.}{class_r_f_m69_a0764053e5601fbd866bc458c6b641445}} per più dettagli.
+\end{DoxyNote}
+\begin{DoxyWarning}{Avvertimento}
+La bit rate deve essere identica per entrambe le radio
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parametri}
+{\em Bit\+Rate} & bit rate in bit al secondo, compresa tra 1\textquotesingle{}200 e 300\textquotesingle{}000 per la modulazione F\+SK e tra 1\textquotesingle{}200 e 32\textquotesingle{}768 per O\+OK\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Restituisce}
+\doxyref{Errore}{pag.}{struct_r_f_m69_1_1_errore} secondo l\textquotesingle{}{\ttfamily enum} {\ttfamily \doxyref{Errore\+::\+Lista\+Errori}{pag.}{struct_r_f_m69_1_1_errore_a4dadb6af0e4d38eaac18d3afe26e5bcd}} (1 se c\textquotesingle{}è un errore e 0 se tutto va bene). 
+\end{DoxyReturn}
+
+
+Definizione alla linea 517 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a0be22ccf2de531ed50b08783c4ca15c3}} 
+\index{R\+F\+M69@{R\+F\+M69}!imposta\+Freq\+Dev@{imposta\+Freq\+Dev}}
+\index{imposta\+Freq\+Dev@{imposta\+Freq\+Dev}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{imposta\+Freq\+Dev()}
+{\footnotesize\ttfamily int R\+F\+M69\+::imposta\+Freq\+Dev (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{freq\+Dev }\end{DoxyParamCaption})}
+
+
+
+Imposta la Frequency Deviation per la modulazione F\+SK. 
+
+Con la Frequency Deviation conviene modificare anche la bit rate. Si tenga sempre presente che\+:
+
+
+\begin{DoxyItemize}
+\item (1/5) $\ast$ bit\+Rate $<$ freq\+Dev $<$ 5 $\ast$ bit\+Rate
+\item 600 $<$ freq\+Dev $<$ 500\textquotesingle{}000 -\/ (bit\+Rate / 2)
+\end{DoxyItemize}
+
+Si potrebbero applicare molte altre forumle, che nn sono riportate qui (vedi ad ed. il teorema di Shannon–\+Hartley).
+
+\begin{DoxyWarning}{Avvertimento}
+La Frequency Deviation deve essere identica per entrambe le radio
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Questa impostazione non ha alcun effetto se la modulazione scelta nel file \doxyref{R\+F\+M69\+\_\+impostazioni.\+h}{pag.}{_r_f_m69__impostazioni_8h} è O\+OK
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parametri}
+{\em freq\+Dev} & Frequency deviation, in Hertz, compresa tra 600 e 300\textquotesingle{}000\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Restituisce}
+\doxyref{Errore}{pag.}{struct_r_f_m69_1_1_errore} secondo l\textquotesingle{}{\ttfamily enum} {\ttfamily \doxyref{Errore\+::\+Lista\+Errori}{pag.}{struct_r_f_m69_1_1_errore_a4dadb6af0e4d38eaac18d3afe26e5bcd}} (1 se c\textquotesingle{}è un errore e 0 se tutto va bene). 
+\end{DoxyReturn}
+
+
+Definizione alla linea 543 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a85789df072dfcf0395797a975822788b}} 
+\index{R\+F\+M69@{R\+F\+M69}!imposta\+Frequenza\+M\+Hz@{imposta\+Frequenza\+M\+Hz}}
+\index{imposta\+Frequenza\+M\+Hz@{imposta\+Frequenza\+M\+Hz}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{imposta\+Frequenza\+M\+Hz()}
+{\footnotesize\ttfamily int R\+F\+M69\+::imposta\+Frequenza\+M\+Hz (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{freq }\end{DoxyParamCaption})}
+
+
+
+Imposta la bandwidth del channel filter. 
+
+Imposta la frequenza di comunicazione
+
+Imposta la frequenza della trasmissione radio. \begin{DoxyNote}{Nota}
+La funzione non impone limiti al valore ricevuto. Esistono però due limiti\+:
+\end{DoxyNote}
+
+\begin{DoxyItemize}
+\item Il limite del modulo, che esiste in 4 varianti diverse con ciascuna una banda di frequenze possibili diversa;
+\item La legge, che regola l\textquotesingle{}utilizzo dello spettro elettromagnetico lasciando alcune bande ben definite a moduli a bassa potenza come questo.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parametri}
+{\em freq} & La frequenza di trasmissione in Hertz\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Restituisce}
+\doxyref{Errore}{pag.}{struct_r_f_m69_1_1_errore} secondo l\textquotesingle{}{\ttfamily enum} {\ttfamily \doxyref{Errore\+::\+Lista\+Errori}{pag.}{struct_r_f_m69_1_1_errore_a4dadb6af0e4d38eaac18d3afe26e5bcd}} (1 se c\textquotesingle{}è un errore e 0 se tutto va bene). 
+\end{DoxyReturn}
+
+
+Definizione alla linea 566 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ae9966b4e02747e72a745c75306edbc0b}} 
 \index{R\+F\+M69@{R\+F\+M69}!listen@{listen}}
@@ -558,7 +689,7 @@ Mette la radio in modalità {\ttfamily listen}
 
 {\ttfamily listen} è una modalità particolare che consiste in realtà nella continua alternanza tra due modalità\+: {\ttfamily rx} (ricezione) e {\ttfamily idle} (una specie di sleep adattato alla modalità listen). 
 
-Definizione alla linea 539 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 552 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544}} 
 \index{R\+F\+M69@{R\+F\+M69}!sleep@{sleep}}
@@ -572,65 +703,67 @@ Mette la radio in modalità sleep (richiederà 0.\+1uA di corrente)
 
 
 
-Definizione alla linea 545 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
-
-\mbox{\label{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03}} 
-\index{R\+F\+M69@{R\+F\+M69}!sleep\+Default@{sleep\+Default}}
-\index{sleep\+Default@{sleep\+Default}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{sleep\+Default()}
-{\footnotesize\ttfamily void R\+F\+M69\+::sleep\+Default (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-Imposta la modalità di default della radio. 
-
-Questa funzione non cambia la modalità attuale!~\newline
-Ad es.{\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03};} non corrisponde a {\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03}; \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
-
-Definizione alla linea 549 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
-
-\mbox{\label{class_r_f_m69_a43a1a3d1a049e325e85537e3efe4a82c}} 
-\index{R\+F\+M69@{R\+F\+M69}!standby\+Default@{standby\+Default}}
-\index{standby\+Default@{standby\+Default}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{standby\+Default()}
-{\footnotesize\ttfamily void R\+F\+M69\+::standby\+Default (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-Imposta la modalità di default della radio. 
-
-Questa funzione non cambia la modalità attuale!~\newline
-Ad es.{\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03};} non corrisponde a {\ttfamily \doxyref{sleep\+Default()}{pag.}{class_r_f_m69_ae6249b031b7cc97ddfb4a52c1e103b03}; \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
-
-Definizione alla linea 552 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
-
-\mbox{\label{class_r_f_m69_adb7e764b5d62bd05e3d592000547c895}} 
-\index{R\+F\+M69@{R\+F\+M69}!listen\+Default@{listen\+Default}}
-\index{listen\+Default@{listen\+Default}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{listen\+Default()}
-{\footnotesize\ttfamily void R\+F\+M69\+::listen\+Default (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-
-
-
-
-Definizione alla linea 555 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
-
-\mbox{\label{class_r_f_m69_a249357ef0b7e1cb464e6960aed1cb2f5}} 
-\index{R\+F\+M69@{R\+F\+M69}!rx\+Default@{rx\+Default}}
-\index{rx\+Default@{rx\+Default}!R\+F\+M69@{R\+F\+M69}}
-\subsubsection{rx\+Default()}
-{\footnotesize\ttfamily void R\+F\+M69\+::rx\+Default (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-
-
-
-
 Definizione alla linea 558 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a7675068b42344584e7b0124c341ccc1b}} 
+\index{R\+F\+M69@{R\+F\+M69}!default\+Sleep@{default\+Sleep}}
+\index{default\+Sleep@{default\+Sleep}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{default\+Sleep()}
+{\footnotesize\ttfamily void R\+F\+M69\+::default\+Sleep (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Imposta la modalità di default della radio. 
+
+Questa funzione non cambia la modalità attuale!~\newline
+Ad es.{\ttfamily sleep\+Default();} non corrisponde a {\ttfamily sleep\+Default(); \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
+
+Definizione alla linea 562 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_af9ee80c7b2ccbc8dcf52cd6d9028062a}} 
+\index{R\+F\+M69@{R\+F\+M69}!default\+Standby@{default\+Standby}}
+\index{default\+Standby@{default\+Standby}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{default\+Standby()}
+{\footnotesize\ttfamily void R\+F\+M69\+::default\+Standby (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Imposta la modalità di default della radio. 
+
+Questa funzione non cambia la modalità attuale!~\newline
+Ad es.{\ttfamily sleep\+Default();} non corrisponde a {\ttfamily sleep\+Default(); \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
+
+Definizione alla linea 565 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a7c4a62d0591410d9e3b5418cab501190}} 
+\index{R\+F\+M69@{R\+F\+M69}!default\+Listen@{default\+Listen}}
+\index{default\+Listen@{default\+Listen}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{default\+Listen()}
+{\footnotesize\ttfamily void R\+F\+M69\+::default\+Listen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Imposta la modalità di default della radio. 
+
+Questa funzione non cambia la modalità attuale!~\newline
+Ad es.{\ttfamily sleep\+Default();} non corrisponde a {\ttfamily sleep\+Default(); \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
+
+Definizione alla linea 568 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+
+\mbox{\label{class_r_f_m69_a9251cc68aa77310d33cdd9e3ccc57cb0}} 
+\index{R\+F\+M69@{R\+F\+M69}!default\+Ricezione@{default\+Ricezione}}
+\index{default\+Ricezione@{default\+Ricezione}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{default\+Ricezione()}
+{\footnotesize\ttfamily void R\+F\+M69\+::default\+Ricezione (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Imposta la modalità di default della radio. 
+
+Questa funzione non cambia la modalità attuale!~\newline
+Ad es.{\ttfamily sleep\+Default();} non corrisponde a {\ttfamily sleep\+Default(); \doxyref{sleep()}{pag.}{class_r_f_m69_aeb0686540b440c8fac725c53b5bf5544};} 
+
+Definizione alla linea 571 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a440d37e3362fc5249c62a88eb2d472d1}} 
 \index{R\+F\+M69@{R\+F\+M69}!imposta\+Timeout\+Ack@{imposta\+Timeout\+Ack}}
@@ -644,12 +777,12 @@ Imposta il tempo d\textquotesingle{}attesa massimo per un A\+CK.
 
 
 \begin{DoxyParams}{Parametri}
-{\em tempo\+Ms} & Tempo di attesa in millisecondi per la funzione {\ttfamily \doxyref{aspetta\+Ack()}{pag.}{class_r_f_m69_a9aae2404953422f02b7ac0f5e2b0b950}}. Dopo aver atteso per questo tempo la funzione terminerà senza aver ricevuto un A\+CK. \\
+{\em tempo\+Ms} & Tempo di attesa in millisecondi per la funzione {\ttfamily \doxyref{ack\+In\+Sospeso()}{pag.}{class_r_f_m69_a9ebfacf21a3b7999e1edc9e080ddb329}}. Dopo aver atteso per questo tempo la funzione terminerà senza aver ricevuto un A\+CK. \\
 \hline
 \end{DoxyParams}
 
 
-Definizione alla linea 562 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 575 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a82233bd29dc90576ad24815e73d3e452}} 
 \index{R\+F\+M69@{R\+F\+M69}!rssi@{rssi}}
@@ -666,7 +799,7 @@ Received Signal Strength Indicator (R\+S\+SI) per l\textquotesingle{}ultimo mess
 \end{DoxyReturn}
 
 
-Definizione alla linea 231 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 234 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a42cddb43229d81b1af95c4ca80f9ae26}} 
 \index{R\+F\+M69@{R\+F\+M69}!tempo\+Ricezione@{tempo\+Ricezione}}
@@ -683,7 +816,7 @@ Il tempo in millisecondi dall\textquotesingle{}inizio del programma a cui è sta
 \end{DoxyReturn}
 
 
-Definizione alla linea 236 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 239 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a6d669858f310c67aa49a1ae09d3d6499}} 
 \index{R\+F\+M69@{R\+F\+M69}!imposta\+Potenza\+Tx@{imposta\+Potenza\+Tx}}
@@ -711,7 +844,7 @@ Alla potenza massima, +20d\+Bm, il segnale può in realtà rivelarsi meno forte 
 \end{DoxyParams}
 
 
-Definizione alla linea 572 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 464 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_abc47406aadb1d0464f4a259fc38b782f}} 
 \index{R\+F\+M69@{R\+F\+M69}!sta\+Trasmettendo@{sta\+Trasmettendo}}
@@ -730,13 +863,63 @@ Questa funzione può essere utile se vicino alla radio si trova un dispsitivo se
 \end{DoxyReturn}
 
 
-Definizione alla linea 361 del file R\+F\+M69.\+h.
+Definizione alla linea 435 del file R\+F\+M69.\+h.
 
-\mbox{\label{class_r_f_m69_a7247bad24b8b3c040a35eb3b4fe84a7d}} 
+\mbox{\label{class_r_f_m69_a597de2e2c76336659093d2e87d323d85}} 
+\index{R\+F\+M69@{R\+F\+M69}!ottieni\+Attesa\+Ack@{ottieni\+Attesa\+Ack}}
+\index{ottieni\+Attesa\+Ack@{ottieni\+Attesa\+Ack}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{ottieni\+Attesa\+Ack()}
+{\footnotesize\ttfamily uint16\+\_\+t R\+F\+M69\+::ottieni\+Attesa\+Ack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Restituisce la durata dell\textquotesingle{}ultima attesa di un A\+CK (ricevuto) 
+
+Il valore restituito da questa funzione è il tempo in millisecondi impiegato per svolgere le operazioni elencate di seguito l\textquotesingle{}ultima volta che sono state eseguite {\itshape tutte}; se il messaggio non richiedeva A\+CK o comunque l\textquotesingle{}A\+CK non è arrivato questa funzione darà il tempo relativo a un messaggio precedente che ha avuto il suo A\+CK\+:
+
+{\ttfamily [attesa A\+CK] = [trasmissione] + [decodificazione] + [T\+E\+M\+PO P\+R\+I\+MA D\+E\+L\+LA C\+H\+I\+A\+M\+A\+TA A\+L\+LA F\+U\+N\+Z\+I\+O\+NE \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}] + [trasmissione A\+CK]}
+
+Il {\ttfamily [T\+E\+M\+PO P\+R\+I\+MA D\+E\+L\+LA C\+H\+I\+A\+M\+A\+TA A\+L\+LA F\+U\+N\+Z\+I\+O\+NE \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}]} è il fattore più variabile; è più basso se il codice della radio ricevente è scritto bene (dal punto di vista di questa classe). 
+
+Definizione alla linea 457 del file R\+F\+M69.\+h.
+
+\mbox{\label{class_r_f_m69_a242a4c71987bd260576e226104ea2f6a}} 
+\index{R\+F\+M69@{R\+F\+M69}!ottieni\+Attesa\+Massima\+Ack@{ottieni\+Attesa\+Massima\+Ack}}
+\index{ottieni\+Attesa\+Massima\+Ack@{ottieni\+Attesa\+Massima\+Ack}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{ottieni\+Attesa\+Massima\+Ack()}
+{\footnotesize\ttfamily uint16\+\_\+t R\+F\+M69\+::ottieni\+Attesa\+Massima\+Ack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Restituisce la durata massima di attesa di un A\+CK (ricevuto) 
+
+Restituisce lo stesso valore della funzione {\ttfamily durata\+Attesa\+Ack()}, ma relativo all\textquotesingle{}attesa più lunga dall\textquotesingle{}ultima inizializzazione al momento della chiamata.
+
+Può essere usato per definire un tempo timeout\+Ack adeguato\+: chiamata dopo aver eseguito il programma finale con un timeout arbitrariamente grande, questa funzione restituirà il valore ideale del timeout\+: se ad es. restituisse 100 un timeout adeguato potrebbe essere 110 o 120. Se però la media \doxyref{ottieni\+Attesa\+Media\+Ack()}{pag.}{class_r_f_m69_af5538a0258d104c45fac05c03d69af36} fosse nettamente inferiore (ad es. 50) converrebbe probabilmente identificare il punto in cui il tempo di attesa è massimo usando la funzione \doxyref{ottieni\+Attesa\+Ack()}{pag.}{class_r_f_m69_a597de2e2c76336659093d2e87d323d85} e eliminare la causa di tale ritardo oppure aumentare momrntaneamente il timeout il quel punto. 
+
+Definizione alla linea 472 del file R\+F\+M69.\+h.
+
+\mbox{\label{class_r_f_m69_af5538a0258d104c45fac05c03d69af36}} 
+\index{R\+F\+M69@{R\+F\+M69}!ottieni\+Attesa\+Media\+Ack@{ottieni\+Attesa\+Media\+Ack}}
+\index{ottieni\+Attesa\+Media\+Ack@{ottieni\+Attesa\+Media\+Ack}!R\+F\+M69@{R\+F\+M69}}
+\subsubsection{ottieni\+Attesa\+Media\+Ack()}
+{\footnotesize\ttfamily uint16\+\_\+t R\+F\+M69\+::ottieni\+Attesa\+Media\+Ack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Restituisce la durata media di attesa di un A\+CK (ricevuto) 
+
+Restituisce lo stesso valore della funzione {\ttfamily durata\+Attesa\+Ack()}, ma anziché riferirsi a un\textquotesingle{}attesa in particolare restituisce l\textquotesingle{}attesa media dall\textquotesingle{}ultima inizializzazione al momento della chiamata.
+
+Può essere un indice della buona scrittura del codice della radio ricevente\+: più la funzione {\ttfamily \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}} è chiamata (o pronta ad essere chiamata) regolarmente e frequentemente più questo valore sarà basso. 
+
+Definizione alla linea 483 del file R\+F\+M69.\+h.
+
+\mbox{\label{class_r_f_m69_a8cca0cc81ea4d5d03dea4930a176a5fe}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Inviati@{nr\+Messaggi\+Inviati}}
 \index{nr\+Messaggi\+Inviati@{nr\+Messaggi\+Inviati}!R\+F\+M69@{R\+F\+M69}}
 \subsubsection{nr\+Messaggi\+Inviati()}
-{\footnotesize\ttfamily int R\+F\+M69\+::nr\+Messaggi\+Inviati (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily uint16\+\_\+t R\+F\+M69\+::nr\+Messaggi\+Inviati (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -747,13 +930,13 @@ Il numero di messaggi inviati dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 372 del file R\+F\+M69.\+h.
+Definizione alla linea 488 del file R\+F\+M69.\+h.
 
-\mbox{\label{class_r_f_m69_a510888edc4cf87dbe13d89433dd87dc7}} 
+\mbox{\label{class_r_f_m69_a35bd91314fd80a855736a564ca65273b}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Ricevuti@{nr\+Messaggi\+Ricevuti}}
 \index{nr\+Messaggi\+Ricevuti@{nr\+Messaggi\+Ricevuti}!R\+F\+M69@{R\+F\+M69}}
 \subsubsection{nr\+Messaggi\+Ricevuti()}
-{\footnotesize\ttfamily int R\+F\+M69\+::nr\+Messaggi\+Ricevuti (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily uint16\+\_\+t R\+F\+M69\+::nr\+Messaggi\+Ricevuti (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -764,7 +947,7 @@ Il numero di messaggi ricevuti dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 376 del file R\+F\+M69.\+h.
+Definizione alla linea 492 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a42670b5f67f3a0f072e1c86c3ad66fea}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Errore\+Serial@{stampa\+Errore\+Serial}}
@@ -800,7 +983,7 @@ Siccome contiene alcune centinaia di caratteri, questa funzione \char`\"{}pesa\c
 \item {\ttfamily contesto == false} -\/$>$ nessuna radio connessa 
 \end{DoxyItemize}
 
-Definizione alla linea 625 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
+Definizione alla linea 585 del file R\+F\+M69\+\_\+comunicazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a7a65d533c452153744998ba3ae33196f}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Registri\+Serial@{stampa\+Registri\+Serial}}
@@ -814,7 +997,7 @@ Stampa il valore di tutti i registri della radio sul monitor seriale.
 
 Strampa il valore di tutti i registri della radio 
 
-Definizione alla linea 453 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+Definizione alla linea 598 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_a34a9de7e3b90617f3cd036a3c85fe4ee}} 
 \index{R\+F\+M69@{R\+F\+M69}!valore\+Registro@{valore\+Registro}}
@@ -828,7 +1011,7 @@ Leggi il valore di un registro della radio.
 
 
 
-Definizione alla linea 481 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
+Definizione alla linea 626 del file R\+F\+M69\+\_\+inizializzazione.\+cpp.
 
 \mbox{\label{class_r_f_m69_ae9bebf493b38a2e22350f49f70cf1016}} 
 \index{R\+F\+M69@{R\+F\+M69}!operator=@{operator=}}

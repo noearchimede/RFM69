@@ -88,6 +88,9 @@ Membri pubblici</h2></td></tr>
 <tr class="memitem:af2ea878aed6c1cce272d63c8c6d39322"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#af2ea878aed6c1cce272d63c8c6d39322">inviaFinoAck</a> (uint16_t &amp;tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo=0)</td></tr>
 <tr class="memdesc:af2ea878aed6c1cce272d63c8c6d39322"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invia un messaggio ripetutamente fino alla ricezione di un ACK.  <a href="#af2ea878aed6c1cce272d63c8c6d39322">Continua...</a><br /></td></tr>
 <tr class="separator:af2ea878aed6c1cce272d63c8c6d39322"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d87e1e9b25fbdd5b9a0c4ee4c405021"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a6d87e1e9b25fbdd5b9a0c4ee4c405021">inviaFinoAck</a> (const uint16_t &amp;&amp;tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo=0)</td></tr>
+<tr class="memdesc:a6d87e1e9b25fbdd5b9a0c4ee4c405021"><td class="mdescLeft">&#160;</td><td class="mdescRight">Versione di <code>inviaFinoAck</code> senza restituzione del numero di tentativi.  <a href="#a6d87e1e9b25fbdd5b9a0c4ee4c405021">Continua...</a><br /></td></tr>
+<tr class="separator:a6d87e1e9b25fbdd5b9a0c4ee4c405021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade25e9bc296b574729d8136f88815384"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384">leggi</a> (uint8_t messaggio[], uint8_t &amp;lunghezza)</td></tr>
 <tr class="memdesc:ade25e9bc296b574729d8136f88815384"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce un messaggio, se ce n'è uno da leggere.  <a href="#ade25e9bc296b574729d8136f88815384">Continua...</a><br /></td></tr>
 <tr class="separator:ade25e9bc296b574729d8136f88815384"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,9 +109,9 @@ Membri pubblici</h2></td></tr>
 <tr class="memitem:a5995c4fa211e5cf869782b777bc7fa2f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a5995c4fa211e5cf869782b777bc7fa2f">titoloMessaggio</a> ()</td></tr>
 <tr class="memdesc:a5995c4fa211e5cf869782b777bc7fa2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce il titolo dell'ultimo messaggio.  <a href="#a5995c4fa211e5cf869782b777bc7fa2f">Continua...</a><br /></td></tr>
 <tr class="separator:a5995c4fa211e5cf869782b777bc7fa2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9aae2404953422f02b7ac0f5e2b0b950"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950">aspettaAck</a> ()</td></tr>
-<tr class="memdesc:a9aae2404953422f02b7ac0f5e2b0b950"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce true se la classe sta aspettando un ACK.  <a href="#a9aae2404953422f02b7ac0f5e2b0b950">Continua...</a><br /></td></tr>
-<tr class="separator:a9aae2404953422f02b7ac0f5e2b0b950"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ebfacf21a3b7999e1edc9e080ddb329"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a9ebfacf21a3b7999e1edc9e080ddb329">ackInSospeso</a> ()</td></tr>
+<tr class="memdesc:a9ebfacf21a3b7999e1edc9e080ddb329"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce true se la classe sta aspettando un ACK.  <a href="#a9ebfacf21a3b7999e1edc9e080ddb329">Continua...</a><br /></td></tr>
+<tr class="separator:a9ebfacf21a3b7999e1edc9e080ddb329"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1dac77e3fee1b9c1c1f519a603f9132"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a> ()</td></tr>
 <tr class="memdesc:ad1dac77e3fee1b9c1c1f519a603f9132"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce true se la radio ha ricevuto un ACK.  <a href="#ad1dac77e3fee1b9c1c1f519a603f9132">Continua...</a><br /></td></tr>
 <tr class="separator:ad1dac77e3fee1b9c1c1f519a603f9132"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +121,18 @@ Membri pubblici</h2></td></tr>
 <tr class="memitem:a641eb4b586c56cba627a73cc6006a63e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a641eb4b586c56cba627a73cc6006a63e">standby</a> ()</td></tr>
 <tr class="memdesc:a641eb4b586c56cba627a73cc6006a63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mette la radio in standby (richiederà 1.25mA di corrente)  <a href="#a641eb4b586c56cba627a73cc6006a63e">Continua...</a><br /></td></tr>
 <tr class="separator:a641eb4b586c56cba627a73cc6006a63e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Funzioni di impostazione</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Impostazioni nel file di impostazione che possono essere modificate anche nel programma </p>
+</div></td></tr>
+<tr class="memitem:a0764053e5601fbd866bc458c6b641445"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a0764053e5601fbd866bc458c6b641445">impostaBitRate</a> (uint32_t bitRate)</td></tr>
+<tr class="memdesc:a0764053e5601fbd866bc458c6b641445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la bit rate di trasmissione.  <a href="#a0764053e5601fbd866bc458c6b641445">Continua...</a><br /></td></tr>
+<tr class="separator:a0764053e5601fbd866bc458c6b641445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0be22ccf2de531ed50b08783c4ca15c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a0be22ccf2de531ed50b08783c4ca15c3">impostaFreqDev</a> (uint32_t freqDev)</td></tr>
+<tr class="memdesc:a0be22ccf2de531ed50b08783c4ca15c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la Frequency Deviation per la modulazione FSK.  <a href="#a0be22ccf2de531ed50b08783c4ca15c3">Continua...</a><br /></td></tr>
+<tr class="separator:a0be22ccf2de531ed50b08783c4ca15c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85789df072dfcf0395797a975822788b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a85789df072dfcf0395797a975822788b">impostaFrequenzaMHz</a> (uint32_t freq)</td></tr>
+<tr class="memdesc:a85789df072dfcf0395797a975822788b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la bandwidth del channel filter.  <a href="#a85789df072dfcf0395797a975822788b">Continua...</a><br /></td></tr>
+<tr class="separator:a85789df072dfcf0395797a975822788b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Funzioni ausiliarie</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Utili ma non indispensabili </p>
 </div></td></tr>
@@ -127,16 +142,18 @@ Membri pubblici</h2></td></tr>
 <tr class="memitem:aeb0686540b440c8fac725c53b5bf5544"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544">sleep</a> ()</td></tr>
 <tr class="memdesc:aeb0686540b440c8fac725c53b5bf5544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mette la radio in modalità sleep (richiederà 0.1uA di corrente)  <a href="#aeb0686540b440c8fac725c53b5bf5544">Continua...</a><br /></td></tr>
 <tr class="separator:aeb0686540b440c8fac725c53b5bf5544"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6249b031b7cc97ddfb4a52c1e103b03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03">sleepDefault</a> ()</td></tr>
-<tr class="memdesc:ae6249b031b7cc97ddfb4a52c1e103b03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la modalità di default della radio.  <a href="#ae6249b031b7cc97ddfb4a52c1e103b03">Continua...</a><br /></td></tr>
-<tr class="separator:ae6249b031b7cc97ddfb4a52c1e103b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43a1a3d1a049e325e85537e3efe4a82c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a43a1a3d1a049e325e85537e3efe4a82c">standbyDefault</a> ()</td></tr>
-<tr class="memdesc:a43a1a3d1a049e325e85537e3efe4a82c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la modalità di default della radio.  <a href="#a43a1a3d1a049e325e85537e3efe4a82c">Continua...</a><br /></td></tr>
-<tr class="separator:a43a1a3d1a049e325e85537e3efe4a82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb7e764b5d62bd05e3d592000547c895"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#adb7e764b5d62bd05e3d592000547c895">listenDefault</a> ()</td></tr>
-<tr class="separator:adb7e764b5d62bd05e3d592000547c895"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a249357ef0b7e1cb464e6960aed1cb2f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a249357ef0b7e1cb464e6960aed1cb2f5">rxDefault</a> ()</td></tr>
-<tr class="separator:a249357ef0b7e1cb464e6960aed1cb2f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7675068b42344584e7b0124c341ccc1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a7675068b42344584e7b0124c341ccc1b">defaultSleep</a> ()</td></tr>
+<tr class="memdesc:a7675068b42344584e7b0124c341ccc1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la modalità di default della radio.  <a href="#a7675068b42344584e7b0124c341ccc1b">Continua...</a><br /></td></tr>
+<tr class="separator:a7675068b42344584e7b0124c341ccc1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9ee80c7b2ccbc8dcf52cd6d9028062a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#af9ee80c7b2ccbc8dcf52cd6d9028062a">defaultStandby</a> ()</td></tr>
+<tr class="memdesc:af9ee80c7b2ccbc8dcf52cd6d9028062a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la modalità di default della radio.  <a href="#af9ee80c7b2ccbc8dcf52cd6d9028062a">Continua...</a><br /></td></tr>
+<tr class="separator:af9ee80c7b2ccbc8dcf52cd6d9028062a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c4a62d0591410d9e3b5418cab501190"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a7c4a62d0591410d9e3b5418cab501190">defaultListen</a> ()</td></tr>
+<tr class="memdesc:a7c4a62d0591410d9e3b5418cab501190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la modalità di default della radio.  <a href="#a7c4a62d0591410d9e3b5418cab501190">Continua...</a><br /></td></tr>
+<tr class="separator:a7c4a62d0591410d9e3b5418cab501190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9251cc68aa77310d33cdd9e3ccc57cb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a9251cc68aa77310d33cdd9e3ccc57cb0">defaultRicezione</a> ()</td></tr>
+<tr class="memdesc:a9251cc68aa77310d33cdd9e3ccc57cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta la modalità di default della radio.  <a href="#a9251cc68aa77310d33cdd9e3ccc57cb0">Continua...</a><br /></td></tr>
+<tr class="separator:a9251cc68aa77310d33cdd9e3ccc57cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a440d37e3362fc5249c62a88eb2d472d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a440d37e3362fc5249c62a88eb2d472d1">impostaTimeoutAck</a> (uint16_t tempoMs)</td></tr>
 <tr class="memdesc:a440d37e3362fc5249c62a88eb2d472d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imposta il tempo d'attesa massimo per un ACK.  <a href="#a440d37e3362fc5249c62a88eb2d472d1">Continua...</a><br /></td></tr>
 <tr class="separator:a440d37e3362fc5249c62a88eb2d472d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,12 +172,21 @@ Membri pubblici</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Log</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Funzioni utili per monitorare il funzionamento della radio </p>
 </div></td></tr>
-<tr class="memitem:a7247bad24b8b3c040a35eb3b4fe84a7d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a7247bad24b8b3c040a35eb3b4fe84a7d">nrMessaggiInviati</a> ()</td></tr>
-<tr class="memdesc:a7247bad24b8b3c040a35eb3b4fe84a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione.  <a href="#a7247bad24b8b3c040a35eb3b4fe84a7d">Continua...</a><br /></td></tr>
-<tr class="separator:a7247bad24b8b3c040a35eb3b4fe84a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a510888edc4cf87dbe13d89433dd87dc7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a510888edc4cf87dbe13d89433dd87dc7">nrMessaggiRicevuti</a> ()</td></tr>
-<tr class="memdesc:a510888edc4cf87dbe13d89433dd87dc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione.  <a href="#a510888edc4cf87dbe13d89433dd87dc7">Continua...</a><br /></td></tr>
-<tr class="separator:a510888edc4cf87dbe13d89433dd87dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a597de2e2c76336659093d2e87d323d85"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a597de2e2c76336659093d2e87d323d85">ottieniAttesaAck</a> ()</td></tr>
+<tr class="memdesc:a597de2e2c76336659093d2e87d323d85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce la durata dell'ultima attesa di un ACK (ricevuto)  <a href="#a597de2e2c76336659093d2e87d323d85">Continua...</a><br /></td></tr>
+<tr class="separator:a597de2e2c76336659093d2e87d323d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a242a4c71987bd260576e226104ea2f6a"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a242a4c71987bd260576e226104ea2f6a">ottieniAttesaMassimaAck</a> ()</td></tr>
+<tr class="memdesc:a242a4c71987bd260576e226104ea2f6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce la durata massima di attesa di un ACK (ricevuto)  <a href="#a242a4c71987bd260576e226104ea2f6a">Continua...</a><br /></td></tr>
+<tr class="separator:a242a4c71987bd260576e226104ea2f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5538a0258d104c45fac05c03d69af36"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#af5538a0258d104c45fac05c03d69af36">ottieniAttesaMediaAck</a> ()</td></tr>
+<tr class="memdesc:af5538a0258d104c45fac05c03d69af36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce la durata media di attesa di un ACK (ricevuto)  <a href="#af5538a0258d104c45fac05c03d69af36">Continua...</a><br /></td></tr>
+<tr class="separator:af5538a0258d104c45fac05c03d69af36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cca0cc81ea4d5d03dea4930a176a5fe"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a8cca0cc81ea4d5d03dea4930a176a5fe">nrMessaggiInviati</a> ()</td></tr>
+<tr class="memdesc:a8cca0cc81ea4d5d03dea4930a176a5fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione.  <a href="#a8cca0cc81ea4d5d03dea4930a176a5fe">Continua...</a><br /></td></tr>
+<tr class="separator:a8cca0cc81ea4d5d03dea4930a176a5fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35bd91314fd80a855736a564ca65273b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a35bd91314fd80a855736a564ca65273b">nrMessaggiRicevuti</a> ()</td></tr>
+<tr class="memdesc:a35bd91314fd80a855736a564ca65273b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione.  <a href="#a35bd91314fd80a855736a564ca65273b">Continua...</a><br /></td></tr>
+<tr class="separator:a35bd91314fd80a855736a564ca65273b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42670b5f67f3a0f072e1c86c3ad66fea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_r_f_m69.html#a42670b5f67f3a0f072e1c86c3ad66fea">stampaErroreSerial</a> (HardwareSerial &amp;serial, int errore, bool contesto=true)</td></tr>
 <tr class="memdesc:a42670b5f67f3a0f072e1c86c3ad66fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stampa la descrizione di un errore sul monitor seriale.  <a href="#a42670b5f67f3a0f072e1c86c3ad66fea">Continua...</a><br /></td></tr>
 <tr class="separator:a42670b5f67f3a0f072e1c86c3ad66fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -401,7 +427,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Inizializza la radio e stampa il risultato (ok o errore...) sul monitor seriale. </p>
 <p>Questa funzione chima <code><a class="el" href="class_r_f_m69.html#ad3f48e5290ae7a04fcb82c79386eff68" title="Inizializza la radio. Deve essere chiamato all&#39;inizio del programma. ">inizializza(uint8_t)</a></code> e <code><a class="el" href="class_r_f_m69.html#a42670b5f67f3a0f072e1c86c3ad66fea" title="Stampa la descrizione di un errore sul monitor seriale. ">stampaErroreSerial()</a></code>: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code" href="class_r_f_m69.html#ad3f48e5290ae7a04fcb82c79386eff68">RFM69::inizializza</a>(<span class="keywordtype">int</span> lunghezzaMaxMessaggio, HardwareSerial&amp; serial) {</div><div class="line">    serial.print(F(<span class="stringliteral">&quot;Inizializzazione RFM69... &quot;</span>));</div><div class="line">    <span class="keywordtype">int</span> errore = <a class="code" href="class_r_f_m69.html#ad3f48e5290ae7a04fcb82c79386eff68">inizializza</a>(lunghezzaMaxMessaggio);</div><div class="line">    <span class="keywordflow">if</span>(!errore) serial.println(F(<span class="stringliteral">&quot;ok&quot;</span>));</div><div class="line">    <span class="keywordflow">else</span> <a class="code" href="class_r_f_m69.html#a42670b5f67f3a0f072e1c86c3ad66fea">stampaErroreSerial</a>(serial, errore);</div><div class="line">    <span class="keywordflow">return</span> errore;</div><div class="line">}</div></div><!-- fragment --><dl class="section return"><dt>Restituisce</dt><dd>La funzione restituisce comunque il codice di errore restituito da <code><a class="el" href="class_r_f_m69.html#ad3f48e5290ae7a04fcb82c79386eff68" title="Inizializza la radio. Deve essere chiamato all&#39;inizio del programma. ">inizializza(uint8_t)</a></code> </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00373">373</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00382">382</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -505,7 +531,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </div>
 </div>
 <a id="af2ea878aed6c1cce272d63c8c6d39322"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2ea878aed6c1cce272d63c8c6d39322">&#9670;&nbsp;</a></span>inviaFinoAck()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af2ea878aed6c1cce272d63c8c6d39322">&#9670;&nbsp;</a></span>inviaFinoAck() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -560,6 +586,59 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 </div>
 </div>
+<a id="a6d87e1e9b25fbdd5b9a0c4ee4c405021"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d87e1e9b25fbdd5b9a0c4ee4c405021">&#9670;&nbsp;</a></span>inviaFinoAck() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RFM69::inviaFinoAck </td>
+          <td>(</td>
+          <td class="paramtype">const uint16_t &amp;&amp;&#160;</td>
+          <td class="paramname"><em>tentativi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t&#160;</td>
+          <td class="paramname"><em>messaggio</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>lunghezza</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>titolo</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Versione di <code>inviaFinoAck</code> senza restituzione del numero di tentativi. </p>
+<p>Questa funzione corrisponde ad <code>inviaFinoAck(uint16_t&amp;, const uin8_t, uint8_t, uint8_t)</code> ma il suo primo argomento non è una 'reference'; può essere usata se non si è interessati a sapere il numero di tentativi effettuati oppure se si passa come argomentoun valore e non una variabile. </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00174">174</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+
+</div>
+</div>
 <a id="ade25e9bc296b574729d8136f88815384"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade25e9bc296b574729d8136f88815384">&#9670;&nbsp;</a></span>leggi()</h2>
 
@@ -597,7 +676,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </dl>
 <dl class="section return"><dt>Restituisce</dt><dd>Codice di errore definito nell'enum <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">RFM69::Errore::ListaErrori</a> </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00139">139</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00141">141</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -619,7 +698,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Attiva la radio in modo che possa ricevere dei messaggi. </p>
 <p>Per riceve la radio deve essere in modalità ricezione. Nelle altre modalità non si accorgerà nemmeno di aver ricevuto un messaggio. Quindi se non si chiama questa funzione sulla radio ricevente tutti i messaggi inviatile andranno persi. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00199">199</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00202">202</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -641,7 +720,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Controlla se c'è un nuovo messaggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se il buffer della classe contiene un nuovo messaggio. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00211">211</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00214">214</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -663,7 +742,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Restituisce la dimensione dell'ultimo mesasggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>la dimensione dell'utlimo messaggio ricevuto in bytes </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00219">219</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00222">222</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -686,18 +765,18 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Il titolo di un messaggio è un numero compreso tra 1 e 16 scritto nell'intestazione dall'utente (con il parametro <code>titolo</code> di <code><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a></code>). La classe si limita a inviarlo e renderlo disponibile prima della lettura del messaggio tramite questa funzione, non lo utilizza. L'utente può usarlo per scartare subito messaggi non interessanti e dare grande importanza ad altri, oppure semplicemente per creare più funzioni di lettura dei messaggi, ognuna specializzata in un particolare tipo di messaggio, e chiamare subito quella giusta.</p>
 <dl class="section return"><dt>Restituisce</dt><dd>il titolo dell'ultimo messaggio </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00225">225</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00228">228</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a9aae2404953422f02b7ac0f5e2b0b950"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9aae2404953422f02b7ac0f5e2b0b950">&#9670;&nbsp;</a></span>aspettaAck()</h2>
+<a id="a9ebfacf21a3b7999e1edc9e080ddb329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ebfacf21a3b7999e1edc9e080ddb329">&#9670;&nbsp;</a></span>ackInSospeso()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool RFM69::aspettaAck </td>
+          <td class="memname">bool RFM69::ackInSospeso </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -707,14 +786,14 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 <p>Restituisce true se la classe sta aspettando un ACK. </p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se la classe sta aspettando un ack, cioé se ha inviato un messaggio con richiesta di ACK e non lo ha ancora ricevuto.</dd></dl>
-<p>Questa funzione contiene un sistema di timeout. Dopo lo scadere del tempo restituisce <code>false</code> anche se non ha ricevuto nessun ack.</p>
+<p>Questa funzione contiene un sistema di timeout. Se chiamata dopo lo scadere del tempo chiama <code><a class="el" href="class_r_f_m69.html#a7e9a828d5c3f3c82a27b5e15c11b4dde" title="Simula la ricezione di un ACK. ">rinunciaAck()</a></code> e restituisce <code>false</code>.</p>
 <dl class="section warning"><dt>Avvertimento</dt><dd><code>false</code> ha due signifcati opposti:<ol type="1">
 <li>L'ACK è stato ricevuto</li>
 <li>L'ACK non è arrivato, ma il tempo massimo di attesa ê scaduto. Per questo è necessario chiamare <em>sempore</em> anche <a class="el" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132" title="Restituisce true se la radio ha ricevuto un ACK. ">ricevutoAck()</a>. </li>
 </ol>
 </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00251">251</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00254">254</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -735,9 +814,9 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 <p>Restituisce true se la radio ha ricevuto un ACK. </p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se la radio ha ricevuto un ACK per l'ultimo messaggio inviato</dd></dl>
-<p>Questa funzione non aspetta l'ACK, dice solo se è arrivato, quindi chiamata immediatamente dopo <code><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a></code> restituisce sempre <code>false</code>. Normalmente è perciò usata insieme a <a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950" title="Restituisce true se la classe sta aspettando un ACK. ">aspettaAck()</a> (cioé subito dopo di essa).</p>
-<p>Esempio: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 3; i++) {</div><div class="line">    <a class="code" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295">invia</a>();</div><div class="line">    <a class="code" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950">aspettaAck</a>();</div><div class="line">    <span class="keywordflow">if</span>(<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) <span class="keywordflow">break</span>;</div><div class="line">}</div><div class="line"><span class="keywordflow">if</span>(!<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) {</div><div class="line">    print(<span class="stringliteral">&quot;Trasmissione messaggio fallita&quot;</span>);</div><div class="line">}</div></div><!-- fragment --> 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00267">267</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p>Questa funzione non aspetta l'ACK, dice solo se è arrivato, quindi chiamata immediatamente dopo <code><a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a></code> restituisce sempre <code>false</code>. Normalmente è perciò usata insieme a <a class="el" href="class_r_f_m69.html#a9ebfacf21a3b7999e1edc9e080ddb329" title="Restituisce true se la classe sta aspettando un ACK. ">ackInSospeso()</a> (cioé subito dopo di essa).</p>
+<p>Esempio: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 3; i++) {</div><div class="line">    <a class="code" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295">invia</a>();</div><div class="line">    <span class="keywordflow">while</span>(<a class="code" href="class_r_f_m69.html#a9ebfacf21a3b7999e1edc9e080ddb329">ackInSospeso</a>());</div><div class="line">    <span class="keywordflow">if</span>(<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) <span class="keywordflow">break</span>;</div><div class="line">}</div><div class="line"><span class="keywordflow">if</span>(!<a class="code" href="class_r_f_m69.html#ad1dac77e3fee1b9c1c1f519a603f9132">ricevutoAck</a>()) {</div><div class="line">    print(<span class="stringliteral">&quot;Trasmissione messaggio fallita&quot;</span>);</div><div class="line">}</div></div><!-- fragment --> 
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00270">270</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -757,11 +836,11 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 </div><div class="memdoc">
 
 <p>Simula la ricezione di un ACK. </p>
-<dl class="section note"><dt>Nota</dt><dd>Normalmente questza funzione non dovrebbe mai essere chiamata.</dd></dl>
-<p>Questa funzione è chiamata automaticamente da <a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950" title="Restituisce true se la classe sta aspettando un ACK. ">aspettaAck()</a> allo scadere del tempo massimo. Può essere usata dall'utente per terminare l'attesa prima di quella scadenza. In caso di invio di un secondo messaggio prima della ricezione dell'ACK (ad es. per trasmettere un'informazione urgente) è chiamata automaticamente.</p>
+<dl class="section note"><dt>Nota</dt><dd>Normalmente questa funzione non dovrebbe mai essere chiamata.</dd></dl>
+<p>Questa funzione è chiamata automaticamente da <a class="el" href="class_r_f_m69.html#a9ebfacf21a3b7999e1edc9e080ddb329" title="Restituisce true se la classe sta aspettando un ACK. ">ackInSospeso()</a> allo scadere del tempo massimo. Può essere usata dall'utente per terminare l'attesa prima di quella scadenza. In caso di invio di un secondo messaggio prima della ricezione dell'ACK (ad es. per trasmettere un'informazione urgente) è chiamata automaticamente.</p>
 <p>Se il vero ACK dovesse arrivare dopo l'esecuzione di questa funzione non avrà nessun effetto. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00274">274</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00277">277</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -783,7 +862,110 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Mette la radio in standby (richiederà 1.25mA di corrente) </p>
 <p>La modalità <code>standby</code> serve per mettere la radio in pausa per qualche secondo. Per pause più lunghe conviene usare <code><a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a></code>, soprattutto se l'intero dispositivo deve essere messo in standby per un certo periodo. Se invece il dispositivo utilizza relativamente tanta corrente durante lo standby della radio (ad es. ha accesi diversi LED, un motore, ...) la differenza tra <code><a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a></code> e <code><a class="el" href="class_r_f_m69.html#a641eb4b586c56cba627a73cc6006a63e" title="Mette la radio in standby (richiederà 1.25mA di corrente) ">standby()</a></code> non è rilevante. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00542">542</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00555">555</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0764053e5601fbd866bc458c6b641445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0764053e5601fbd866bc458c6b641445">&#9670;&nbsp;</a></span>impostaBitRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RFM69::impostaBitRate </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>bitRate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la bit rate di trasmissione. </p>
+<dl class="section note"><dt>Nota</dt><dd>Con la bit rate conviene modificare anche la Frequency Deviation, se si utilizza la modulazione FSK (default per questa classe). Vedi il commento a <code><a class="el" href="class_r_f_m69.html#a0764053e5601fbd866bc458c6b641445" title="Imposta la bit rate di trasmissione. ">impostaBitRate()</a></code> per più dettagli.</dd></dl>
+<dl class="section warning"><dt>Avvertimento</dt><dd>La bit rate deve essere identica per entrambe le radio</dd></dl>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">BitRate</td><td>bit rate in bit al secondo, compresa tra 1'200 e 300'000 per la modulazione FSK e tra 1'200 e 32'768 per OOK</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd><a class="el" href="struct_r_f_m69_1_1_errore.html" title="Contenitore dell&#39;enum Errore::ListaErrori. ">Errore</a> secondo l'<code>enum</code> <code><a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">Errore::ListaErrori</a></code> (1 se c'è un errore e 0 se tutto va bene). </dd></dl>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00517">517</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0be22ccf2de531ed50b08783c4ca15c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0be22ccf2de531ed50b08783c4ca15c3">&#9670;&nbsp;</a></span>impostaFreqDev()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RFM69::impostaFreqDev </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>freqDev</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la Frequency Deviation per la modulazione FSK. </p>
+<p>Con la Frequency Deviation conviene modificare anche la bit rate. Si tenga sempre presente che:</p>
+<ul>
+<li>(1/5) * bitRate &lt; freqDev &lt; 5 * bitRate</li>
+<li>600 &lt; freqDev &lt; 500'000 - (bitRate / 2)</li>
+</ul>
+<p>Si potrebbero applicare molte altre forumle, che nn sono riportate qui (vedi ad ed. il teorema di Shannon–Hartley).</p>
+<dl class="section warning"><dt>Avvertimento</dt><dd>La Frequency Deviation deve essere identica per entrambe le radio</dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Questa impostazione non ha alcun effetto se la modulazione scelta nel file <a class="el" href="_r_f_m69__impostazioni_8h.html" title="File di configurazione del modulo radio RFM69. ">RFM69_impostazioni.h</a> è OOK</dd></dl>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">freqDev</td><td>Frequency deviation, in Hertz, compresa tra 600 e 300'000</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd><a class="el" href="struct_r_f_m69_1_1_errore.html" title="Contenitore dell&#39;enum Errore::ListaErrori. ">Errore</a> secondo l'<code>enum</code> <code><a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">Errore::ListaErrori</a></code> (1 se c'è un errore e 0 se tutto va bene). </dd></dl>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00543">543</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a85789df072dfcf0395797a975822788b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85789df072dfcf0395797a975822788b">&#9670;&nbsp;</a></span>impostaFrequenzaMHz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RFM69::impostaFrequenzaMHz </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>freq</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la bandwidth del channel filter. </p>
+<p>Imposta la frequenza di comunicazione</p>
+<p>Imposta la frequenza della trasmissione radio. </p><dl class="section note"><dt>Nota</dt><dd>La funzione non impone limiti al valore ricevuto. Esistono però due limiti:</dd></dl>
+<ul>
+<li>Il limite del modulo, che esiste in 4 varianti diverse con ciascuna una banda di frequenze possibili diversa;</li>
+<li>La legge, che regola l'utilizzo dello spettro elettromagnetico lasciando alcune bande ben definite a moduli a bassa potenza come questo.</li>
+</ul>
+<dl class="params"><dt>Parametri</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">freq</td><td>La frequenza di trasmissione in Hertz</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Restituisce</dt><dd><a class="el" href="struct_r_f_m69_1_1_errore.html" title="Contenitore dell&#39;enum Errore::ListaErrori. ">Errore</a> secondo l'<code>enum</code> <code><a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">Errore::ListaErrori</a></code> (1 se c'è un errore e 0 se tutto va bene). </dd></dl>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00566">566</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -805,7 +987,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Mette la radio in modalità <code>listen</code> </p>
 <p><code>listen</code> è una modalità particolare che consiste in realtà nella continua alternanza tra due modalità: <code>rx</code> (ricezione) e <code>idle</code> (una specie di sleep adattato alla modalità listen). </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00539">539</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00552">552</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -826,95 +1008,99 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 
 <p>Mette la radio in modalità sleep (richiederà 0.1uA di corrente) </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00545">545</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
-
-</div>
-</div>
-<a id="ae6249b031b7cc97ddfb4a52c1e103b03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6249b031b7cc97ddfb4a52c1e103b03">&#9670;&nbsp;</a></span>sleepDefault()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void RFM69::sleepDefault </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Imposta la modalità di default della radio. </p>
-<p>Questa funzione non cambia la modalità attuale!<br />
-Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>;</code> non corrisponde a <code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>; <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
-
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00549">549</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a43a1a3d1a049e325e85537e3efe4a82c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43a1a3d1a049e325e85537e3efe4a82c">&#9670;&nbsp;</a></span>standbyDefault()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void RFM69::standbyDefault </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Imposta la modalità di default della radio. </p>
-<p>Questa funzione non cambia la modalità attuale!<br />
-Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>;</code> non corrisponde a <code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e103b03" title="Imposta la modalità di default della radio. ">sleepDefault()</a>; <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
-
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00552">552</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
-
-</div>
-</div>
-<a id="adb7e764b5d62bd05e3d592000547c895"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb7e764b5d62bd05e3d592000547c895">&#9670;&nbsp;</a></span>listenDefault()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void RFM69::listenDefault </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p></p>
-
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00555">555</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a249357ef0b7e1cb464e6960aed1cb2f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a249357ef0b7e1cb464e6960aed1cb2f5">&#9670;&nbsp;</a></span>rxDefault()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void RFM69::rxDefault </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p></p>
-
 <p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00558">558</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7675068b42344584e7b0124c341ccc1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7675068b42344584e7b0124c341ccc1b">&#9670;&nbsp;</a></span>defaultSleep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RFM69::defaultSleep </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la modalità di default della radio. </p>
+<p>Questa funzione non cambia la modalità attuale!<br />
+Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00562">562</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af9ee80c7b2ccbc8dcf52cd6d9028062a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9ee80c7b2ccbc8dcf52cd6d9028062a">&#9670;&nbsp;</a></span>defaultStandby()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RFM69::defaultStandby </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la modalità di default della radio. </p>
+<p>Questa funzione non cambia la modalità attuale!<br />
+Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00565">565</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7c4a62d0591410d9e3b5418cab501190"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c4a62d0591410d9e3b5418cab501190">&#9670;&nbsp;</a></span>defaultListen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RFM69::defaultListen </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la modalità di default della radio. </p>
+<p>Questa funzione non cambia la modalità attuale!<br />
+Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00568">568</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9251cc68aa77310d33cdd9e3ccc57cb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9251cc68aa77310d33cdd9e3ccc57cb0">&#9670;&nbsp;</a></span>defaultRicezione()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RFM69::defaultRicezione </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Imposta la modalità di default della radio. </p>
+<p>Questa funzione non cambia la modalità attuale!<br />
+Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a class="el" href="class_r_f_m69.html#aeb0686540b440c8fac725c53b5bf5544" title="Mette la radio in modalità sleep (richiederà 0.1uA di corrente) ">sleep()</a>;</code> </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00571">571</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -937,12 +1123,12 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Imposta il tempo d'attesa massimo per un ACK. </p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tempoMs</td><td>Tempo di attesa in millisecondi per la funzione <code><a class="el" href="class_r_f_m69.html#a9aae2404953422f02b7ac0f5e2b0b950" title="Restituisce true se la classe sta aspettando un ACK. ">aspettaAck()</a></code>. Dopo aver atteso per questo tempo la funzione terminerà senza aver ricevuto un ACK. </td></tr>
+    <tr><td class="paramname">tempoMs</td><td>Tempo di attesa in millisecondi per la funzione <code><a class="el" href="class_r_f_m69.html#a9ebfacf21a3b7999e1edc9e080ddb329" title="Restituisce true se la classe sta aspettando un ACK. ">ackInSospeso()</a></code>. Dopo aver atteso per questo tempo la funzione terminerà senza aver ricevuto un ACK. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00562">562</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00575">575</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -964,7 +1150,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce il valore RSSI per l'ultimo messaggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Received Signal Strength Indicator (RSSI) per l'ultimo messaggio ricevuto. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00231">231</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00234">234</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -986,7 +1172,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce l'"ora" della ricezione dell'ultimo messaggio. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il tempo in millisecondi dall'inizio del programma a cui è stata attivata l'<code>isr()</code> che segna la finem della ricezione del messaggio. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00236">236</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00239">239</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -1018,7 +1204,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
   </dd>
 </dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00572">572</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00464">464</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -1049,12 +1235,12 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Questa funzione può essere utile se vicino alla radio si trova un dispsitivo sensibile alle onde elettromagnetiche della frequenza emessa dalla radio (ad es. un sensore che non è accurato in caso di forte disturbo attorno ai 433Mhz, nel caso il modulo radio usato sia europeo, potrebbe usare questa funzione per rimandare la propria misurazione a dopo la trasmissione del messaggio).</p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se la radio sta trasmettendo un messaggio. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00361">361</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00435">435</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
-<a id="a7247bad24b8b3c040a35eb3b4fe84a7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7247bad24b8b3c040a35eb3b4fe84a7d">&#9670;&nbsp;</a></span>nrMessaggiInviati()</h2>
+<a id="a597de2e2c76336659093d2e87d323d85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a597de2e2c76336659093d2e87d323d85">&#9670;&nbsp;</a></span>ottieniAttesaAck()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1063,7 +1249,101 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int RFM69::nrMessaggiInviati </td>
+          <td class="memname">uint16_t RFM69::ottieniAttesaAck </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Restituisce la durata dell'ultima attesa di un ACK (ricevuto) </p>
+<p>Il valore restituito da questa funzione è il tempo in millisecondi impiegato per svolgere le operazioni elencate di seguito l'ultima volta che sono state eseguite <em>tutte</em>; se il messaggio non richiedeva ACK o comunque l'ACK non è arrivato questa funzione darà il tempo relativo a un messaggio precedente che ha avuto il suo ACK:</p>
+<p><code>[attesa ACK] = [trasmissione] + [decodificazione] + [TEMPO PRIMA DELLA CHIAMATA ALLA FUNZIONE <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>] + [trasmissione ACK]</code></p>
+<p>Il <code>[TEMPO PRIMA DELLA CHIAMATA ALLA FUNZIONE <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>]</code> è il fattore più variabile; è più basso se il codice della radio ricevente è scritto bene (dal punto di vista di questa classe). </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00457">457</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+
+</div>
+</div>
+<a id="a242a4c71987bd260576e226104ea2f6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a242a4c71987bd260576e226104ea2f6a">&#9670;&nbsp;</a></span>ottieniAttesaMassimaAck()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t RFM69::ottieniAttesaMassimaAck </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Restituisce la durata massima di attesa di un ACK (ricevuto) </p>
+<p>Restituisce lo stesso valore della funzione <code>durataAttesaAck()</code>, ma relativo all'attesa più lunga dall'ultima inizializzazione al momento della chiamata.</p>
+<p>Può essere usato per definire un tempo timeoutAck adeguato: chiamata dopo aver eseguito il programma finale con un timeout arbitrariamente grande, questa funzione restituirà il valore ideale del timeout: se ad es. restituisse 100 un timeout adeguato potrebbe essere 110 o 120. Se però la media <a class="el" href="class_r_f_m69.html#af5538a0258d104c45fac05c03d69af36" title="Restituisce la durata media di attesa di un ACK (ricevuto) ">ottieniAttesaMediaAck()</a> fosse nettamente inferiore (ad es. 50) converrebbe probabilmente identificare il punto in cui il tempo di attesa è massimo usando la funzione <a class="el" href="class_r_f_m69.html#a597de2e2c76336659093d2e87d323d85" title="Restituisce la durata dell&#39;ultima attesa di un ACK (ricevuto) ">ottieniAttesaAck()</a> e eliminare la causa di tale ritardo oppure aumentare momrntaneamente il timeout il quel punto. </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00472">472</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+
+</div>
+</div>
+<a id="af5538a0258d104c45fac05c03d69af36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5538a0258d104c45fac05c03d69af36">&#9670;&nbsp;</a></span>ottieniAttesaMediaAck()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t RFM69::ottieniAttesaMediaAck </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Restituisce la durata media di attesa di un ACK (ricevuto) </p>
+<p>Restituisce lo stesso valore della funzione <code>durataAttesaAck()</code>, ma anziché riferirsi a un'attesa in particolare restituisce l'attesa media dall'ultima inizializzazione al momento della chiamata.</p>
+<p>Può essere un indice della buona scrittura del codice della radio ricevente: più la funzione <code><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a></code> è chiamata (o pronta ad essere chiamata) regolarmente e frequentemente più questo valore sarà basso. </p>
+
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00483">483</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+
+</div>
+</div>
+<a id="a8cca0cc81ea4d5d03dea4930a176a5fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cca0cc81ea4d5d03dea4930a176a5fe">&#9670;&nbsp;</a></span>nrMessaggiInviati()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t RFM69::nrMessaggiInviati </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1079,12 +1359,12 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il numero di messaggi inviati dopo l'ultima inizializzazione </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00372">372</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00488">488</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
-<a id="a510888edc4cf87dbe13d89433dd87dc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a510888edc4cf87dbe13d89433dd87dc7">&#9670;&nbsp;</a></span>nrMessaggiRicevuti()</h2>
+<a id="a35bd91314fd80a855736a564ca65273b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35bd91314fd80a855736a564ca65273b">&#9670;&nbsp;</a></span>nrMessaggiRicevuti()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1093,7 +1373,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int RFM69::nrMessaggiRicevuti </td>
+          <td class="memname">uint16_t RFM69::nrMessaggiRicevuti </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1109,7 +1389,7 @@ Ad es.<code><a class="el" href="class_r_f_m69.html#ae6249b031b7cc97ddfb4a52c1e10
 <p>Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il numero di messaggi ricevuti dopo l'ultima inizializzazione </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00376">376</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00492">492</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1164,7 +1444,7 @@ Siccome contiene alcune centinaia di caratteri, questa funzione "pesa" più dell
 <li><code>contesto == false</code> -&gt; nessuna radio connessa </li>
 </ul>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00625">625</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html#l00585">585</a> del file <a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -1187,7 +1467,7 @@ Siccome contiene alcune centinaia di caratteri, questa funzione "pesa" più dell
 <p>Stampa il valore di tutti i registri della radio sul monitor seriale. </p>
 <p>Strampa il valore di tutti i registri della radio </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00453">453</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00598">598</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
 
 </div>
 </div>
@@ -1209,7 +1489,7 @@ Siccome contiene alcune centinaia di caratteri, questa funzione "pesa" più dell
 
 <p>Leggi il valore di un registro della radio. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00481">481</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html#l00626">626</a> del file <a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a>.</p>
 
 </div>
 </div>

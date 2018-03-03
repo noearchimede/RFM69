@@ -1,9 +1,14 @@
+{\itshape Arduino \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} radio module driver}
+
+\+\_\+$\ast$$\ast$\+Note$\ast$$\ast$ This library is written and commented in Italian. Please {\tt contact me} if you\textquotesingle{}d like to get a version of my code with class members names and documentation in English.\+\_\+ 
 
 
 
+{\bfseries Autore} Noè Archimede Pezzoli~\newline
+ {\bfseries Data} Febbraio 2018~\newline
 
-{\bfseries Autore}\+: Noè Archimede Pezzoli ({\tt noearchimede@gmail.\+com})~\newline
- {\bfseries Data}\+: Febbraio 2018~\newline
+
+{\bfseries Contatto} {\tt noearchimede@gmail.\+com} ~\newline
  
 
 
@@ -23,7 +28,8 @@ Il codice della libreria è ampiamente commentato in italiano. I commenti normal
  {\tt 3. Collisioni}~\newline
  {\tt 4. Hardware}~\newline
  {\tt 5. Struttura dei messaggi}~\newline
- {\tt 6. Esempio di utilizzo}~\newline
+ {\tt 6. Impostazioni}~\newline
+ {\tt 7. Esempio di utilizzo}~\newline
 
 
 {\tt Documentazione} 
@@ -149,6 +155,39 @@ stato tx            |######## 2 #######|
 \end{DoxyItemize}
 
 ~\newline
+ Per costruire un sistema di trasmissione di dati bidirezionale e continua, dunque, è necessario creare un sistema di gestione di queste possibili collisioni, cercando di evitarle il più possibile. Invece i un programma che utilizza la radio solo di tanto in tanto è sufficiente tenere presente la possibilità di perdere un messaggio (quindi ad es. controllarne la ricezione tramite il sistema di A\+CK ed eventualmente reinviarlo).
+
+La probabilità di perdere un messaggio è relativamente bassa. Il grafico sottostante raffigura la percentuale di messaggi trasmessi con successo rispetto al numero medio di messaggi inviati in un minuto, in un sistema in cui due radio si inviano reciprocamente messaggi di 12 bytes (4 bytes di dati) con richiesta di A\+CK ad intervalli di tempo casuali ma in media ad una stessa frequenza. La tabella è stata generata dal programma {\itshape Test collisioni} (composto dai file {\ttfamily \doxyref{Esempi/\+Test\+\_\+collisioni\+\_\+master.\+cpp}{pag.}{_test__collisioni__master_8cpp}} e {\ttfamily \doxyref{Esempi/\+Test\+\_\+collisioni\+\_\+assistente.\+cpp}{pag.}{_test__collisioni__assistente_8cpp}}, uno per ciascuna radio).
+
+
+\begin{DoxyCode}
+ %
+100 |  *                                                                                        
+    |       *                                                                                   
+    |      *  *                                                                                 
+    |               *                                                                           
+    |           * *   **                                                                         
+ 75 |   *               *      **   *                                                            
+    |                   *                                                                       
+    |                       *      *       *                                                    
+    |                                 * *                                                       
+    |                                         *                                                 
+ 50 |                                       * *      *                                          
+    |                                               **                                          
+    |                                              *   *     **                                  
+    |                                                           * * **                          
+    |                                                      *            *        *              
+ 25 |                                                                    *  *   **               
+    |                                                                                    *      
+    |                                                                        *         * ** *   
+    |                                  *                                                  *     
+    |                                                                     *              **      
+  0 +------------------------------------------------------------------------------------------  mess/min
+    0          200          400          600          800          1000          1200          1400
+\end{DoxyCode}
+
+
+~\newline
 
 
 \subsection*{4. Hardware}
@@ -222,7 +261,16 @@ La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo cont
 ~\newline
 
 
-\subsection*{6. Esempio di utilizzo}
+\subsection*{6. Impostazioni}
+
+
+
+Il modulo \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} offre all\textquotesingle{}utente ampie possibilità di impostazione. Alcune di queste impostazioni sono richieste dalla classe, come ad esempio il modo di trasmissione dei dati (che deve essere \char`\"{}a pacchetti\char`\"{}). La maggior parte resta però a disposizione dell\textquotesingle{}utente.
+
+~\newline
+
+
+\subsection*{7. Esempio di utilizzo}
 
 
 
