@@ -1,6 +1,4 @@
-{\itshape Arduino \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} radio module driver}
-
-\+\_\+$\ast$$\ast$\+Note$\ast$$\ast$ This library is written and commented in Italian. Please {\tt contact me} if you\textquotesingle{}d like to get a version of my code with class members names and documentation in English.\+\_\+ 
+{\itshape {\bfseries Note}} $\ast$\+This library is written and commented in Italian. Please {\tt contact me} if you\textquotesingle{}d like to get a version of my code with class members names and documentation in English$\ast$. 
 
 
 
@@ -157,7 +155,7 @@ stato tx            |######## 2 #######|
 ~\newline
  Per costruire un sistema di trasmissione di dati bidirezionale e continua, dunque, è necessario creare un sistema di gestione di queste possibili collisioni, cercando di evitarle il più possibile. Invece i un programma che utilizza la radio solo di tanto in tanto è sufficiente tenere presente la possibilità di perdere un messaggio (quindi ad es. controllarne la ricezione tramite il sistema di A\+CK ed eventualmente reinviarlo).
 
-La probabilità di perdere un messaggio è relativamente bassa. Il grafico sottostante raffigura la percentuale di messaggi trasmessi con successo rispetto al numero medio di messaggi inviati in un minuto, in un sistema in cui due radio si inviano reciprocamente messaggi di 12 bytes (4 bytes di dati) con richiesta di A\+CK ad intervalli di tempo casuali ma in media ad una stessa frequenza. La tabella è stata generata dal programma {\itshape Test collisioni} (composto dai file {\ttfamily \doxyref{Esempi/\+Test\+\_\+collisioni\+\_\+master.\+cpp}{pag.}{_test__collisioni__master_8cpp}} e {\ttfamily \doxyref{Esempi/\+Test\+\_\+collisioni\+\_\+assistente.\+cpp}{pag.}{_test__collisioni__assistente_8cpp}}, uno per ciascuna radio).
+La probabilità di perdere un messaggio è relativamente bassa. Il grafico sottostante raffigura la percentuale di messaggi trasmessi con successo rispetto al numero medio di messaggi inviati in un minuto, in un sistema in cui due radio si inviano reciprocamente messaggi di 12 bytes (4 bytes di dati) con richiesta di A\+CK ad intervalli di tempo casuali ma in media ad una stessa frequenza. La tabella è stata generata dal programma {\itshape Test collisioni} (composto dai file {\ttfamily Esempi/\+Test\+\_\+collisioni\+\_\+master.\+cpp} e {\ttfamily Esempi/\+Test\+\_\+collisioni\+\_\+assistente.\+cpp}, uno per ciascuna radio).
 
 
 \begin{DoxyCode}
