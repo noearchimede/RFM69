@@ -91,7 +91,7 @@ uint32_t tUltimaStampa = 0;
 
 float deriv;
 uint8_t nrTest = 0;
-uint16_t riassunto[nrTestMax][5];
+//uint16_t riassunto[nrTestMax][5];
 enum class elemRiass {mpmPrevisti,mpmEffettivi,messTot,durata,successo};
 bool novita = false;
 bool statStabili = false;
@@ -109,7 +109,6 @@ void stampaNovita();
 void elaboraStatistiche();
 void salvaStatistiche();
 void imposta(uint32_t);
-void pausa();
 bool numeroCasuale(uint32_t);
 void stampaRiassunto();
 void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
@@ -121,10 +120,62 @@ void fineProgramma();
 // Inizializzazione
 ////////////////////////////////////////////////////////////////////////////////
 
+uint16_t riassunto[50][5] = {{25,19,13,40,10000},
+{50,47,32,40,10000},
+{75,57,39,40,8709},
+{100,107,73,40,8421},
+{125,142,95,40,8571},
+{150,176,119,40,8804},
+{175,152,102,40,8378},
+{200,177,119,40,8000},
+{225,197,132,40,7669},
+{250,263,176,40,7750},
+{275,261,175,40,8108},
+{300,267,180,40,7068},
+{325,343,231,40,8314},
+{350,350,234,40,6769},
+{375,326,218,40,7356},
+{400,418,283,40,7619},
+{425,460,308,40,7251},
+{450,470,314,40,6223},
+{475,458,306,40,5104},
+{500,517,346,40,6344},
+{525,538,359,40,5537},
+{550,539,360,40,4637},
+{575,586,395,40,6155},
+{600,631,423,40,5547},
+{625,600,401,40,5585},
+{650,709,473,40,5155},
+{675,641,428,40,3898},
+{700,694,463,40,6068},
+{725,729,487,40,5315},
+{750,776,518,40,5011},
+{775,830,555,40,4294},
+{800,800,534,40,3287},
+{825,827,553,40,4226},
+{850,842,562,40,4428},
+{875,877,586,40,3847},
+{900,897,600,40,3241},
+{925,952,637,40,3392},
+{950,983,658,40,3993},
+{975,1007,672,40,2568},
+{1000,1029,687,40,3555},
+{1025,1028,686,40,2945},
+{1050,1045,698,40,10000},
+{1075,1068,713,40,10000},
+{1100,1100,734,40,10000},
+{1125,1107,739,40,10000},
+{1150,1099,733,40,1599},
+{1175,1165,778,40,2352},
+{1200,1160,775,40,2033},
+{1225,1203,803,40,2101},
+{1250,1156,772,40,2359}};
 
 void setup() {
 
     Serial.begin(115200);
+    nrTest = 49;
+    stampaRiassunto();
 
     Serial.println("\n\n\n\nRFM69 - Test collisione messaggi\n\n\n");
 
@@ -134,7 +185,7 @@ void setup() {
     // Inizializza la radio. Deve essere chiamato una volta all'inizio del programma.
     // Se come secondo argomento si fornisce un riferimento a Serial, la funzione
     // stampa il risultato dell'inizializzazione (riuscita o no).
-    radio.inizializza(lunghezzaMessaggi, Serial);
+    if(radio.inizializza(lunghezzaMessaggi, Serial) != 0) while(true);
 
 
     Serial.println("Questa radio conduce l'esperimento.");
@@ -181,6 +232,7 @@ void loop() {
 
     leggi();
     invia();
+    stampaNovita();
 
     if(novita) {
         novita = false;
@@ -199,7 +251,6 @@ void loop() {
 
     spegniLed();
     delay(1);
-    pausa();
 }
 
 
@@ -216,10 +267,8 @@ void invia() {
     uint32_t deltaT = (t - microsInviaPrec);
     microsInviaPrec = t;
 
-    int16_t correzione = messPerMinEffettivi - messPerMin;
-
     // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
-    bool decisione = ((messPerMin * deltaT) - (correzione * deltaT) > random(60000000));
+    bool decisione = (messPerMin * deltaT > random(60000000));
 
     if(!decisione) return;
 
@@ -329,37 +378,6 @@ void imposta(uint32_t mpm) {
 
 
 
-
-
-void pausa() {
-    if(millis() - tUltimoMessaggio < 5000) return;
-
-    Serial.println("-- Aspetto altra radio --");
-
-    radio.iniziaRicezione();
-    bool statoLed = true;
-    uint32_t tLed = millis();
-    uint8_t i = 0;
-    while(!radio.nuovoMessaggio()) {
-        if(millis() - tLed > 200) {
-            digitalWrite(LED_ACK, statoLed);
-            digitalWrite(LED_TX, !statoLed);
-            statoLed = !statoLed;
-            tLed = millis();
-            i++;
-        }
-        if(i == 10) break;
-    }
-    tUltimoMessaggio = millis();
-    digitalWrite(LED_ACK, LOW);
-    digitalWrite(LED_TX, LOW);
-
-    leggi();
-}
-
-
-
-
 void elaboraStatistiche() {
 
     // Calcolo messaggi al minuto
@@ -372,7 +390,7 @@ void elaboraStatistiche() {
 
     // Determinazione della situazione di stabilità (usa il metodo Savitzky–Golay
     // per calcolare la derivata della funzione del successo nel tempo)
-    /*deriv = 0;
+    deriv = 0;
     if(nrElaborazioni >= 9) {
         deriv += (float)indiciSuccessoPrec[0] *   86;
         deriv += (float)indiciSuccessoPrec[1] * -142;
@@ -380,7 +398,7 @@ void elaboraStatistiche() {
         deriv += (float)indiciSuccessoPrec[3] * -126;
         //deriv += indiciSuccessoPrec[4] * 0;
         deriv += (float)indiciSuccessoPrec[5] *  126;
-        deriv += (float)indiciSuccessoPrec[6] *  193;
+        deriv += (float)indiciSuccessoPrec[6] *  193; // Usato come risultato finale
         deriv += (float)indiciSuccessoPrec[7] *  142;
         deriv += (float)indiceSuccesso        *  -86;
         deriv /= 1188.0;
@@ -393,12 +411,12 @@ void elaboraStatistiche() {
 
 
     // Aggiornamento dell'array
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 7; i++)
     indiciSuccessoPrec[i] = indiciSuccessoPrec[i+1];
-    indiciSuccessoPrec[4] = indiceSuccesso;
+    indiciSuccessoPrec[7] = indiceSuccesso;
 
 
-    nrElaborazioni++;*/
+    nrElaborazioni++;
     if(millis() - tInizio > durataMinimaTest)
     statStabili = true;
 }
@@ -415,14 +433,15 @@ void salvaStatistiche()  {
     // Durata del test
     riassunto[nrTest][(int)elemRiass::durata] = (millis() - tInizio) / 1000;
     // Percentuale successo
-    riassunto[nrTest][(int)elemRiass::successo] = indiceSuccesso;
+    // l'elemento 6 di quest'array ha il peso maggiore nel calsolo della stabilità
+    riassunto[nrTest][(int)elemRiass::successo] = indiciSuccessoPrec[6];
 
     nrTest++;
 
     bool mpmNonRaggiunti = false;
-    if(messPerMin > 50) mpmNonRaggiunti = (messPerMinEffettivi < messPerMin - 100);
+    if(messPerMin > 100) mpmNonRaggiunti = (messPerMinEffettivi < messPerMin - 100);
 
-    if(indiceSuccesso < 500 || nrTest == nrTestMax || mpmNonRaggiunti)
+    if(indiceSuccesso < 100 || nrTest == nrTestMax || mpmNonRaggiunti)
     fineTest = true;
 }
 
@@ -480,7 +499,7 @@ void fineProgramma() {
 
 void stampaNovita() {
 
-    if(millis() - tUltimaStampa < 3000) return;
+    if(millis() - tUltimaStampa < 5000) return;
 
     tUltimaStampa = millis();
 
@@ -515,10 +534,6 @@ void stampaRiassunto() {
     // Variabili globali usate:
     // - nrTest = Numero di test effettuati - 1
     // - Riassunto[nrTest][5] =  risultati ottenuti
-
-    for(int i = 6; i; i--) Serial.println();
-    for(int i = 71; i; i--) Serial.print('*');
-    Serial.println();
 
     // Calcolo totali
 
@@ -703,7 +718,7 @@ void stampaRiassunto() {
         Serial.print("}");
         if(a < nrTest - 1) Serial.print(",");
     }
-    Serial.print("}");
+    Serial.print("};");
     Serial.println();
     Serial.println();
     Serial.println();
