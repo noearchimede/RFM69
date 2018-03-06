@@ -963,4 +963,14 @@ bool collegaFunzioneISR(void (*fz)(), uint8_t nr);
     @return Codice errore come per le funzioni `invia()`
 * /
 int eseguiFunzioneRemota(uint8_t nr, uint16_t timeout);
+
+
+
+Impostare bit rate in una funzione; tenere presente che:
+ - fdev + (bitRate/2) <= 500kHz
+ - 0,5 <= b <= 10 dove b = 2*fDev/bitRate
+ - fDev > fRF * crystalTolerance (es.: 433*50 se freq = 433MHz e cry.tol = 50 ppm)
+
+ - rxBw > 2*Fdev + bitRate + (fRF*cryTolRx + fRF*cyTolTx)(1)
+    dove (1) vale, per ad es. cryTol = 50 ppm e freq 433MHz, (433*50*2)
 */
