@@ -49,12 +49,12 @@ dell'implementazione della classe RFM69).
 
 // [0x3, 0x4] Bit Rate (Chip Rate when Manchester encoding is enabled)
 // x [auto] ; FSK: 1'200 - 300'000 , OOK: 1'200 - 32'768
-#define BIT_RATE                        19200
+#define BIT_RATE                        9600
 // [0x5, 0x6] FSK frequency deviation
 // x [auto] ; 600 - 300'000 ; constraints:
 //  1) (1/5)*BIT_RATE < FREQ_DEV < 5*BIT_RATE
 //  2) 600 < FREQ_DEV < 500'000 - (BIT_RATE / 2)
-#define FREQ_DEV                        38400
+#define FREQ_DEV                        30000
 // [Modulation index = (2 * FREQ_DEV) / BIT_RATE]
 
 // [0x7, 0x8, 0x9] RF carrier frequency
@@ -152,18 +152,20 @@ dell'implementazione della classe RFM69).
 #define LNA_GAIN                        LNA_GAIN_AGC
 
 // [0x19] Channel filter bandwidth
-// x ; 2'600 - 500'000 ; ~[2 * bitRate] (trovato sperimentalmente)
-// limite: BitRate < 2 x RxBw)
-#define RX_BW                           FREQ_DEV * 2
+// x ; 2'600 - 500'000
+// RX_BW > 2*FREQ_DEV + BIT_RATE + CryTol*RADIO_FREQ[MHz]*2, dove CryTol
+//  (crystal tolerance) è compresa tra 50 e 100 ppm (cfr. datasheet p. 31)
+#define RX_BW                           (FREQ_DEV * 2) + BIT_RATE + ((RADIO_FREQ/1000000) * 70 * 2)
+
 // [0x19] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // _16, _8, _4, _2, _1, _0_5, _0_25, _0_125
 #define DCC_FREQ                        DCC_FREQ_0_125
 // [0x1A] Channel filter bandwidth used during AFC
 // x ; 2'600 - 500'000
-#define RX_BW_AFC                       FREQ_DEV * 2
+#define RX_BW_AFC                       RX_BW
 // [0x1A] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // DCC_FREQ: _16, _8, _4, _2, _1, _0_5, _0_25, _0_125
-#define DCC_FREQ_AFC                    DCC_FREQ_0_125
+#define DCC_FREQ_AFC                    DCC_FREQ
 
 // [0x1B] Selects type of threshold in the OOK data slicer
 // _FIXED, _PEAK, _AVERAGE
