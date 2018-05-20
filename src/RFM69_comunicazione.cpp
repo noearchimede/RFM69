@@ -614,36 +614,36 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto
     }
     switch(errore) {
         case Errore::ok :
-        serial.println(F("ok!")); break;
+        serial.print(F("ok!")); break;
         case Errore::errore :
-        serial.println(F("errore")); break;
+        serial.print(F("errore")); break;
 
         case Errore::initTroppeRadio :
-        serial.println(F("troppe radio")); break;
+        serial.print(F("troppe radio")); break;
         case Errore::initInitSPIFallita :
-        serial.println(F("init SPI fallita")); break;
+        serial.print(F("init SPI fallita")); break;
         case Errore::initNessunaRadioConnessa :
-        serial.println(F("nessuna radio connessa")); break;
+        serial.print(F("nessuna radio connessa")); break;
         case Errore::initVersioneRadioNon0x24 :
-        serial.println(F("versione radio non 0x24")); break;
+        serial.print(F("versione radio non 0x24")); break;
         case Errore::initPinInterruptNonValido :
-        serial.println(F("pin interrupt non valido")); break;
+        serial.print(F("pin interrupt non valido")); break;
         case Errore::initErroreImpostazione :
-        serial.println(F("errore impostazione")); break;
+        serial.print(F("errore impostazione")); break;
 
         case Errore::inviaMessaggioVuoto :
-        serial.println(F("messaggio vuoto")); break;
+        serial.print(F("messaggio vuoto")); break;
         case Errore::inviaTimeoutTxPrecedente :
-        serial.println(F("il mess. prec. non è ancora partito")); break;
+        serial.print(F("il mess. prec. non è ancora partito")); break;
 
         case Errore::leggiNessunMessaggio :
-        serial.println(F("nessun messaggio")); break;
+        serial.print(F("nessun messaggio")); break;
         case Errore::leggiArrayTroppoCorta :
-        serial.println(F("array troppo corta")); break;
+        serial.print(F("array troppo corta")); break;
 
         case Errore::modImpossibile:
-        serial.println(F("impossibile cambiare")); break;
+        serial.print(F("impossibile cambiare")); break;
         case Errore::modTimeout :
-        serial.println(F("timeout")); break;
+        serial.print(F("timeout")); break;
     }
 }
