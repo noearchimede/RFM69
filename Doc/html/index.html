@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>RFM69: Driver Arduino per i moduli radio RFM69</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -27,15 +27,14 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Generato da Doxygen 1.8.14 -->
+<!-- Generato da Doxygen 1.8.13 -->
 <script type="text/javascript" src="menudata.js"></script>
 <script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
-/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
 $(function() {
   initMenu('',false,false,'search.php','Cerca');
 });
-/* @license-end */</script>
+</script>
 <div id="main-nav"></div>
 </div><!-- top -->
 <div class="header">
@@ -122,8 +121,7 @@ stato tx            |######## 2 #######|
 <li>[<code>###</code>]: la funzione <code>invia()</code> non dovrebbe mai essere chiamata qui.<ul>
 <li><p class="startli">[<code>1</code>]: In teoria non bisognerebbe trasmettere (l'altra radio non è in modalità rx), ma in realtà se l'utente chiama <code>invia()</code> mentre la classe aspetta un ack per il messaggio precedente significa che l'utente ha rinunciato a controllare quell'ack. In tal caso <code>invia()</code> si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andrà perso, ma il compito della funzione <code>invia()</code> non è aspettare l'ack precedente (quello è compito dell'utente, anche se lo aspettasse per un certo tempo <code>invia()</code> non potrebbe segnalare se è arrivato o no). La sequenza corretta sarebbe:</p>
 <p class="startli">```cpp inviaConAck(); aspettaAck(); // contiene un timeout if(ackRicevuto()) invia(); // prossimo messaggio ``` oppure</p>
-<p class="startli">```cpp inviaConAck(); delay(x); // potrebbero essere altre funzioni if(ackRicevuto()) invia(); // prossimo messaggio <br />
- rinunciaAck(); // smetti di aspettare l'ACK ``<code></code></p>
+<p class="startli">```cpp inviaConAck(); delay(x); // potrebbero essere altre funzioni if(ackRicevuto()) invia(); // prossimo messaggio rinunciaAck(); // smetti di aspettare l'ACK ``<code></code></p>
 </li>
 <li><code>[</code>2`]: Momento critico: se si chiama invia() qui ci sarà una collisione con l'invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all'utente impedire queste collisioni o saperle gestire.</li>
 <li>[<code>3</code>]: I messaggi inviati qui saranno persi. È un difetto dei messaggi senza ACK.</li>
@@ -133,38 +131,38 @@ stato tx            |######## 2 #######|
 </div></div></div><div id="id-section1"><div id="2"><div id="3"><br />
  Per costruire un sistema di trasmissione di dati bidirezionale e continua, dunque, è necessario creare un sistema di gestione di queste possibili collisioni, cercando di evitarle il più possibile. Invece i un programma che utilizza la radio solo di tanto in tanto è sufficiente tenere presente la possibilità di perdere un messaggio (quindi ad es. controllarne la ricezione tramite il sistema di ACK ed eventualmente reinviarlo).</div></div></div><div id="id-section1"><div id="2"><div id="3">La probabilità di perdere un messaggio è relativamente bassa. Il grafico sottostante raffigura la percentuale di messaggi trasmessi con successo rispetto al numero medio di messaggi inviati in un minuto, in un sistema in cui due radio si inviano reciprocamente messaggi di 12 bytes (4 bytes di dati) con richiesta di ACK ad intervalli di tempo casuali ma in media ad una stessa frequenza. La tabella è stata generata dal programma <em>Test collisioni</em> (composto dai file <code>Esempi/Test_collisioni_master.cpp</code> e <code>Esempi/Test_collisioni_assistente.cpp</code>, uno per ciascuna radio).</div></div></div><div id="id-section1"><div id="2"><div id="3"><div class="fragment"><div class="line"> %</div><div class="line">100 |  *                                                                                        </div><div class="line">    |       *                                                                                   </div><div class="line">    |      *  *                                                                                 </div><div class="line">    |               *                                                                           </div><div class="line">    |           * *   **                                                                         </div><div class="line"> 75 |   *               *      **   *                                                            </div><div class="line">    |                   *                                                                       </div><div class="line">    |                       *      *       *                                                    </div><div class="line">    |                                 * *                                                       </div><div class="line">    |                                         *                                                 </div><div class="line"> 50 |                                       * *      *                                          </div><div class="line">    |                                               **                                          </div><div class="line">    |                                              *   *     **                                  </div><div class="line">    |                                                           * * **                          </div><div class="line">    |                                                      *            *        *              </div><div class="line"> 25 |                                                                    *  *   **               </div><div class="line">    |                                                                                    *      </div><div class="line">    |                                                                        *         * ** *   </div><div class="line">    |                                  *                                                  *     </div><div class="line">    |                                                                     *              **      </div><div class="line">  0 +------------------------------------------------------------------------------------------  mess/min</div><div class="line">    0          200          400          600          800          1000          1200          1400</div></div><!-- fragment --></div></div></div><div id="id-section1"><div id="2"><div id="3"><br />
 <div id="4"></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><h2>4. Hardware</h2>
-</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4">Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.3V (ad es. Adafruit vende <a href="https://www.adafruit.com/product/3071">https://www.adafruit.com/product/3071</a> per la maggior parte dei paesi, tra cui tutti quelli europei, e <a href="https://www.adafruit.com/product/3070">https://www.adafruit.com/product/3070</a> per gli USA e pochi altri).</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4">Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'interrupt su quest'ultimo e può "affidargli" il proprio pin di reset (non veramente sfruttato da questa classe, ma se è già connesso deve essere gestito per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V.</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"><a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a>  </th><th class="markdownTableHeadNone">uC   </th></tr>
-<tr class="markdownTableBody" class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">MISO  </td><td class="markdownTableBodyNone">MISO   </td></tr>
-<tr class="markdownTableBody" class="markdownTableRowEven">
-<td class="markdownTableBodyNone">MOSI  </td><td class="markdownTableBodyNone">MOSI   </td></tr>
-<tr class="markdownTableBody" class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">SCK  </td><td class="markdownTableBodyNone">SCK   </td></tr>
-<tr class="markdownTableBody" class="markdownTableRowEven">
-<td class="markdownTableBodyNone">NSS  </td><td class="markdownTableBodyNone">I/O <code>*</code>   </td></tr>
-<tr class="markdownTableBody" class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">DIO0  </td><td class="markdownTableBodyNone">INT <code>**</code>   </td></tr>
-<tr class="markdownTableBody" class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><em>RESET <code>&amp;</code></em>  </td><td class="markdownTableBodyNone"><em>I/O <code>*</code></em>   </td></tr>
+</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4">Come già detto ho scritto questa classe in particolare per il modulo RFM69HCW di HopeRF, in commercio sia da solo sia inserito in altri moduli che offrono, ad esempio, un logic level shifting da 5V a 3.3V (ad es. Adafruit vende <a href="https://www.adafruit.com/product/3071">https://www.adafruit.com/product/3071</a> per la maggior parte dei paesi, tra cui tutti quelli europei, e <a href="https://www.adafruit.com/product/3070">https://www.adafruit.com/product/3070</a> per gli USA e pochi altri).</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4">Il modulo comunica con il microcontrollore tramite SPI, deve poter chiamare un'interrupt su quest'ultimo e può "affidargli" il proprio pin di reset (non veramente sfruttato da questa classe, ma se è già connesso deve essere gestito per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V.</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><table class="doxtable">
+<tr>
+<th><a class="el" href="class_r_f_m69.html" title="Driver per i moduli radio RFM69. ">RFM69</a> </th><th>uC  </th></tr>
+<tr>
+<td>MISO </td><td>MISO </td></tr>
+<tr>
+<td>MOSI </td><td>MOSI </td></tr>
+<tr>
+<td>SCK </td><td>SCK </td></tr>
+<tr>
+<td>NSS </td><td>I/O <code>*</code> </td></tr>
+<tr>
+<td>DIO0 </td><td>INT <code>**</code> </td></tr>
+<tr>
+<td><em>RESET <code>&amp;</code></em> </td><td><em>I/O <code>*</code></em> </td></tr>
 </table>
-</div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><ul>
+<ul>
 <li><code>&amp;</code>: Opzionale</li>
 <li><code>*</code>: OUT è qualsiasi pin di input/output (sarà configurato come output dalla classe)</li>
 <li><code>**</code>: INT è un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.</li>
 </ul>
 </div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><br />
 <div id="5"></div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"><h2>5. Struttura dei messaggi</h2>
-</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"></div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5">Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura:</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Preamble  </th><th class="markdownTableHeadNone">Sync word  </th><th class="markdownTableHeadNone">Lunghezza  </th><th class="markdownTableHeadNone">Intestazione  </th><th class="markdownTableHeadNone">Contenuto  </th><th class="markdownTableHeadNone">CRC   </th></tr>
-<tr class="markdownTableBody" class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">PREAMBLE_SIZE  </td><td class="markdownTableBodyNone">SYNC_SIZE  </td><td class="markdownTableBodyNone">1  </td><td class="markdownTableBodyNone">1  </td><td class="markdownTableBodyNone">lunghezza  </td><td class="markdownTableBodyNone">2   </td></tr>
-<tr class="markdownTableBody" class="markdownTableRowEven">
-<td class="markdownTableBodyNone">01010101...  </td><td class="markdownTableBodyNone">SYNC_VAL  </td><td class="markdownTableBodyNone">lunghezza  </td><td class="markdownTableBodyNone">intestazione  </td><td class="markdownTableBodyNone">messaggio  </td><td class="markdownTableBodyNone">crc   </td></tr>
+</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"></div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5">Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente struttura:</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"><table class="doxtable">
+<tr>
+<th>Preamble </th><th>Sync word </th><th>Lunghezza </th><th>Intestazione </th><th>Contenuto </th><th>CRC  </th></tr>
+<tr>
+<td>PREAMBLE_SIZE </td><td>SYNC_SIZE </td><td>1 </td><td>1 </td><td>lunghezza </td><td>2 </td></tr>
+<tr>
+<td>01010101... </td><td>SYNC_VAL </td><td>lunghezza </td><td>intestazione </td><td>messaggio </td><td>crc </td></tr>
 </table>
-</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5">La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo contenuto.</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"><ul>
+La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo contenuto.</div></div></div></div></div><div id="id-section1"><div id="2"><div id="3"><div id="4"><div id="5"><ul>
 <li><code>PREAMBLE_SIZE</code>, <code>SYNC_SIZE</code> e <code>SYNC_VAL</code> sono costanti definite nel file "RFM69_impostazioni.h".</li>
 <li><code>lunghezza</code> e <code>messaggio</code> sono gli argomenti della funzione <code>invia()</code>.</li>
 <li><code>intestazione</code> è un byte generato dalle funzioni di invio e letto da quelle di ricezione, inaccessibile all'utente.</li>
@@ -179,7 +177,7 @@ stato tx            |######## 2 #######|
 <hr class="footer"/><address class="footer"><small>
 Generato da &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.14
+</a> 1.8.13
 </small></address>
 </body>
 </html>

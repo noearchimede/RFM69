@@ -143,11 +143,10 @@ stato tx            |######## 2 #######|
 \begin{DoxyItemize}
 \item [{\ttfamily 1}]\+: In teoria non bisognerebbe trasmettere (l\textquotesingle{}altra radio non è in modalità rx), ma in realtà se l\textquotesingle{}utente chiama {\ttfamily invia()} mentre la classe aspetta un ack per il messaggio precedente significa che l\textquotesingle{}utente ha rinunciato a controllare quell\textquotesingle{}ack. In tal caso {\ttfamily invia()} si comporta come se il messaggio precedente non avesse contenuto una richiesta di ack. Probabilmente questo messaggio andrà perso, ma il compito della funzione {\ttfamily invia()} non è aspettare l\textquotesingle{}ack precedente (quello è compito dell\textquotesingle{}utente, anche se lo aspettasse per un certo tempo {\ttfamily invia()} non potrebbe segnalare se è arrivato o no). La sequenza corretta sarebbe\+:
 
-\`{}\`{}\`{}cpp invia\+Con\+Ack(); aspetta\+Ack(); // contiene un timeout if(ack\+Ricevuto()) invia(); // prossimo messaggio \`{}\`{}\`{} oppure
+```cpp invia\+Con\+Ack(); aspetta\+Ack(); // contiene un timeout if(ack\+Ricevuto()) invia(); // prossimo messaggio ``` oppure
 
-\`{}\`{}\`{}cpp invia\+Con\+Ack(); delay(x); // potrebbero essere altre funzioni if(ack\+Ricevuto()) invia(); // prossimo messaggio ~\newline
- rinuncia\+Ack(); // smetti di aspettare l\textquotesingle{}A\+CK \`{}\`{}{\ttfamily }
-\item {\ttfamily [}2\`{}]\+: Momento critico\+: se si chiama invia() qui ci sarà una collisione con l\textquotesingle{}invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all\textquotesingle{}utente impedire queste collisioni o saperle gestire.
+```cpp invia\+Con\+Ack(); delay(x); // potrebbero essere altre funzioni if(ack\+Ricevuto()) invia(); // prossimo messaggio rinuncia\+Ack(); // smetti di aspettare l\textquotesingle{}A\+CK ``{\ttfamily }
+\item {\ttfamily [}2`]\+: Momento critico\+: se si chiama invia() qui ci sarà una collisione con l\textquotesingle{}invia() della radio A e entrambi i messaggi saranno persi, ma questa classe non ha modo di evitarlo. Spetta all\textquotesingle{}utente impedire queste collisioni o saperle gestire.
 \item [{\ttfamily 3}]\+: I messaggi inviati qui saranno persi. È un difetto dei messaggi senza A\+CK.
 \end{DoxyItemize}
 \end{DoxyItemize}
@@ -199,22 +198,20 @@ Il modulo comunica con il microcontrollore tramite S\+PI, deve poter chiamare un
 \tabulinesep=1mm
 \begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69}  }&\textbf{ uC   }\\\cline{1-2}
+\rowcolor{\tableheadbgcolor}\textbf{ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} }&\textbf{ uC  }\\\cline{1-2}
 \endfirsthead
 \hline
 \endfoot
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69}  }&\textbf{ uC   }\\\cline{1-2}
+\rowcolor{\tableheadbgcolor}\textbf{ \doxyref{R\+F\+M69}{pag.}{class_r_f_m69} }&\textbf{ uC  }\\\cline{1-2}
 \endhead
-M\+I\+SO  &M\+I\+SO   \\\cline{1-2}
-M\+O\+SI  &M\+O\+SI   \\\cline{1-2}
-S\+CK  &S\+CK   \\\cline{1-2}
-N\+SS  &I/O {\ttfamily $\ast$}   \\\cline{1-2}
-D\+I\+O0  &I\+NT {\ttfamily $\ast$$\ast$}   \\\cline{1-2}
-{\itshape R\+E\+S\+ET {\ttfamily \&}}  &{\itshape I/O {\ttfamily $\ast$}}   \\\cline{1-2}
+M\+I\+SO &M\+I\+SO \\\cline{1-2}
+M\+O\+SI &M\+O\+SI \\\cline{1-2}
+S\+CK &S\+CK \\\cline{1-2}
+N\+SS &I/O {\ttfamily $\ast$} \\\cline{1-2}
+D\+I\+O0 &I\+NT {\ttfamily $\ast$$\ast$} \\\cline{1-2}
+{\itshape R\+E\+S\+ET {\ttfamily \&}} &{\itshape I/O {\ttfamily $\ast$}} \\\cline{1-2}
 \end{longtabu}
-
-
 
 \begin{DoxyItemize}
 \item {\ttfamily \&}\+: Opzionale
@@ -234,18 +231,16 @@ Tutti i messaggi inviati con le funzioni di questa classe hanno la seguente stru
 \tabulinesep=1mm
 \begin{longtabu} spread 0pt [c]{*{6}{|X[-1]}|}
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ Preamble  }&\textbf{ Sync word  }&\textbf{ Lunghezza  }&\textbf{ Intestazione  }&\textbf{ Contenuto  }&\textbf{ C\+RC   }\\\cline{1-6}
+\rowcolor{\tableheadbgcolor}\textbf{ Preamble }&\textbf{ Sync word }&\textbf{ Lunghezza }&\textbf{ Intestazione }&\textbf{ Contenuto }&\textbf{ C\+RC  }\\\cline{1-6}
 \endfirsthead
 \hline
 \endfoot
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ Preamble  }&\textbf{ Sync word  }&\textbf{ Lunghezza  }&\textbf{ Intestazione  }&\textbf{ Contenuto  }&\textbf{ C\+RC   }\\\cline{1-6}
+\rowcolor{\tableheadbgcolor}\textbf{ Preamble }&\textbf{ Sync word }&\textbf{ Lunghezza }&\textbf{ Intestazione }&\textbf{ Contenuto }&\textbf{ C\+RC  }\\\cline{1-6}
 \endhead
-P\+R\+E\+A\+M\+B\+L\+E\+\_\+\+S\+I\+ZE  &S\+Y\+N\+C\+\_\+\+S\+I\+ZE  &1  &1  &lunghezza  &2   \\\cline{1-6}
-01010101...  &S\+Y\+N\+C\+\_\+\+V\+AL  &lunghezza  &intestazione  &messaggio  &crc   \\\cline{1-6}
+P\+R\+E\+A\+M\+B\+L\+E\+\_\+\+S\+I\+ZE &S\+Y\+N\+C\+\_\+\+S\+I\+ZE &1 &1 &lunghezza &2 \\\cline{1-6}
+01010101... &S\+Y\+N\+C\+\_\+\+V\+AL &lunghezza &intestazione &messaggio &crc \\\cline{1-6}
 \end{longtabu}
-
-
 La prima riga è la lunghezzza della sezione in bytes, la seconda è il suo contenuto.
 
 
