@@ -36,7 +36,7 @@ dell'implementazione della classe RFM69).
 // (da una macro del preprocessore) nel valore da inscrivere nel registro.
 
 #ifdef RFM69_impostazioni_h
-#error "È già stato incluso un altro file di impostazione"
+#warning "È già stato incluso un altro file di impostazione"
 #else
 #define RFM69_impostazioni_h
 
