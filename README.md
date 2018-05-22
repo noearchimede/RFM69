@@ -172,7 +172,9 @@ in cui non si può o non si dovrebbe trasmetterne altri.
     -  [`1`]: In teoria non bisognerebbe trasmettere (l'altra radio non è in modalità rx),
         ma in realtà se l'utente chiama `invia()` mentre la classe aspetta un ack per
         il messaggio precedente significa che l'utente ha rinunciato a controllare
-        quell'ack. In tal caso `invia()` si comporta come se il messaggio precedente
+        quell'ack (se così non fosse basterebbe implementare una flag di "messaggio in
+	uscita" o controllare la funzione `ackRicevuto()` prima di inviare).
+	In tal caso `invia()` si comporta come se il messaggio precedente
         non avesse contenuto una richiesta di ack. Probabilmente questo messaggio
         andrà perso, ma il compito della funzione `invia()` non è aspettare l'ack
         precedente (quello è compito dell'utente, anche se lo aspettasse per un certo
