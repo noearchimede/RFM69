@@ -184,7 +184,7 @@ Constructor da usare se il pin R\+E\+S\+ET è connesso al uC.
 \hline
 {\em pin\+Interrupt} & Numero del pin attraverso il quale la radio genera un interrupt sul uC. Deve ovviamente essere un pin di interrupt. \\
 \hline
-{\em pin\+Reset} & Numero del pin collegato al pin R\+E\+S\+ET della radio. \\
+{\em pin\+Reset} & Numero del pin collegato al pin R\+E\+S\+ET della radio. 0x\+FF significa che il pin di reset non è collegato. \\
 \hline
 \end{DoxyParams}
 
@@ -394,7 +394,7 @@ Versione di {\ttfamily invia\+Fino\+Ack} senza restituzione del numero di tentat
 
 Questa funzione corrisponde ad {\ttfamily invia\+Fino\+Ack(uint16\+\_\+t\&, const uin8\+\_\+t, uint8\+\_\+t, uint8\+\_\+t)} ma il suo primo argomento non è una \textquotesingle{}reference\textquotesingle{}; può essere usata se non si è interessati a sapere il numero di tentativi effettuati oppure se si passa come argomentoun valore e non una variabile. 
 
-Definizione alla linea 174 del file R\+F\+M69.\+h.
+Definizione alla linea 175 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_ade25e9bc296b574729d8136f88815384}} 
 \index{R\+F\+M69@{R\+F\+M69}!leggi@{leggi}}
@@ -863,7 +863,7 @@ Questa funzione può essere utile se vicino alla radio si trova un dispsitivo se
 \end{DoxyReturn}
 
 
-Definizione alla linea 435 del file R\+F\+M69.\+h.
+Definizione alla linea 436 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a597de2e2c76336659093d2e87d323d85}} 
 \index{R\+F\+M69@{R\+F\+M69}!ottieni\+Attesa\+Ack@{ottieni\+Attesa\+Ack}}
@@ -881,7 +881,7 @@ Il valore restituito da questa funzione è il tempo in millisecondi impiegato pe
 
 Il {\ttfamily [T\+E\+M\+PO P\+R\+I\+MA D\+E\+L\+LA C\+H\+I\+A\+M\+A\+TA A\+L\+LA F\+U\+N\+Z\+I\+O\+NE \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}]} è il fattore più variabile; è più basso se il codice della radio ricevente è scritto bene (dal punto di vista di questa classe). 
 
-Definizione alla linea 457 del file R\+F\+M69.\+h.
+Definizione alla linea 458 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a242a4c71987bd260576e226104ea2f6a}} 
 \index{R\+F\+M69@{R\+F\+M69}!ottieni\+Attesa\+Massima\+Ack@{ottieni\+Attesa\+Massima\+Ack}}
@@ -897,7 +897,7 @@ Restituisce lo stesso valore della funzione {\ttfamily durata\+Attesa\+Ack()}, m
 
 Può essere usato per definire un tempo timeout\+Ack adeguato\+: chiamata dopo aver eseguito il programma finale con un timeout arbitrariamente grande, questa funzione restituirà il valore ideale del timeout\+: se ad es. restituisse 100 un timeout adeguato potrebbe essere 110 o 120. Se però la media \doxyref{ottieni\+Attesa\+Media\+Ack()}{pag.}{class_r_f_m69_af5538a0258d104c45fac05c03d69af36} fosse nettamente inferiore (ad es. 50) converrebbe probabilmente identificare il punto in cui il tempo di attesa è massimo usando la funzione \doxyref{ottieni\+Attesa\+Ack()}{pag.}{class_r_f_m69_a597de2e2c76336659093d2e87d323d85} e eliminare la causa di tale ritardo oppure aumentare momrntaneamente il timeout il quel punto. 
 
-Definizione alla linea 472 del file R\+F\+M69.\+h.
+Definizione alla linea 473 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_af5538a0258d104c45fac05c03d69af36}} 
 \index{R\+F\+M69@{R\+F\+M69}!ottieni\+Attesa\+Media\+Ack@{ottieni\+Attesa\+Media\+Ack}}
@@ -913,7 +913,7 @@ Restituisce lo stesso valore della funzione {\ttfamily durata\+Attesa\+Ack()}, m
 
 Può essere un indice della buona scrittura del codice della radio ricevente\+: più la funzione {\ttfamily \doxyref{leggi()}{pag.}{class_r_f_m69_ade25e9bc296b574729d8136f88815384}} è chiamata (o pronta ad essere chiamata) regolarmente e frequentemente più questo valore sarà basso. 
 
-Definizione alla linea 483 del file R\+F\+M69.\+h.
+Definizione alla linea 484 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a8cca0cc81ea4d5d03dea4930a176a5fe}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Inviati@{nr\+Messaggi\+Inviati}}
@@ -930,7 +930,7 @@ Il numero di messaggi inviati dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 488 del file R\+F\+M69.\+h.
+Definizione alla linea 489 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a35bd91314fd80a855736a564ca65273b}} 
 \index{R\+F\+M69@{R\+F\+M69}!nr\+Messaggi\+Ricevuti@{nr\+Messaggi\+Ricevuti}}
@@ -947,7 +947,7 @@ Il numero di messaggi ricevuti dopo l\textquotesingle{}ultima inizializzazione
 \end{DoxyReturn}
 
 
-Definizione alla linea 492 del file R\+F\+M69.\+h.
+Definizione alla linea 493 del file R\+F\+M69.\+h.
 
 \mbox{\label{class_r_f_m69_a42670b5f67f3a0f072e1c86c3ad66fea}} 
 \index{R\+F\+M69@{R\+F\+M69}!stampa\+Errore\+Serial@{stampa\+Errore\+Serial}}
@@ -1027,6 +1027,6 @@ Deleted perché non ha senso copiare una radio
 
 La documentazione per questa classe è stata generata a partire dai seguenti file\+:\begin{DoxyCompactItemize}
 \item 
-/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/\+R\+F\+M69/\textbf{ R\+F\+M69.\+h}\item 
-/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/\+R\+F\+M69/\textbf{ R\+F\+M69\+\_\+comunicazione.\+cpp}\item 
-/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/\+R\+F\+M69/\textbf{ R\+F\+M69\+\_\+inizializzazione.\+cpp}\end{DoxyCompactItemize}
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/src/\textbf{ R\+F\+M69.\+h}\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/src/\textbf{ R\+F\+M69\+\_\+comunicazione.\+cpp}\item 
+/\+Users/noe/\+Documents/\+Robot/\+Librerie/\+R\+F\+M69/src/\textbf{ R\+F\+M69\+\_\+inizializzazione.\+cpp}\end{DoxyCompactItemize}

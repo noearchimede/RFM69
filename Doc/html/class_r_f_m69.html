@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>RFM69: Riferimenti per la classe RFM69</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -27,15 +27,14 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Generato da Doxygen 1.8.14 -->
+<!-- Generato da Doxygen 1.8.13 -->
 <script type="text/javascript" src="menudata.js"></script>
 <script type="text/javascript" src="menu.js"></script>
 <script type="text/javascript">
-/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
 $(function() {
   initMenu('',false,false,'search.php','Cerca');
 });
-/* @license-end */</script>
+</script>
 <div id="main-nav"></div>
 </div><!-- top -->
 <div class="header">
@@ -294,7 +293,7 @@ Membri pubblici</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">pinSS</td><td>Numero del pin Slave Select </td></tr>
     <tr><td class="paramname">pinInterrupt</td><td>Numero del pin attraverso il quale la radio genera un interrupt sul uC. Deve ovviamente essere un pin di interrupt. </td></tr>
-    <tr><td class="paramname">pinReset</td><td>Numero del pin collegato al pin RESET della radio. </td></tr>
+    <tr><td class="paramname">pinReset</td><td>Numero del pin collegato al pin RESET della radio. 0xFF significa che il pin di reset non è collegato. </td></tr>
   </table>
   </dd>
 </dl>
@@ -635,7 +634,7 @@ Sarà allocata un'array di <code>lunghezzaMaxMessaggio</code> bytes.</dd></dl>
 <p>Versione di <code>inviaFinoAck</code> senza restituzione del numero di tentativi. </p>
 <p>Questa funzione corrisponde ad <code>inviaFinoAck(uint16_t&amp;, const uin8_t, uint8_t, uint8_t)</code> ma il suo primo argomento non è una 'reference'; può essere usata se non si è interessati a sapere il numero di tentativi effettuati oppure se si passa come argomentoun valore e non una variabile. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00174">174</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00175">175</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1235,7 +1234,7 @@ Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a cl
 <p>Questa funzione può essere utile se vicino alla radio si trova un dispsitivo sensibile alle onde elettromagnetiche della frequenza emessa dalla radio (ad es. un sensore che non è accurato in caso di forte disturbo attorno ai 433Mhz, nel caso il modulo radio usato sia europeo, potrebbe usare questa funzione per rimandare la propria misurazione a dopo la trasmissione del messaggio).</p>
 <dl class="section return"><dt>Restituisce</dt><dd><code>true</code> se la radio sta trasmettendo un messaggio. </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00435">435</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00436">436</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1267,7 +1266,7 @@ Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a cl
 <p><code>[attesa ACK] = [trasmissione] + [decodificazione] + [TEMPO PRIMA DELLA CHIAMATA ALLA FUNZIONE <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>] + [trasmissione ACK]</code></p>
 <p>Il <code>[TEMPO PRIMA DELLA CHIAMATA ALLA FUNZIONE <a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>]</code> è il fattore più variabile; è più basso se il codice della radio ricevente è scritto bene (dal punto di vista di questa classe). </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00457">457</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00458">458</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1298,7 +1297,7 @@ Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a cl
 <p>Restituisce lo stesso valore della funzione <code>durataAttesaAck()</code>, ma relativo all'attesa più lunga dall'ultima inizializzazione al momento della chiamata.</p>
 <p>Può essere usato per definire un tempo timeoutAck adeguato: chiamata dopo aver eseguito il programma finale con un timeout arbitrariamente grande, questa funzione restituirà il valore ideale del timeout: se ad es. restituisse 100 un timeout adeguato potrebbe essere 110 o 120. Se però la media <a class="el" href="class_r_f_m69.html#af5538a0258d104c45fac05c03d69af36" title="Restituisce la durata media di attesa di un ACK (ricevuto) ">ottieniAttesaMediaAck()</a> fosse nettamente inferiore (ad es. 50) converrebbe probabilmente identificare il punto in cui il tempo di attesa è massimo usando la funzione <a class="el" href="class_r_f_m69.html#a597de2e2c76336659093d2e87d323d85" title="Restituisce la durata dell&#39;ultima attesa di un ACK (ricevuto) ">ottieniAttesaAck()</a> e eliminare la causa di tale ritardo oppure aumentare momrntaneamente il timeout il quel punto. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00472">472</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00473">473</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1329,7 +1328,7 @@ Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a cl
 <p>Restituisce lo stesso valore della funzione <code>durataAttesaAck()</code>, ma anziché riferirsi a un'attesa in particolare restituisce l'attesa media dall'ultima inizializzazione al momento della chiamata.</p>
 <p>Può essere un indice della buona scrittura del codice della radio ricevente: più la funzione <code><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a></code> è chiamata (o pronta ad essere chiamata) regolarmente e frequentemente più questo valore sarà basso. </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00483">483</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00484">484</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1359,7 +1358,7 @@ Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a cl
 <p>Restituisce il numero di messaggi inviati dopo l'ultima inizializzazione. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il numero di messaggi inviati dopo l'ultima inizializzazione </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00488">488</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00489">489</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1389,7 +1388,7 @@ Ad es.<code>sleepDefault();</code> non corrisponde a <code>sleepDefault(); <a cl
 <p>Restituisce il numero di messaggi ricevuti dopo l'ultima inizializzazione. </p>
 <dl class="section return"><dt>Restituisce</dt><dd>Il numero di messaggi ricevuti dopo l'ultima inizializzazione </dd></dl>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00492">492</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00493">493</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
@@ -1523,16 +1522,16 @@ Siccome contiene alcune centinaia di caratteri, questa funzione "pesa" più dell
 </div>
 </div>
 <hr/>La documentazione per questa classe è stata generata a partire dai seguenti file:<ul>
-<li>/Users/noe/Documents/Robot/Librerie/RFM69/RFM69/<a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a></li>
-<li>/Users/noe/Documents/Robot/Librerie/RFM69/RFM69/<a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a></li>
-<li>/Users/noe/Documents/Robot/Librerie/RFM69/RFM69/<a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a></li>
+<li>/Users/noe/Documents/Robot/Librerie/RFM69/src/<a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a></li>
+<li>/Users/noe/Documents/Robot/Librerie/RFM69/src/<a class="el" href="_r_f_m69__comunicazione_8cpp_source.html">RFM69_comunicazione.cpp</a></li>
+<li>/Users/noe/Documents/Robot/Librerie/RFM69/src/<a class="el" href="_r_f_m69__inizializzazione_8cpp_source.html">RFM69_inizializzazione.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generato da &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.14
+</a> 1.8.13
 </small></address>
 </body>
 </html>
