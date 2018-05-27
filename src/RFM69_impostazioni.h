@@ -155,7 +155,7 @@ dell'implementazione della classe RFM69).
 // x ; 2'600 - 500'000
 // RX_BW > 2*FREQ_DEV + BIT_RATE + CryTol*RADIO_FREQ[MHz]*2, dove CryTol
 //  (crystal tolerance) è compresa tra 50 e 100 ppm (cfr. datasheet p. 31)
-#define RX_BW                           (FREQ_DEV * 2) + BIT_RATE + ((RADIO_FREQ/1000000) * 70 * 2)
+#define RX_BW                           ((long)FREQ_DEV * 2) + BIT_RATE + ((RADIO_FREQ/1000000L) * 70 * 2)
 
 // [0x19] Cut-off frequency of the DC offset canceller (DCC), in % of RxBw
 // _16, _8, _4, _2, _1, _0_5, _0_25, _0_125

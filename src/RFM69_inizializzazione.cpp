@@ -530,7 +530,7 @@ int RFM69::impostaBitRate(uint32_t bitRate) {
     spi.scriviRegistro(RFM69_03_BITRATE_MSB, val >> 8);
     spi.scriviRegistro(RFM69_04_BITRATE_LSB, val);
 
-    if(bitRate == ((uint16_t)spi.leggiRegistro(RFM69_03_BITRATE_MSB) << 8) | spi.leggiRegistro(RFM69_04_BITRATE_LSB))
+    if(bitRate == (((uint16_t)spi.leggiRegistro(RFM69_03_BITRATE_MSB) << 8) | spi.leggiRegistro(RFM69_04_BITRATE_LSB)))
     return Errore::ok;
 
     return Errore::errore;
@@ -553,7 +553,7 @@ int RFM69::impostaFreqDev(uint32_t freqDev) {
     spi.scriviRegistro(RFM69_05_FDEV_MSB, val << 8);
     spi.scriviRegistro(RFM69_06_FDEF_LSB, val);
 
-    if(freqDev == ((uint16_t)spi.leggiRegistro(RFM69_05_FDEV_MSB) << 8) | spi.leggiRegistro(RFM69_06_FDEF_LSB))
+    if(freqDev == (((uint16_t)spi.leggiRegistro(RFM69_05_FDEV_MSB) << 8) | spi.leggiRegistro(RFM69_06_FDEF_LSB)))
     return Errore::ok;
 
     return Errore::errore;
@@ -578,7 +578,7 @@ int RFM69::impostaFrequenzaMHz(uint32_t freq) {
     //Registro RegFrfLsb
     spi.scriviRegistro(RFM69_09_FRF_LSB, freq);
 
-    if(freq = ((uint32_t)spi.leggiRegistro(RFM69_07_FRF_MSB) << 16) | (spi.leggiRegistro(RFM69_08_FRF_MID) << 8) | (spi.leggiRegistro(RFM69_09_FRF_LSB)))
+    if(freq == (((uint32_t)spi.leggiRegistro(RFM69_07_FRF_MSB) << 16) | (spi.leggiRegistro(RFM69_08_FRF_MID) << 8) | (spi.leggiRegistro(RFM69_09_FRF_LSB))))
     return Errore::ok;
 
     return Errore::errore;
