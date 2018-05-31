@@ -46,7 +46,7 @@ public:
         @param pinInterrupt   Numero del pin attraverso il quale la radio genera
             un interrupt sul uC. Deve ovviamente essere un pin di interrupt.
         @param pinReset       Numero del pin collegato al pin RESET della radio.
-        0xFF significa che il pin di reset non è collegato. 
+        0xFF significa che il pin di reset non è collegato.
     */
     RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset);
 
@@ -693,7 +693,6 @@ private:
         uint8_t dimensione;
         Intestazione intestazione;
         uint32_t tempoRicezione;
-        int8_t rssi;
     };
 
 
@@ -801,6 +800,8 @@ private:
     uint32_t sommaAtteseAck;
     // Numero di ACK ricevuti, serve nel calcolo della media
     uint16_t nrAckRicevuti;
+    // Valore RSSI più recente disponibile
+    int8_t ultimoRssi;
 
 
     // Modalità in cui si trova attualmente la radio

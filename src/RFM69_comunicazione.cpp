@@ -229,10 +229,10 @@ uint8_t RFM69::titoloMessaggio() {
     return ultimoMessaggio.intestazione.bit.titolo;
 }
 
-// Restituisce il valore RSSI del segnale dell'ultimo messaggio
+// Restituisce il valore RSSI del segnale più recente (messaggio o ACK)
 //
 int8_t RFM69::rssi() {
-    return ultimoMessaggio.rssi;
+    return ultimoRssi;
 }
 
 // Restituisce l'"ora" di ricezione dell'ultimo messaggio
@@ -360,6 +360,7 @@ void RFM69::isr() {
 
                 attesaAck = false;
                 ackRicevuto = true;
+                ultimoRssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
                 cambiaModalita(modalitaDefault, false);
                 spi.usaInIsr(false);
                 // non c'è nient'altro da fare, un ACK non ha contenuto
@@ -383,6 +384,7 @@ void RFM69::isr() {
             // # Il messaggio è un ACK indesiderato # //
 
             ackInattesi++;
+            ultimoRssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
             cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
             spi.usaInIsr(false);
             return;
@@ -404,7 +406,7 @@ void RFM69::isr() {
         ultimoMessaggio.tempoRicezione = millis();
         ultimoMessaggio.dimensione = lung - 1;
         ultimoMessaggio.intestazione.byte = intest.byte;
-        ultimoMessaggio.rssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+        ultimoRssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
 
         spi.usaInIsr(false);
 
