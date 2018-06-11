@@ -13,47 +13,69 @@ della classe RFM69.
 // Constructor
 RFM69::Spi::Spi(uint8_t pinSlaveSelect, uint32_t frequenzaHz, BitOrder bitOrder, DataMode dataMode)
 :
-ss(pinSlaveSelect),
-frequenza(frequenzaHz),
-bitOrder(bitOrder),
-dataMode(dataMode)
-{}
+ss(pinSlaveSelect)
+{
+    // ### Calcola i valori per i registri SPCR e SPSR ### //
+    // Questa porzione di codice è persa dall'impementazione della classe
+    // SPISettings nella libreria SPI di Arduino.
+
+    // Find the fastest clock that is less than or equal to the given clock
+    // rate
+    uint8_t clockDiv;
+    uint32_t clockSetting = F_CPU / 2;
+    clockDiv = 0;
+    while (clockDiv < 6 && frequenzaHz < clockSetting) {
+        clockSetting /= 2;
+        clockDiv++;
+    }
+    // Compensate for the duplicate fosc/64
+    if (clockDiv == 6)
+    clockDiv = 7;
+    // Invert the SPI2X bit
+    clockDiv ^= 0x1;
+
+    // Pack into the SPISettings class
+    spcr = _BV(SPE) | _BV(MSTR) | ((bitOrder == BitOrder::LSBFirst) ? _BV(DORD) : 0) |
+    (dataMode & 0x0C) | ((clockDiv >> 1) & 0x03);
+    spsr = clockDiv & 0x01;
+}
+
+
 
 // Inizializzazione di SPI
 // Chiamato una sola volta, all'interno di `init()`
 //
 bool RFM69::Spi::inizializza() {
 
-    if(!SPI_HAS_TRANSACTION) return false;
+    // ### Inizializza l'intefaccia SPI ###
 
-    // Inizializza la classe SPI di Arduino
-    SPI.begin();
+    // L'interfaccia SPI di ATMega328p può funzionare sia come master sia come
+    // slave. Per gestire questa seconda funzione deve possedere un pin SS (per
+    // ATMega328p è il pin che Arduino chiama 10). Se SS viene messo a terra
+    // l'interfaccia passerà automaticamente ed immediatamente in modo slave.
+    // Quindi se si intende usare quel pin come input altrove nel programma SPI
+    // deve essere disabilitato e riabilitato solo durante i trasferimenti.
+    //
+    // Questo programma permette all'utente di usare il pin SS come input.
+
+
+    // Set direction register for SCK and MOSI pin.
+    // MISO pin automatically overrides to INPUT.
+    pinMode(SCK, OUTPUT);
+    pinMode(MOSI, OUTPUT);
 
     // A questo punto l'interfaccia SPI è quasi pronta, manca solo l'impostazione
     // del pin SS (Slave Select) collegato alla radio.
     pinMode(ss, OUTPUT);
     digitalWrite(ss, HIGH);
 
-    // L'interfaccia SPI è pronta, e non ci si dovrà più occupare della sua impotazione
-    // se non si usa un altro dispositivo con requisiti diversi dalla radio.
-    // Ma...
-
-    // ...ATTENZIONE!
-    // L'interfaccia SPI di ATMega328p può funzionare sia come master sia come
-    // slave. Per gestire questa seconda funzione deve possedere un pin SS (per
-    // ATMega328p è il pin che Arduino chiama 10). Se SS viene messo a terra
-    // l'interfaccia passerà automaticamente ed immediatamente in modo slave.
-    // Quindi se il pin SS è usato come input da qualche altra parte del programma
-    // (il che non costituisce un problema in sé) bisognerà, prima di ogni utilizzo
-    // di SPI, assicurarsi che la modalità selezionata sia ancora master, e rendere
-    // il pin SS un OUTPUT durante la comunicazione per evitare l'interruzzione
-    // inaspettata di quest'ultima.
 
     delay(20);
 
     usaInIsr(false);
 
     return true;
+
 }
 
 
@@ -96,42 +118,34 @@ void RFM69::Spi::scriviRegistro(uint8_t addr, uint8_t val) {
 
 
 
-// "Incapsulamento" della funzione `SPI.tranfer`, con l'aggiunta di un valore di
-// default per il byte da inviare (utile se si è interessati solo alla ricezione)
+// Esegue una transizione SPI,c ioè invia un byte e ne riceve uno contemporaneamente
+//
 uint8_t RFM69::Spi::trasferisciByte(uint8_t byte) {
-    return SPI.transfer(byte);
+    SPDR = byte;
+    while (!(SPSR & _BV(SPIF))) ; // wait
+    return SPDR;
 }
 
 
 // Prepara la comunicazione SPI.
-// Il valore restituito deve essere passato come argomento alla funzione `terminaTransfer()`
 //
 void RFM69::Spi::preparaTrasferimento() {
 
     // Blocca gli interrupt
     if(gestisciInterrupt) cli();
 
-    // # Impedisci al pin SS (10 su Arduino UNO) di mettere improvvisamente SPI in
-    // modalità slave rendendolo temporeaneamente OUTPUT (se non lo è già)
-    // Attenzione: si tratta del pin SS, #defined da qualche parte da Arduino,
-    // non del pin ss, membro privato di questa classe!
-    // stato del pin #
-
-    // Trova l'indirizzo del bit corrispondente a SS in DDR (Data Direction Register)
-    uint8_t bit = digitalPinToBitMask(SS); //SS, non ss
-    volatile uint8_t *reg = portModeRegister(digitalPinToPort(SS)); //SS, non ss
-
-    // Se il bit non è impostato, la porta è usata come INPUT e potrebbe causare
-    // un cambio di modalità di SPI
-    if(!(*reg & bit)) {
-        pinSSInput = true;
-        pinMode(SS, OUTPUT); //SS, non ss
-    }
+    // Trova lo stato attuale del pin SS per reimpostarlo alla fine del
+    // trasferimento
+    uint8_t port = digitalPinToPort(SS);
+    uint8_t bit = digitalPinToBitMask(SS);
+    volatile uint8_t *reg = portModeRegister(port);
+    if(!(*reg & bit)) pinSSInput = true;
     else pinSSInput = false;
 
+    if(pinSSInput) pinMode(SS, OUTPUT);
 
-    // Inizia la transiszione
-    SPI.beginTransaction(SPISettings(frequenza, bitOrder, dataMode));
+    SPCR = spcr;
+    SPSR = spsr;
 
     // Attiva il pin SS scelto per comunicare con la radio (potrebbe essere anche
     // quello trattato sopra)
@@ -142,15 +156,15 @@ void RFM69::Spi::preparaTrasferimento() {
 
 
 // Termina la comunicazione SPI.
-// L'argomento è il valore restituito da `preparaTransfer()`
 //
 void RFM69::Spi::terminaTrasferimento() {
 
     // Disattiva la comunicazione (SS high)
     digitalWrite(ss, HIGH);
 
-    // Termina la transiszione
-    SPI.endTransaction();
+    // Disabilita SPI per evitare che entri in slave mode (SPI entra in Slave
+    // Mode se il pin SS è un input e passa al livello logico 0)
+    SPCR &= ~(_BV(SPE));
 
     // Reimposta la direzione di pinSS come era prima della comunicazione
     if(pinSSInput) pinMode(SS, INPUT);

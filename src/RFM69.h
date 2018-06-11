@@ -25,7 +25,6 @@
 
 
 #include <Arduino.h>
-#include <SPI.h>
 
 class RFM69 {
 
@@ -899,11 +898,12 @@ private:
 
         // Impostazioni
         const uint8_t ss;
-        const uint32_t frequenza;
-        const BitOrder bitOrder;
-        const DataMode dataMode;
+        // calcolati in base a un input "leggibile"
+        uint8_t spcr;
+        uint8_t spsr;
 
-        // stato del pin SS (il 10 su Arduino UNO), controllato a ogni trasferimento
+        // L'utente desidera usare il pin SS (10 su Arduino UNO) come input
+        // altrove nel programma
         bool pinSSInput;
 
         // deve essere false quando SPI è usata in un'ISR
