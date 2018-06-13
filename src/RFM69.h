@@ -820,7 +820,7 @@ private:
     // Informazioni sull'ultimo messaggio ricevuto
     volatile InfoMessaggio ultimoMessaggio;
     // pointer al buffer in cui l'ISR copia la memoria FIFO del messaggio ricevuto
-    uint8_t* buffer = nullptr;
+    volatile uint8_t* buffer = nullptr;
 
 
     // totale di messaggi inviati dall'ultima inizializzazione

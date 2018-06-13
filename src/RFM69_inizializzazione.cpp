@@ -261,9 +261,7 @@ spi(pinSS,
 
 // Destructor
 RFM69::~RFM69() {
-    if(buffer != nullptr) {
-        free(buffer);
-    }
+    if(buffer != nullptr) free((void*)buffer);
     nrIstanze--;
 }
 
@@ -355,9 +353,9 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
     // # Allocazione di un'array da usare come buffer #
     // Il buffer potrebbe essere già stato allocato in una chimata precedente a
     // questa funzione
-    if(buffer != nullptr) free(buffer);
+    if(buffer != nullptr) free((void*)buffer);
     // Allocazione del (nuovo) buffer
-    buffer = (uint8_t*) malloc(sizeof(uint8_t) * lunghezzaMaxMessaggio);
+    buffer = (volatile uint8_t *) malloc(sizeof(uint8_t) * lunghezzaMaxMessaggio);
     lungMaxMessEntrata = lunghezzaMaxMessaggio;
 
 
