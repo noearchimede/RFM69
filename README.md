@@ -1,12 +1,6 @@
 Driver Arduino per i moduli radio RFM69
 =======================================
 
-***Note*** *This library is written and commented in Italian. Please
-[contact me](mailto:noearchimede@gmail.com) if you'd like to get a version of
-my code with class members names and documentation in English*.
-
----
-
 **Autore**   Noè Archimede Pezzoli<br>
 **Data**  Febbraio 2018<br>
 
