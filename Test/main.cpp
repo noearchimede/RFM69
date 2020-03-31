@@ -3,7 +3,7 @@
 // di test o di esempio presenti nella cartella RFM69/Esempi.
 // Chiaramente è possibile selezionare un solo programma alla volta.
 // Numero del programma da compilare
-#define PROGRAMMA 3
+#define PROGRAMMA 1
 
 
 #if PROGRAMMA == 1

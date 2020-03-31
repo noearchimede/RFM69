@@ -11,7 +11,7 @@ radio.
 
 // #define MODULO_1 o MODULO_2 per compilare uno dei due programmi
 //------------------------------------------------------------------------------
-#define MODULO_1
+#define MODULO_2
 // #define MODULO_2
 //------------------------------------------------------------------------------
 
