@@ -11,6 +11,7 @@ Il file è suddiviso in 5 sezioni:
 4. Constructor e destructor
 5. Inizializzazione
 6. Debug
+7. Funzione testConnessione()
 
 */
 
@@ -623,4 +624,13 @@ void RFM69::stampaRegistriSerial(HardwareSerial& serial) {
 
 uint8_t RFM69::valoreRegistro(uint8_t indirizzo) {
     return spi.leggiRegistro(indirizzo);
+}
+
+
+
+// ### 8. testConnessione ** //
+
+uint8_t RFM69::testConnessione() {
+    spi.inizializza();
+    return spi.leggiRegistro(0x10);
 }

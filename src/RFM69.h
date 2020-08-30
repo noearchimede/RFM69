@@ -30,6 +30,15 @@ class RFM69 {
 
 public:
 
+    //! @name Test
+    //!@{
+    //! Test della connessione con il dispositivo
+    /*! Questa funzione contatta la radio, richiede il codice della versione e
+        lo restituisce. Il valore atteso è 0x24.
+    */
+    uint8_t testConnessione();
+    //!@}
+
     //! @name Constructor
     //!@{
 
