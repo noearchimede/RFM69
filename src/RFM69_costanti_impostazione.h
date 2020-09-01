@@ -79,7 +79,7 @@ nel file RFM69_inizializzazioe.h
 
 // RFM69_12_PA_RAMP
 #define PA_RAMP_3_4_MS		             0x0
-#define PA_RAMP_2_MS		             0x1 
+#define PA_RAMP_2_MS		             0x1
 #define PA_RAMP_1_MS	                 0x2
 #define PA_RAMP_500_US		             0x3
 #define PA_RAMP_250_US		             0x4
