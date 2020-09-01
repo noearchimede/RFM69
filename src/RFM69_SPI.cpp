@@ -85,7 +85,7 @@ bool RFM69::Spi::inizializza() {
 //
 uint8_t RFM69::Spi::leggiRegistro(uint8_t addr) {
 
-    preparaTrasferimento();
+    apriComunicazione();
 
     // Il byte di indirizzo deve avere uno 0 come MSB per dire alla radio check
     // si tratta di una lettura (-> che la radio deve inviare il contenuto delay
@@ -94,7 +94,7 @@ uint8_t RFM69::Spi::leggiRegistro(uint8_t addr) {
     //il valore scritto (ad es. 0) è ignorato dalla radio
     uint8_t val = trasferisciByte();
 
-    terminaTrasferimento();
+    chiudiComunicazione();
 
     return val;
 }
@@ -105,14 +105,14 @@ uint8_t RFM69::Spi::leggiRegistro(uint8_t addr) {
 //
 void RFM69::Spi::scriviRegistro(uint8_t addr, uint8_t val) {
 
-    preparaTrasferimento();
+    apriComunicazione();
 
     // Se il MSB dell'indirizzo è 1 la radio si aspetta come secondo byte dei dati
     // da scrivere nel registro specificato
     trasferisciByte(addr | 0x80); //0x80: 1000 0000
     trasferisciByte(val);
 
-    terminaTrasferimento();
+    chiudiComunicazione();
 
 }
 
@@ -129,7 +129,7 @@ uint8_t RFM69::Spi::trasferisciByte(uint8_t byte) {
 
 // Prepara la comunicazione SPI.
 //
-void RFM69::Spi::preparaTrasferimento() {
+void RFM69::Spi::apriComunicazione() {
 
     // Blocca gli interrupt
     if(gestisciInterrupt) cli();
@@ -157,7 +157,7 @@ void RFM69::Spi::preparaTrasferimento() {
 
 // Termina la comunicazione SPI.
 //
-void RFM69::Spi::terminaTrasferimento() {
+void RFM69::Spi::chiudiComunicazione() {
 
     // Disattiva la comunicazione (SS high)
     digitalWrite(ss, HIGH);

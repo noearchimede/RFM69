@@ -843,6 +843,37 @@ private:
     uint16_t trasmissioniFalliteTimeout = 0;
 
 
+    // ### Comunicazione con la radio ###
+
+    // Bus di comunicazine generico, specializzato sotto
+    class Bus {
+    
+    public:
+
+        // funzione eseguita una sola volta all'inizio del programma
+        virtual bool inizializza() = 0;
+
+        // ### Funzioni per la manipolazione semidiretta del bus ###
+        // (usate per esempio per leggere molti byte di seguito)
+        // Que tre funzioni devono sempre essere usate insieme in questo ordine
+        void apriComunicazione();
+        uint8_t trasferisciByte(uint8_t byte = 0);
+        void chiudiComunicazione();
+
+        // ### Funzioni per l'accesso rapido a singoli registri ###
+        // leggi un registro della radio (un byte)
+        virtual uint8_t leggiRegistro(uint8_t addr) = 0;
+        // scrivi un byte in un registo della radio
+        virtual void scriviRegistro(uint8_t addr, uint8_t val) = 0;
+
+        // questa funzione deve essere chiamata prima e dopo l'utilizzo di SPI
+        // all'interno di un'ISR (prima cona rgomento `true`, dopo con `false)
+        void usaInIsr(bool x) { gestisciInterrupt = !x; }
+
+    protected:
+        // deve essere false quando SPI è usata in un'ISR
+        bool gestisciInterrupt;
+    };
 
     // ### SPI ###
 
@@ -855,7 +886,7 @@ private:
     // (questa classe scvrive nei registri di SPI le proprie impostazioni prima
     // ogni trasferimeto di dati).
     //
-    class Spi {
+    class Spi : public Bus {
 
     public:
         // Impostazioni
@@ -868,39 +899,19 @@ private:
         // frequenzaHz:  frequenza della clock di SPI
         // bitOrder:     LSBFirst o MSBFirst. La radio richiede il secondo
         // dataMode:     modalità di SPI (cpol: Clock POLarity, cpha: Clock PHAse)
-        //
         Spi(uint8_t pinSS, uint32_t frequenzaHz, BitOrder bitOrder, DataMode dataMode);
 
-        // inizializza SPI
+
+        // ### Implementazione delle funzioni virtuali di Bus
+        
         bool inizializza();
 
-
-        // ### Funzioni standard di lettura/scrittura ###
-
-
-        // leggi un registro della radio (un byte)
         uint8_t leggiRegistro(uint8_t addr);
-        // scrivi un byte in un registo della radio
         void scriviRegistro(uint8_t addr, uint8_t val);
 
-        // questa funzione deve essere chiamata prima e dopo l'utilizzo di SPI
-        // all'interno di un'ISR (prima cona rgomento `true`, dopo con `false)
-        void usaInIsr(bool x) {gestisciInterrupt = !x;}
-
-
-        // ### Funzioni di manipolazione "semidiretta" del bus ###
-
-        // Le seguenti funzioni devono sempre essere usate insieme, nell'ordine
-        // in cui sono presentate qui (prepara - trasferisci - termina)
-
-        // prepara il trasferimento di dati su SPI. Deve essere chiamato prima
-        // di ogni chiamata a `leggiRegistro` o `scriviRegistro`
-        void preparaTrasferimento();
-        // Trasferisci un byte tramite SPI da Master a Slave o viceversa
+        void apriComunicazione();
         uint8_t trasferisciByte(uint8_t byte = 0);
-        // termina il trasferimento di dati su SPI. Deve essere chiamato dopo
-        // di ogni chiamata a `leggiRegistro` o `scriviRegistro`
-        void terminaTrasferimento();
+        void chiudiComunicazione();
 
 
     private:
@@ -914,9 +925,6 @@ private:
         // L'utente desidera usare il pin SS (10 su Arduino UNO) come input
         // altrove nel programma
         bool pinSSInput;
-
-        // deve essere false quando SPI è usata in un'ISR
-        bool gestisciInterrupt;
 
     };
     // `spi` è l'unica istanza della "classe interna" Spi di RFM69.

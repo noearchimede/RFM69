@@ -396,12 +396,12 @@ void RFM69::isr() {
         messaggiRicevuti++;
 
         // leggi tutti gli altri bytes
-        spi.preparaTrasferimento();
+        spi.apriComunicazione();
         spi.trasferisciByte(RFM69_00_FIFO);
         for(int i = 0; i < lung - 1; i++) {
             buffer[i] = spi.trasferisciByte();
         }
-        spi.terminaTrasferimento();
+        spi.chiudiComunicazione();
 
         ultimoMessaggio.tempoRicezione = millis();
         ultimoMessaggio.dimensione = lung - 1;
