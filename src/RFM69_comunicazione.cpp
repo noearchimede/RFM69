@@ -445,7 +445,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     uint8_t regOpMode = spi.leggiRegistro(RFM69_01_OP_MODE) & 0xE3;
 
     // Imposta i 3 bit che stabiliscono la modalità
-    uint8_t codiceMod;
+    uint8_t codiceMod = 0x0;
     switch(mod) {
         case Modalita::sleep:   codiceMod = 0x0;    break;
         // per entrare in modalità listen la radio deve essere in standby
@@ -455,7 +455,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
         case Modalita::tx:      codiceMod = 0x3;    break;
         case Modalita::rx:      codiceMod = 0x4;    break;
     }
-    regOpMode |= codiceMod << 2;
+    regOpMode |= (codiceMod << 2);
 
     // *Listen* (1/3) - Disattiva
     if (modalita == Modalita::listen) {
@@ -486,7 +486,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
         // Aspetta che la radio sia pronta (questa flag è 0 durante il cambiamento di
         // modalità)
         unsigned long inizioAttesa = millis();
-        while(!spi.leggiRegistro(RFM69_27_IRQ_FLAGS_1) & RFM69_FLAGS_1_MODE_READY) {
+        while((!spi.leggiRegistro(RFM69_27_IRQ_FLAGS_1)) & RFM69_FLAGS_1_MODE_READY) {
             if(inizioAttesa + 100 < millis()) return Errore::modTimeout;
         }
     }
