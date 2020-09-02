@@ -117,6 +117,17 @@ void RFM69::Spi::scriviRegistro(uint8_t addr, uint8_t val) {
 }
 
 
+// Legge una sequenza di bytes adiacenti
+//
+void RFM69::Spi::leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) {
+    apriComunicazione();
+    trasferisciByte(addr0);
+    for(unsigned int i = 0; i < len; i++) {
+        data[i] = trasferisciByte();
+    }
+    chiudiComunicazione();
+}
+
 
 // Esegue una transizione SPI,c ioè invia un byte e ne riceve uno contemporaneamente
 //

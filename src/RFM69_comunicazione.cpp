@@ -100,14 +100,14 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
     // Il primo byte contiene la lunghezza del messaggio compresa l'intestazione
     // ma sé stesso escluso.
     // Anche le radio useranno questo valore per inviare/ricevere il pacchetto.
-    spi.scriviRegistro(RFM69_00_FIFO, lunghezza + 1);
+    bus->scriviRegistro(RFM69_00_FIFO, lunghezza + 1);
 
     // Il secondo byte è l'intestazione della classe
-    spi.scriviRegistro(RFM69_00_FIFO, intestazione);
+    bus->scriviRegistro(RFM69_00_FIFO, intestazione);
 
     // Tutti gli altri bytes sono il messaggio dell'utente
     for(int i = 0; i < lunghezza; i++) {
-        spi.scriviRegistro(RFM69_00_FIFO, messaggio[i]);
+        bus->scriviRegistro(RFM69_00_FIFO, messaggio[i]);
     }
 
     cambiaModalita(Modalita::tx);
@@ -185,12 +185,12 @@ void RFM69::inviaAck() {
     }
 
     // Lunghezza, obbligatoria perché serve alla radio (1)
-    spi.scriviRegistro(RFM69_00_FIFO, 1);
+    bus->scriviRegistro(RFM69_00_FIFO, 1);
 
     // Intestazione, segnala che il messaggio è un ACK
     Intestazione intestazione;
     intestazione.bit.ack = 1;
-    spi.scriviRegistro(RFM69_00_FIFO, intestazione.byte);
+    bus->scriviRegistro(RFM69_00_FIFO, intestazione.byte);
 
     cambiaModalita(Modalita::tx);
     trasmissioneAck = true;
@@ -301,10 +301,10 @@ void RFM69::isr() {
 
     // È appena stato trasmesso un messaggio
     if(trasmissioneMessaggio) {
-        spi.usaInIsr(true);
+        bus->usaInIsr(true);
         if(attesaAck) cambiaModalita(Modalita::rx, false);
         else cambiaModalita(modalitaDefault, false);
-        spi.usaInIsr(false);
+        bus->usaInIsr(false);
         trasmissioneMessaggio = false;
         messaggiInviati++;
         return;
@@ -312,9 +312,9 @@ void RFM69::isr() {
 
     // È appena stato trasmesso un ACK
     if(trasmissioneAck) {
-        spi.usaInIsr(true);
+        bus->usaInIsr(true);
         cambiaModalita(modalitaDefault, false);
-        spi.usaInIsr(false);
+        bus->usaInIsr(false);
         trasmissioneAck = false;
         return;
     }
@@ -325,15 +325,15 @@ void RFM69::isr() {
     if(modalita == Modalita::rx || modalita == Modalita::listen) {
         // # Non si sa ancora se è un vero messaggio o solo un ACK #
 
-        spi.usaInIsr(true);
+        bus->usaInIsr(true);
 
         Modalita modPrec = modalita; // rx o listen
         cambiaModalita(Modalita::standby, false);
 
         // Leggi i primi due bytes (lunghezza e intestazione)
-        uint8_t lung = spi.leggiRegistro(RFM69_00_FIFO);
+        uint8_t lung = bus->leggiRegistro(RFM69_00_FIFO);
         Intestazione intest;
-        intest.byte = spi.leggiRegistro(RFM69_00_FIFO);
+        intest.byte = bus->leggiRegistro(RFM69_00_FIFO);
 
         if(attesaAck) {
             // Il messaggio dovrebbe essere un ACK. È però possibile che l'altra
@@ -360,9 +360,9 @@ void RFM69::isr() {
 
                 attesaAck = false;
                 ackRicevuto = true;
-                ultimoRssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+                ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
                 cambiaModalita(modalitaDefault, false);
-                spi.usaInIsr(false);
+                bus->usaInIsr(false);
                 // non c'è nient'altro da fare, un ACK non ha contenuto
                 return;
             }
@@ -384,9 +384,9 @@ void RFM69::isr() {
             // # Il messaggio è un ACK indesiderato # //
 
             ackInattesi++;
-            ultimoRssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+            ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
             cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
-            spi.usaInIsr(false);
+            bus->usaInIsr(false);
             return;
         }
 
@@ -396,19 +396,14 @@ void RFM69::isr() {
         messaggiRicevuti++;
 
         // leggi tutti gli altri bytes
-        spi.apriComunicazione();
-        spi.trasferisciByte(RFM69_00_FIFO);
-        for(int i = 0; i < lung - 1; i++) {
-            buffer[i] = spi.trasferisciByte();
-        }
-        spi.chiudiComunicazione();
+        bus->leggiSequenza(RFM69_00_FIFO, lung-1, buffer);
 
         ultimoMessaggio.tempoRicezione = millis();
         ultimoMessaggio.dimensione = lung - 1;
         ultimoMessaggio.intestazione.byte = intest.byte;
-        ultimoRssi = -(spi.leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+        ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
 
-        spi.usaInIsr(false);
+        bus->usaInIsr(false);
 
         return;
     }
@@ -442,7 +437,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     if(aspetta) delay(2);
 
     // Prepara il byte da scrivere nel registro
-    uint8_t regOpMode = spi.leggiRegistro(RFM69_01_OP_MODE) & 0xE3;
+    uint8_t regOpMode = bus->leggiRegistro(RFM69_01_OP_MODE) & 0xE3;
 
     // Imposta i 3 bit che stabiliscono la modalità
     uint8_t codiceMod = 0x0;
@@ -464,13 +459,13 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     }
 
     //Scrivi il registro RegOpMode
-    spi.scriviRegistro(RFM69_01_OP_MODE, regOpMode);
+    bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
 
     // *Listen* (2/3) - Disattiva
     if (modalita == Modalita::listen) {
         regOpMode &= !(1 << 5); // clear ListenAbort
         // Scrivi di nuovo RegOpMode senza il bit ListenAbort
-        spi.scriviRegistro(RFM69_01_OP_MODE, regOpMode);
+        bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
     }
 
 
@@ -486,7 +481,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
         // Aspetta che la radio sia pronta (questa flag è 0 durante il cambiamento di
         // modalità)
         unsigned long inizioAttesa = millis();
-        while((!spi.leggiRegistro(RFM69_27_IRQ_FLAGS_1)) & RFM69_FLAGS_1_MODE_READY) {
+        while((!bus->leggiRegistro(RFM69_27_IRQ_FLAGS_1)) & RFM69_FLAGS_1_MODE_READY) {
             if(inizioAttesa + 100 < millis()) return Errore::modTimeout;
         }
     }
@@ -495,9 +490,9 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     // Per attivare la modalita listen basta scrivere il bit 6 dopo aver
     // messo la radio in standby
     if(mod == Modalita::listen) {
-        regOpMode = spi.leggiRegistro(RFM69_01_OP_MODE);
+        regOpMode = bus->leggiRegistro(RFM69_01_OP_MODE);
         regOpMode |=  1 << 6;
-        spi.scriviRegistro(RFM69_01_OP_MODE, regOpMode);
+        bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
     }
 
     // Imposta l'interrupt generato sul pin DIO0
@@ -511,7 +506,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
         case Modalita::rx:        dio0 = 1;   break;
     }
 
-    spi.scriviRegistro(RFM69_25_DIO_MAPPING_1, dio0 << 6);
+    bus->scriviRegistro(RFM69_25_DIO_MAPPING_1, dio0 << 6);
 
     // Ricorda la modalita attuale della radio
     modalita = mod;
@@ -537,14 +532,14 @@ return Errore::ok;
 void RFM69::highPowerSettings(bool attiva) {
 
     if(attiva) {
-        spi.scriviRegistro(RFM69_13_OCP, 0x0F); // RegOcp (0x13) -> 0x0F
-        spi.scriviRegistro(RFM69_5A_TEST_PA_1, 0x5D); // RegTestPa1 (0x5A) -> 0x5D
-        spi.scriviRegistro(RFM69_5C_TEST_PA_2, 0x7C); // RegTestPa2 (0x5C) -> 0x7C
+        bus->scriviRegistro(RFM69_13_OCP, 0x0F); // RegOcp (0x13) -> 0x0F
+        bus->scriviRegistro(RFM69_5A_TEST_PA_1, 0x5D); // RegTestPa1 (0x5A) -> 0x5D
+        bus->scriviRegistro(RFM69_5C_TEST_PA_2, 0x7C); // RegTestPa2 (0x5C) -> 0x7C
     }
     else {
-        spi.scriviRegistro(RFM69_13_OCP, 0x1A); // RegOcp (0x13) -> 0x1A
-        spi.scriviRegistro(RFM69_5A_TEST_PA_1, 0x55); // RegTestPa1(0x5A) -> 0x55
-        spi.scriviRegistro(RFM69_5C_TEST_PA_2, 0x70); // RegTestPa2(0x5C) -> 0x70
+        bus->scriviRegistro(RFM69_13_OCP, 0x1A); // RegOcp (0x13) -> 0x1A
+        bus->scriviRegistro(RFM69_5A_TEST_PA_1, 0x55); // RegTestPa1(0x5A) -> 0x55
+        bus->scriviRegistro(RFM69_5C_TEST_PA_2, 0x70); // RegTestPa2(0x5C) -> 0x70
     }
 }
 

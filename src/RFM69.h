@@ -42,21 +42,25 @@ public:
     //! @name Constructor
     //!@{
 
-    //! Constructor da usare se il pin RESET della radio non è connesso al uC.
-    /*! @param pinSS          Numero del pin Slave Select
-        @param pinInterrupt   Numero del pin attraverso il quale la radio genera
-            un interrupt sul uC. Deve ovviamente essere un pin di interrupt.
-    */
-    RFM69(uint8_t pinSS, uint8_t pinInterrupt);
-
-    //! Constructor da usare se il pin RESET è connesso al uC.
+    //! Constructor per radio connessa tramite SPI
     /*! @param pinSS          Numero del pin Slave Select
         @param pinInterrupt   Numero del pin attraverso il quale la radio genera
             un interrupt sul uC. Deve ovviamente essere un pin di interrupt.
         @param pinReset       Numero del pin collegato al pin RESET della radio.
-        0xFF significa che il pin di reset non è collegato.
+            0xFF significa che il pin di reset non è collegato.
     */
-    RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset);
+    RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset = 0xff);
+
+    //! Constructor per radio connessa con I2C (tramite SC18IS602B) 
+    /*! @param indirizzo    Indirizzo I2C di SC18IS602B
+        @param numeroSS     Numero del pin Slave Select di SC18IS602B utilizzato
+            per la radio
+        @param pinInterrupt   Numero del pin attraverso il quale la radio genera
+            un interrupt sul uC. Deve ovviamente essere un pin di interrupt.
+        @param pinReset       Numero del pin collegato al pin RESET della radio.
+            0xFF significa che il pin di reset non è collegato.
+    */
+   RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset);
 
     //!@}
     /*! @name Inizializzazione
@@ -771,7 +775,6 @@ private:
 
 
     // Pin
-    const uint8_t pinSS;
     const uint8_t pinInterrupt;
     const uint8_t pinReset; //non usato se `haReset == false`
     // Il microcontrollore può controllare il pin Reset della radio
@@ -850,21 +853,19 @@ private:
     
     public:
 
+        // destructor
+        virtual ~Bus() {}
+
         // funzione eseguita una sola volta all'inizio del programma
         virtual bool inizializza() = 0;
 
-        // ### Funzioni per la manipolazione semidiretta del bus ###
-        // (usate per esempio per leggere molti byte di seguito)
-        // Que tre funzioni devono sempre essere usate insieme in questo ordine
-        void apriComunicazione();
-        uint8_t trasferisciByte(uint8_t byte = 0);
-        void chiudiComunicazione();
-
-        // ### Funzioni per l'accesso rapido a singoli registri ###
         // leggi un registro della radio (un byte)
         virtual uint8_t leggiRegistro(uint8_t addr) = 0;
         // scrivi un byte in un registo della radio
         virtual void scriviRegistro(uint8_t addr, uint8_t val) = 0;
+
+        // leggi una sequenza di len bytes a partire da addr0 e salvali in data
+        virtual void leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) = 0;
 
         // questa funzione deve essere chiamata prima e dopo l'utilizzo di SPI
         // all'interno di un'ISR (prima cona rgomento `true`, dopo con `false)
@@ -877,7 +878,6 @@ private:
 
     // ### SPI ###
 
-    // Gestione di SPI (membro privato di RFM69)
     // Questa classe è scritta per interagire con la radio RFM69, non con
     // un dispositivo qualsiasi, anche se probabilmente si adatterebbe molto
     // bene anche a questo scopo.
@@ -904,17 +904,19 @@ private:
 
         // ### Implementazione delle funzioni virtuali di Bus
         
-        bool inizializza();
+        bool inizializza() override;
 
-        uint8_t leggiRegistro(uint8_t addr);
-        void scriviRegistro(uint8_t addr, uint8_t val);
+        uint8_t leggiRegistro(uint8_t addr) override;
+        void scriviRegistro(uint8_t addr, uint8_t val) override;
+
+        void leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) override;
+
+
+    private:
 
         void apriComunicazione();
         uint8_t trasferisciByte(uint8_t byte = 0);
         void chiudiComunicazione();
-
-
-    private:
 
         // Impostazioni
         const uint8_t ss;
@@ -927,8 +929,38 @@ private:
         bool pinSSInput;
 
     };
-    // `spi` è l'unica istanza della "classe interna" Spi di RFM69.
-    Spi spi;
+
+
+    // ### I2C (tramite SC18IS602B) ###
+
+    class SC18IS602B : public Bus {
+    
+    public:
+
+        SC18IS602B(uint8_t indirizzo, uint8_t numerSS);
+
+        // ### Implementazione delle funzioni virtuali di Bus
+        
+        bool inizializza() override;
+
+        uint8_t leggiRegistro(uint8_t addr) override;
+        void scriviRegistro(uint8_t addr, uint8_t val) override;
+
+        void leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) override;
+
+    private:
+
+        // indirizzo I2C di SC18IS602B
+        const uint8_t indirizzo;
+
+        // pin Chip Select di SC18IS602B usato per la radio (1-4)
+        const uint8_t codiceCS;
+
+    };
+
+    // Istanza della classe che gestisce la comunicazione con il chip
+    // (allocata dinamicamente nel constructor)
+    Bus* bus;
 
 };
 

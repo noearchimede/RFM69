@@ -241,28 +241,38 @@ RFM69* RFM69::pointerRadio = nullptr;
 
 
 
-RFM69::RFM69(uint8_t pinSS, uint8_t pinInterrupt) :
-RFM69(pinSS, pinInterrupt, 0xff) {}
-
-
 RFM69::RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset) :
-pinSS(pinSS),
 pinInterrupt(pinInterrupt),
 pinReset(pinReset),
 haReset(pinReset == 0xff ? false : true),
-highPower(HIGH_POWER),
-spi(pinSS,
-    200000, // impostabile, si potrebbe aggiungere come argomento al constructor
-    Spi::BitOrder::MSBFirst, // richiesto dalla radio
-    Spi::DataMode::cpol0cpha0 // richiesto dalla radio
-)
+highPower(HIGH_POWER)
 {
     nrIstanze++;
+
+    // Impostazioni SPI: la velocità è arbitraria, MSBfirst e cpol0cpha0 sono
+    // richiesti dalla radio
+    bus = new Spi(pinSS, 200000, Spi::BitOrder::MSBFirst, Spi::DataMode::cpol0cpha0);
+
 }
+
+
+RFM69::RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset) :
+pinInterrupt(pinInterrupt),
+pinReset(pinReset),
+haReset(pinReset == 0xff ? false : true),
+highPower(HIGH_POWER)
+{
+    nrIstanze++;
+
+    bus = new SC18IS602B(indirizzo, numeroSS);
+}
+
+
 
 // Destructor
 RFM69::~RFM69() {
     if(buffer != nullptr) free((void*)buffer);
+    delete bus;
     nrIstanze--;
 }
 
@@ -287,7 +297,7 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
     // ## SPI ## //
 
     // Inizializzazione di SPI
-    if(!spi.inizializza()) return Errore::initInitSPIFallita;
+    if(!bus->inizializza()) return Errore::initInitSPIFallita;
 
 
     // ## RESET ## //
@@ -314,7 +324,7 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
     // per cui ho scritto questo programma (RFM69HCW ISM TRANSCEIVER MODULE v1.1)
     // il valore è 0x24. Se il valore è differente non è garantito che questo
     // programma funzioni.
-    uint8_t versioneChip = spi.leggiRegistro(RFM69_10_VERSION);
+    uint8_t versioneChip = bus->leggiRegistro(RFM69_10_VERSION);
 
     // Se la versione risulata un byte uniforme, probabilmente nessun dispositivo
     // ha risposto sul bus SPI
@@ -405,7 +415,7 @@ bool RFM69::caricaImpostazioni() {
     int registro = 0;
     while(registro < RFM69_ULTIMO_REGISTRO) {
         if(!RFM69_RESERVED(registro)) {
-            spi.scriviRegistro(registro, VALORE_REGISTRI(indice));
+            bus->scriviRegistro(registro, VALORE_REGISTRI(indice));
             indice++;
         }
         registro ++;
@@ -418,7 +428,7 @@ bool RFM69::caricaImpostazioni() {
     int i = 0, r = 0;
     while(r <= RFM69_ULTIMO_REGISTRO) {
         if(!RFM69_RESERVED(r)) {
-            uint8_t reg = spi.leggiRegistro(r);
+            uint8_t reg = bus->leggiRegistro(r);
             uint8_t val = VALORE_REGISTRI(i);
             Serial.print("Reg 0x"); Serial.print(r, HEX);
             Serial.print(": 0x"); Serial.print(reg, HEX);
@@ -443,7 +453,7 @@ bool RFM69::caricaImpostazioni() {
     // Il registro PaLevel non può avere valore 0x0 (non avrebbe senso) e tutti
     // i suoi bits sono utilizzati e impostati da questo programma
     // l'indice è 16 e non 17 perché c'è di mezzo un registro RESERVED
-    if(spi.leggiRegistro(RFM69_11_PA_LEVEL) != VALORE_REGISTRI(16)) return false;
+    if(bus->leggiRegistro(RFM69_11_PA_LEVEL) != VALORE_REGISTRI(16)) return false;
 
     return true;
 }
@@ -504,7 +514,7 @@ bool RFM69::impostaPotenzaTx(int dBm) {
     uint8_t paLevel = 0;
     paLevel = (pa0 << 7) | (pa1 << 6) | (pa2 << 5) | outPow;
 
-    spi.scriviRegistro(RFM69_11_PA_LEVEL, paLevel);
+    bus->scriviRegistro(RFM69_11_PA_LEVEL, paLevel);
 
     return true;
 }
@@ -526,10 +536,10 @@ int RFM69::impostaBitRate(uint32_t bitRate) {
     uint16_t val = (32000000.00 / (float)bitRate) + 0.5;
 
     // Scrivi i registri
-    spi.scriviRegistro(RFM69_03_BITRATE_MSB, val >> 8);
-    spi.scriviRegistro(RFM69_04_BITRATE_LSB, val);
+    bus->scriviRegistro(RFM69_03_BITRATE_MSB, val >> 8);
+    bus->scriviRegistro(RFM69_04_BITRATE_LSB, val);
 
-    if(bitRate == (((uint16_t)spi.leggiRegistro(RFM69_03_BITRATE_MSB) << 8) | spi.leggiRegistro(RFM69_04_BITRATE_LSB)))
+    if(bitRate == (((uint16_t)bus->leggiRegistro(RFM69_03_BITRATE_MSB) << 8) | bus->leggiRegistro(RFM69_04_BITRATE_LSB)))
     return Errore::ok;
 
     return Errore::errore;
@@ -549,10 +559,10 @@ int RFM69::impostaFreqDev(uint32_t freqDev) {
     uint16_t val = (freqDev / (32000000.0 / 524288.0) ) + 0.5;
 
     // Scrivi i registri e assicurati che sianon stati scritti correttamente
-    spi.scriviRegistro(RFM69_05_FDEV_MSB, val << 8);
-    spi.scriviRegistro(RFM69_06_FDEF_LSB, val);
+    bus->scriviRegistro(RFM69_05_FDEV_MSB, val << 8);
+    bus->scriviRegistro(RFM69_06_FDEF_LSB, val);
 
-    if(freqDev == (((uint16_t)spi.leggiRegistro(RFM69_05_FDEV_MSB) << 8) | spi.leggiRegistro(RFM69_06_FDEF_LSB)))
+    if(freqDev == (((uint16_t)bus->leggiRegistro(RFM69_05_FDEV_MSB) << 8) | bus->leggiRegistro(RFM69_06_FDEF_LSB)))
     return Errore::ok;
 
     return Errore::errore;
@@ -571,13 +581,13 @@ int RFM69::impostaFrequenzaMHz(uint32_t freq) {
 
     // Scrive il valore ottenuto nei registri
     //Registro RegFrfMsb
-    spi.scriviRegistro(RFM69_07_FRF_MSB, freq >> 16);
+    bus->scriviRegistro(RFM69_07_FRF_MSB, freq >> 16);
     //Registro RegFrfMid
-    spi.scriviRegistro(RFM69_08_FRF_MID, freq >> 8);
+    bus->scriviRegistro(RFM69_08_FRF_MID, freq >> 8);
     //Registro RegFrfLsb
-    spi.scriviRegistro(RFM69_09_FRF_LSB, freq);
+    bus->scriviRegistro(RFM69_09_FRF_LSB, freq);
 
-    if(freq == (((uint32_t)spi.leggiRegistro(RFM69_07_FRF_MSB) << 16) | (spi.leggiRegistro(RFM69_08_FRF_MID) << 8) | (spi.leggiRegistro(RFM69_09_FRF_LSB))))
+    if(freq == (((uint32_t)bus->leggiRegistro(RFM69_07_FRF_MSB) << 16) | (bus->leggiRegistro(RFM69_08_FRF_MID) << 8) | (bus->leggiRegistro(RFM69_09_FRF_LSB))))
     return Errore::ok;
 
     return Errore::errore;
@@ -612,7 +622,7 @@ void RFM69::stampaRegistriSerial(HardwareSerial& serial) {
         else lineaVuota = false;
 
         //leggi il registro e stampane indirizzo e valore
-        uint8_t val = spi.leggiRegistro(i);
+        uint8_t val = bus->leggiRegistro(i);
         serial.print("0x"); serial.print(i,HEX);
         serial.print("\t\t");
         serial.print("0x"); serial.print(val, HEX);
@@ -623,7 +633,7 @@ void RFM69::stampaRegistriSerial(HardwareSerial& serial) {
 
 
 uint8_t RFM69::valoreRegistro(uint8_t indirizzo) {
-    return spi.leggiRegistro(indirizzo);
+    return bus->leggiRegistro(indirizzo);
 }
 
 
@@ -631,6 +641,6 @@ uint8_t RFM69::valoreRegistro(uint8_t indirizzo) {
 // ### 8. testConnessione ** //
 
 uint8_t RFM69::testConnessione() {
-    spi.inizializza();
-    return spi.leggiRegistro(0x10);
+    bus->inizializza();
+    return bus->leggiRegistro(0x10);
 }
