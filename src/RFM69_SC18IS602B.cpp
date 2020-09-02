@@ -86,16 +86,10 @@ bool RFM69::SC18IS602B::inizializza() {
 // Legge un registro della radio
 //
 uint8_t RFM69::SC18IS602B::leggiRegistro(uint8_t addr) {
-
-    Wire.beginTransmission(indirizzo);
-    Wire.write(codiceCS & 0xF); // maschera i 4 MSB, riservati ad altri comandi
-    Wire.write(addr);
-    Wire.write(0); // durante questa trasmissione la radio invia i dati richiesti
-    Wire.endTransmission();
-    Wire.requestFrom(indirizzo, (uint8_t)2); // cast per evitare un avviso del compilatore
-    Wire.read();
-    return Wire.read();
-
+    uint8_t ret;
+    sc18_inviaDati(codiceCS, addr, 1, nullptr);
+    sc18_richiediDati(1, &ret);
+    return ret;
 }
 
 
@@ -103,32 +97,52 @@ uint8_t RFM69::SC18IS602B::leggiRegistro(uint8_t addr) {
 // Scrive su un registro della radio
 //
 void RFM69::SC18IS602B::scriviRegistro(uint8_t addr, uint8_t val) {
-
-    Wire.beginTransmission(indirizzo);
-    Wire.write(codiceCS & 0xF); // maschera i 4 MSB, riservati ad altri comandi
-    Wire.write(addr | 0x80);
-    Wire.write(val);
-    Wire.endTransmission();
-
+    sc18_inviaDati(codiceCS, addr | 0x80, 1, &val);
 }
 
 
 // Legge una sequenza di bytes adiacenti
 //
 void RFM69::SC18IS602B::leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) {
+    sc18_inviaDati(codiceCS, addr0, len, nullptr);
+    sc18_richiediDati(len, data);
+}
 
-    Wire.beginTransmission(indirizzo);
-    Wire.write(codiceCS & 0xF);
-    Wire.write(addr0); // * (vedi sotto)
-    for(unsigned int i = 0; i < len; i++) {
-        Wire.write(0); // la radio sta mandando dati
+
+
+void RFM69::SC18IS602B::sc18_inviaDati (uint8_t byte1, uint8_t byte2,
+                            uint8_t nrAltriByte, uint8_t* altriByte = nullptr) {
+
+    Wire.beginTransmission(indirizzo); 
+    Wire.write(byte1);
+    Wire.write(byte2);
+    if(altriByte == nullptr) { // scrivi zeri "che la radio sostituirà con i suoi dati"
+        for(uint8_t i = 0; i < nrAltriByte; i++) {
+            Wire.write(0);
+        } 
+    }
+    else { // data != nullptr, scrivi i dati da inviare
+        for(uint8_t i = 0; i < nrAltriByte; i++) {
+            Wire.write(*(altriByte + i));
+        }
     }
     Wire.endTransmission();
+}
 
-    Wire.requestFrom(indirizzo, (uint8_t)(len + 1)); // +1 è il byte corrispondente a *
-    Wire.read(); // scarta il byte corrispondente a *
-    for(unsigned int i = 0; i < len; i++) {
-        data[i] = Wire.read();
+
+void RFM69::SC18IS602B::sc18_richiediDati(uint8_t dataLen, uint8_t * data) {
+
+    Wire.requestFrom(indirizzo, dataLen + 1); // +1: vedi commento sotto
+
+    // uint8_t byte1; // il primo byte non serve perché ogni comunicazione SPI
+    //                // inizia con l'indirizzo di un registro (e la radio
+    //                // non risponde durante la trasmissione dell'indirizzo)
+    // byte1 = Wire.read();
+    Wire.read(); // scarta il primo byte (vedi commento sopra)
+    
+    for(unsigned int i = 0; i < dataLen; i++) {
+        *(data + i) = Wire.read();
     }
 
 }
+

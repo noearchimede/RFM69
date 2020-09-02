@@ -950,9 +950,17 @@ private:
 
     private:
 
+        // funzioni per leggere e scrivere il Data Buffer di SC18IS602B
+        //  byte1: primo byte da inviare (tipicamente function ID di SC18)
+        //  byte2: secondo byte (tipicamente indirizzo di un registro della radio)
+        //  nrAltriByte: numero di byte da inviare oltre ai primi due.
+        //  altriByte: il resto dei byte da inviare. Niente per inviare zeri.
+        void sc18_inviaDati(uint8_t byte1, uint8_t byte2, uint8_t nrAltriByte,
+                            uint8_t* altriByte = nullptr);
+        void sc18_richiediDati(uint8_t dataLen, uint8_t * data);
+
         // indirizzo I2C di SC18IS602B
         const uint8_t indirizzo;
-
         // pin Chip Select di SC18IS602B usato per la radio (1-4)
         const uint8_t codiceCS;
 
