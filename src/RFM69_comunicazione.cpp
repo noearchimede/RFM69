@@ -481,8 +481,8 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
         // Aspetta che la radio sia pronta (questa flag è 0 durante il cambiamento di
         // modalità)
         unsigned long inizioAttesa = millis();
-        while((!bus->leggiRegistro(RFM69_27_IRQ_FLAGS_1)) & RFM69_FLAGS_1_MODE_READY) {
-            if(inizioAttesa + 100 < millis()) return Errore::modTimeout;
+        while(!(bus->leggiRegistro(RFM69_27_IRQ_FLAGS_1) & RFM69_FLAGS_1_MODE_READY)) {
+            if(inizioAttesa + 3 < millis()) return Errore::modTimeout;
         }
     }
 
