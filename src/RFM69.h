@@ -60,7 +60,7 @@ public:
         @param pinReset       Numero del pin collegato al pin RESET della radio.
             0xFF significa che il pin di reset non è collegato.
     */
-   RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset);
+   RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset = 0xff);
 
     //!@}
     /*! @name Inizializzazione
