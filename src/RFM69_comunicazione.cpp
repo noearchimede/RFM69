@@ -293,10 +293,23 @@ void RFM69::isrCaller() {
 }
 
 
+// Questa ISR dura chiaramente troppo tempo: da 2 a 5 ms in operazione
+// normale e fino a 8 ms in caso di errori. Abilitare gli interrupt
+// all'interno di un'ISR non è una buona idea, ma in questo caso non sembra
+// creare particolari problemi (si tratta di un interrupt generato dall'esterno,
+// relativamente lento e quindi poco )
+#define RFM69_ABILITA_INTERRUPT_IN_ISR
 
 // Reagisce agli interrupt generati dalla radio sul suo pin DI0
 //
 void RFM69::isr() {
+
+    #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
+    detachInterrupt(numeroInterrupt);
+    sei();
+    #endif
+    
+    // TEST DURATA isrStart = micros();
     // ## Modalità TX, interrupt su `PacketSent` ## //
 
     // È appena stato trasmesso un messaggio
@@ -307,6 +320,11 @@ void RFM69::isr() {
         bus->usaInIsr(false);
         trasmissioneMessaggio = false;
         messaggiInviati++;
+
+        // TEST DURATA isrStop=micros();
+        #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
+        attachInterrupt(numeroInterrupt, isrCaller, RISING);
+        #endif
         return;
     }
 
@@ -316,6 +334,11 @@ void RFM69::isr() {
         cambiaModalita(modalitaDefault, false);
         bus->usaInIsr(false);
         trasmissioneAck = false;
+
+        // TEST DURATA isrStop=micros();
+        #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
+        attachInterrupt(numeroInterrupt, isrCaller, RISING);
+        #endif
         return;
     }
 
@@ -364,6 +387,11 @@ void RFM69::isr() {
                 cambiaModalita(modalitaDefault, false);
                 bus->usaInIsr(false);
                 // non c'è nient'altro da fare, un ACK non ha contenuto
+
+                // TEST DURATA isrStop=micros();
+                #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
+                attachInterrupt(numeroInterrupt, isrCaller, RISING);
+                #endif
                 return;
             }
         }
@@ -387,6 +415,11 @@ void RFM69::isr() {
             ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
             cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
             bus->usaInIsr(false);
+
+            // TEST DURATA isrStop=micros();
+            #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
+            attachInterrupt(numeroInterrupt, isrCaller, RISING);
+            #endif
             return;
         }
 
@@ -405,6 +438,10 @@ void RFM69::isr() {
 
         bus->usaInIsr(false);
 
+        // TEST DURATA isrStop=micros();
+        #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
+        attachInterrupt(numeroInterrupt, isrCaller, RISING);
+        #endif
         return;
     }
 
@@ -480,6 +517,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     if(aspetta) {
         // Aspetta che la radio sia pronta (questa flag è 0 durante il cambiamento di
         // modalità)
+        // timeout: le transizioni più lunghe sembrano durare circa 1 ms (empirico)
         unsigned long inizioAttesa = millis();
         while(!(bus->leggiRegistro(RFM69_27_IRQ_FLAGS_1) & RFM69_FLAGS_1_MODE_READY)) {
             if(inizioAttesa + 3 < millis()) return Errore::modTimeout;

@@ -242,8 +242,8 @@ RFM69* RFM69::pointerRadio = nullptr;
 
 
 RFM69::RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset) :
-pinInterrupt(pinInterrupt),
 pinReset(pinReset),
+numeroInterrupt(digitalPinToInterrupt(pinInterrupt)),
 haReset(pinReset == 0xff ? false : true),
 highPower(HIGH_POWER)
 {
@@ -257,13 +257,13 @@ highPower(HIGH_POWER)
 
 
 RFM69::RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset) :
-pinInterrupt(pinInterrupt),
 pinReset(pinReset),
+numeroInterrupt(digitalPinToInterrupt(pinInterrupt)),
 haReset(pinReset == 0xff ? false : true),
 highPower(HIGH_POWER)
 {
     nrIstanze++;
-
+    
     bus = new SC18IS602B(indirizzo, numeroSS);
 }
 
@@ -315,7 +315,7 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
     // RFM69HCW richiede un'attesa di almeno 10 ms tra l'accensione e il primo
     // messaggio. Questo delay li garantisce.
-    delay(50);
+    delay(20);
 
 
     // ## CONTROLLO DELLA CONNESSIONE ## //
@@ -338,9 +338,6 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
 
     // ## INTERRUPT ## //
-
-    // Preparazione dell'interrupt che gestià l'invio e la ricezione dei messaggi
-    uint8_t numeroInterrupt = digitalPinToInterrupt(pinInterrupt);
 
     // se il pin scelto come interrupt non ha questa capacità blocca l'inizializzazione
     if(numeroInterrupt == NOT_AN_INTERRUPT) return Errore::initPinInterruptNonValido;

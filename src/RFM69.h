@@ -775,8 +775,9 @@ private:
 
 
     // Pin
-    const uint8_t pinInterrupt;
     const uint8_t pinReset; //non usato se `haReset == false`
+    // Numero dell'external interrupt usato dalla radio
+    const uint8_t numeroInterrupt;
     // Il microcontrollore può controllare il pin Reset della radio
     const bool haReset;
 
@@ -969,6 +970,10 @@ private:
     // Istanza della classe che gestisce la comunicazione con il chip
     // (allocata dinamicamente nel constructor)
     Bus* bus;
+
+
+public:
+    uint32_t isrStart, isrStop;
 
 };
 
