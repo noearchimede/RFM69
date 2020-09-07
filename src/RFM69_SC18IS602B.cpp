@@ -12,42 +12,6 @@ da I2C a SPI SC18IS602B.
 #include "Wire.h" // dal framework di Arduino
 
 
-// ### Lista di "function IDs" per SC18IS602B ###
-
-#define FID_SPI_RW_0    0x0 // leggi/scrivi sul dispositivo SPI connesso a "SS0"
-#define FID_SPI_RW_1    0x1
-#define FID_SPI_RW_2    0x2
-#define FID_SPI_RW_3    0x3
-// tutte le combinazioni (FID_SPI_RW_X & FID_SPI_RW_Y) sono anche possibili
-#define FID_SPI_CONF    0xf // configura l'interfaccia SPI (parametri vedi sotto)
-#define FID_CLEAR_INT   0xf1 // rimuovi l'interrupt flag
-#define FID_IDLE        0xf2 // entra in modalità riposo (esce automaticamente
-//  se chiamato sul bus i2c)
-
-// nota: oltre a queste Function ID ci sono quelle per l'utilizzo dei quattro
-// pin SS (Slave Select) come GPIO (General Purpose Input/Output), che non sono
-// però implementate in questa classe 
-
-
-// ### Lista dei parameteri di configurazione SPI (cfr. p. 7 del datasheet) ###
-
-// bitshift
-#define SHIFT_ORDER         5
-#define SHIFT_MODE          2
-#define SHIFT_FREQUENCY     0
-// valori 
-#define ORDER_MSB           0 << SHIFT_ORDER
-#define ORDER_LSB           1 << SHIFT_ORDER
-#define MODE_CPOL0CPHA0     0 << SHIFT_MODE
-#define MODE_CPOL0CPHA1     1 << SHIFT_MODE
-#define MODE_CPOL1CPHA0     2 << SHIFT_MODE
-#define MODE_CPOL1CPHA1     3 << SHIFT_MODE
-#define FREQUENCY_1843KHZ   0 << SHIFT_FREQUENCY
-#define FREQUENCY_461KHZ    1 << SHIFT_FREQUENCY
-#define FREQUENCY_115KHZ    2 << SHIFT_FREQUENCY
-#define FREQUENCY_58KHZ     3 << SHIFT_FREQUENCY
-
-
 
 // Constructor
 RFM69::SC18IS602B::SC18IS602B(uint8_t indirizzo, uint8_t numeroSS)
