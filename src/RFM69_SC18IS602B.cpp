@@ -110,9 +110,9 @@ void RFM69::SC18IS602B::leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data)
 
 
 
-void RFM69::SC18IS602B::sc18_inviaDati (uint8_t byte1, uint8_t byte2,
-                            uint8_t nrAltriByte, uint8_t* altriByte = nullptr) {
-
+void RFM69::SC18IS602B::sc18_inviaDati(uint8_t byte1, uint8_t byte2,
+                            uint8_t nrAltriByte, uint8_t* altriByte) {
+    
     Wire.beginTransmission(indirizzo); 
     Wire.write(byte1);
     Wire.write(byte2);
