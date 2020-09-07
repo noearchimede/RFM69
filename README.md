@@ -14,6 +14,10 @@ La libreria RFM69 permette di collegare due microcontrollori tramite una coppia
 di moduli radio della famiglia RFM69 di HopeRF, in particolare del modello
 [RFM69HCW](http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html).
 
+I moduli radio devono essere collegati al microcontrollore tramite un'interfaccia SPI.
+Qualora questo non fosse possibile, però, è anche possibile usare un chip di conversione tra I2C e SPI e collegare quest'ultimo tramite I2C al microcontrollore.
+Questa libreria contiene il codice necessario per controllare la radio tramite il chip SC18IS602B di NXP Semiconductors (facilemte adattabile anche a dispositivi simili, probabilmente).
+
 Il codice della libreria è ampiamente commentato in italiano. I commenti normali
 (`// ...`), presenti soprattutto nei files di implementazione (`.cpp`), forniscono
 dettagli sull'implementazione. I commenti "speciali" (`//! ...` o `/*! ... */`)
@@ -265,11 +269,30 @@ per evitare reset indesiderati). Deve essere alimentato con una tensione di 3.3V
 | DIO0        | INT `**`  |
 | _RESET `&`_ | _I/O `*`_ |
 
-- `&`:  Opzionale
-- `*`:  OUT è qualsiasi pin di input/output (sarà configurato come output dalla classe)
-- `**`: INT è un pin capace di attivare un interupt del microcontrollore. Ad esempio
-    su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4
-    e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.
+La classe va poi istanziata usando il constructor
+`RFM69(<pinSS>, <pinInterrupt>, <pinReset>)`.
+
+
+Questa libreria permette anche di connettere la radio al microcontrollore attraverso il ponte I2C - SPI SC18IS602B di NXP Semiconductors.
+L'uso di questo sistema è sconsigliato se un'interfaccia SPI è disponibile perché è nettamente più lento, ma non limita alcuna funzione fornita da questa libreria.
+Per usare questo sistema servono i seguenti collegamenti: 
+
+| RFM69       | uC        |
+|-------------|-----------|
+| SDA         | SDA       |
+| SCL         | SCL       |
+| DIO0        | INT `**`  |
+| _RESET `&`_ | _I/O `*`_ |
+
+Inoltre serve l'indirizzo del chip ponte, che nel caso di SC18IS602B dipende dalla connessione di diversi pin fisici.
+Il constructor in questo caso è `RFM69(<indirizzo>, <numeroSS>, <pinInterrupt>, <pinReset>);`, dove numeroSS è il numero della porta SPI di SC18IS602B a cui la radio è connessa (ce ne sono quattro).
+
+
+> `&`:  *Opzionale*
+>
+> `*`:  *Qualsiasi pin di input/output (sarà configurato come output dalla classe)*
+>
+> `**`: *Un pin capace di attivare un interupt del microcontrollore. Ad esempio su Atmega328p, il microcontrollore di Arduino UNO, si possono usare i pin 4 e 5, cioé rispettivamente 2 e 3 nell'ambiete di programmazione Arduino.*
 
 
 <br><div id='5'/>
