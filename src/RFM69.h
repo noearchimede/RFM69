@@ -233,7 +233,7 @@ public:
     uint8_t dimensioneMessaggio();
 
     //! Restituisce il titolo dell'ultimo messaggio
-    /*! Il titolo di un messaggio è un numero compreso tra 1 e 16 scritto
+    /*! Il titolo di un messaggio è un numero compreso tra 1 e 64 scritto
         nell'intestazione dall'utente (con il parametro `titolo` di `invia()`).
         La classe si limita a inviarlo e renderlo disponibile prima della lettura
         del messaggio tramite questa funzione, non lo utilizza. L'utente può
@@ -691,14 +691,14 @@ private:
         struct {
             uint8_t ack : 1;
             uint8_t richiestaAck : 1;
-            uint8_t titolo: 4;
+            uint8_t titolo: 6;
         } bit;          // scrittura e lettura
         uint8_t byte;   // trasmissione
 
         Intestazione() : byte(0) {}
     };
     // Valore massimo nel field Intestazione::bit::titolo (dipende dalla sua dimensione)
-    const uint8_t valMaxTitolo = 16;
+    const uint8_t valMaxTitolo = 64;
 
     // Struct per salvare informazioni sui messaggi ricecvuti
     struct InfoMessaggio {
@@ -730,6 +730,9 @@ private:
         chiamata nell'`isr()`.
     */
     int cambiaModalita(Modalita, bool aspetta = true);
+
+    //! Imposta rapidamente la modalità su Standby (funzione usata dall'ISR)
+    void standbyRapido();
 
     // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza
     void highPowerSettings(bool attiva);
