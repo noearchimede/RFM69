@@ -134,7 +134,7 @@ void RFM69::SC18IS602B::sc18_inviaDati(uint8_t byte1, uint8_t byte2,
 
 void RFM69::SC18IS602B::sc18_richiediDati(uint8_t dataLen, uint8_t * data) {
 
-    Wire.requestFrom(indirizzo, dataLen + 1); // +1: vedi commento sotto
+    Wire.requestFrom(indirizzo, (uint8_t)(dataLen + 1)); // +1: vedi commento sotto
 
     // uint8_t byte1; // il primo byte non serve perché ogni comunicazione SPI
     //                // inizia con l'indirizzo di un registro (e la radio

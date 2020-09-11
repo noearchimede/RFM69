@@ -474,7 +474,7 @@ public:
 
         @return `true` se la radio sta trasmettendo un messaggio.
     */
-    bool staTrasmettendo() {return (trasmissioneMessaggio || trasmissioneAck);}
+    bool staTrasmettendo() {return (stato.trasmissioneMessaggio || stato.trasmissioneAck);}
 
     //!@}
     /*! @name Log
@@ -781,6 +781,9 @@ private:
     // costante dopo l'inizializzazione, può essere modificato da un'init. successiva
     uint8_t lungMaxMessEntrata;
 
+    // mantieni una copia di regOpMode localmente perché serve spesso
+    uint8_t regOpMode;
+
 
     // Pin
     const uint8_t pinReset; //non usato se `haReset == false`
@@ -826,20 +829,23 @@ private:
 
     // Modalità in cui si trova attualmente la radio
     volatile Modalita modalita = Modalita::sleep;
-    // La radio sta trasmettendo un messaggio
-    volatile bool trasmissioneMessaggio = false;
-    // La radio sta trasmettendo un ACK
-    volatile bool trasmissioneAck = false;
     // "ora" di trasmissione dell'ultimo messaggio (ms)
     volatile uint32_t tempoUltimaTrasmissione = 0;
-    // Un ACK richiesto non è ancora stato ricevuto
-    volatile bool attesaAck = false;
-    // È stato ricevuto un ACK per l'ultimo messaggio inviato
-    volatile bool ackRicevuto = false;
-    // Nella radio c'è un nuovo messaggio da leggere
-    volatile bool messaggioRicevuto = false;
     // Informazioni sull'ultimo messaggio ricevuto
     volatile InfoMessaggio ultimoMessaggio;
+    
+    struct {
+    // La radio sta trasmettendo un messaggio
+        volatile bool trasmissioneMessaggio : 1;
+    // La radio sta trasmettendo un ACK
+        volatile bool trasmissioneAck : 1;
+    // Un ACK richiesto non è ancora stato ricevuto
+        volatile bool attesaAck : 1;
+    // È stato ricevuto un ACK per l'ultimo messaggio inviato
+        volatile bool ackRicevuto : 1;
+    // Nella radio c'è un nuovo messaggio da leggere
+        volatile bool messaggioRicevuto : 1;
+    } stato;
 
     class Buffer {
         typedef volatile uint8_t data_type;
@@ -998,9 +1004,6 @@ private:
     // (allocata dinamicamente nel constructor)
     Bus* bus;
 
-
-public:
-    uint32_t isrStart, isrStop;
 
 };
 

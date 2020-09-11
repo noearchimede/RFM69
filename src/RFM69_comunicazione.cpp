@@ -81,9 +81,9 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
     // Se c'è un messaggio in uscita non si può inviarne un altro. Visto che di
     // solito la trasmissione dura pochi millisecondi, però, si può aspettare.
     // (Se si ha fretta non bisogna chiamare invia due volte di seguito)
-    if(trasmissioneMessaggio || trasmissioneAck) {
+    if(stato.trasmissioneMessaggio || stato.trasmissioneAck) {
         uint32_t t = millis();
-        while(trasmissioneMessaggio || trasmissioneAck) {
+        while(stato.trasmissioneMessaggio || stato.trasmissioneAck) {
             // Il messaggio più lungo alla bitrate minima con l'encoding più
             // dispendioso parte in una trentina di ms
             if(millis() - 50 > t) return Errore::inviaTimeoutTxPrecedente;
@@ -92,7 +92,7 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
 
     // Se la classe sta aspettando un ACK ignoralo (se l'utente sta inviando un
     // nuovo messaggio significa che non controllerà più l'ack del precedente)
-    if(attesaAck) rinunciaAck();
+    if(stato.attesaAck) rinunciaAck();
 
 
     cambiaModalita(Modalita::standby);
@@ -111,13 +111,13 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
     }
 
     cambiaModalita(Modalita::tx);
-    trasmissioneMessaggio = true;
+    stato.trasmissioneMessaggio = true;
 
     Intestazione intest;
     intest.byte = intestazione;
-    if(intest.bit.richiestaAck) attesaAck = true;
-    else attesaAck = false;
-    ackRicevuto = false;
+    if(intest.bit.richiestaAck) stato.attesaAck = true;
+    else stato.attesaAck = false;
+    stato.ackRicevuto = false;
     tempoUltimaTrasmissione = millis();
 
     return Errore::ok;
@@ -141,9 +141,9 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
 int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
 
     // Nessun messaggio in entrata
-    if(!messaggioRicevuto) return Errore::leggiNessunMessaggio;
+    if(!stato.messaggioRicevuto) return Errore::leggiNessunMessaggio;
 
-    messaggioRicevuto = false;
+    stato.messaggioRicevuto = false;
 
     // Messaggio troppo lungo per questa radio
     if(lungMaxMessEntrata < ultimoMessaggio.dimensione) return Errore::messaggioTroppoLungo;
@@ -175,9 +175,9 @@ void RFM69::inviaAck() {
     // Se c'è un messaggio in uscita non si può inviare un altro. Visto che di
     // solito la trasmissione dura pochi millisecondi, però, si può aspettare.
     // Alla fine dell'attesa il messaggio uscente viene bloccato.
-    if(trasmissioneMessaggio) {
+    if(stato.trasmissioneMessaggio) {
         uint32_t t = millis();
-        while(trasmissioneMessaggio) {
+        while(stato.trasmissioneMessaggio) {
             // Il messaggio più lungo alla bitrate minima con l'encoding più
             // dispendioso parte in una trentina di ms
             if(millis() - 50 > t) break;
@@ -193,7 +193,7 @@ void RFM69::inviaAck() {
     bus->scriviRegistro(RFM69_00_FIFO, intestazione.byte);
 
     cambiaModalita(Modalita::tx);
-    trasmissioneAck = true;
+    stato.trasmissioneAck = true;
 }
 
 
@@ -201,7 +201,7 @@ void RFM69::inviaAck() {
 //
 int RFM69::iniziaRicezione() {
     uint32_t t = millis();
-    while(trasmissioneAck || trasmissioneMessaggio) {
+    while(stato.trasmissioneAck || stato.trasmissioneMessaggio) {
         // timeoutAck è un tempo arbitrario ma dell'ordine di grandezza giusto
         if(t < millis() - timeoutAck) break;
     }
@@ -212,7 +212,7 @@ int RFM69::iniziaRicezione() {
 // Restituisce `true` se un nuovo messaggio è disponibile
 //
 bool RFM69::nuovoMessaggio() {
-    return messaggioRicevuto;
+    return stato.messaggioRicevuto;
 }
 
 
@@ -252,7 +252,7 @@ uint8_t RFM69::tempoRicezione() {
 // Restituisce true se la classe sta aspettando un ack
 //
 bool RFM69::ackInSospeso() {
-    if(attesaAck) {
+    if(stato.attesaAck) {
         if(millis() - tempoUltimaTrasmissione  > timeoutAck) {
             // timeout, termina l'attesa senza aver ricevuto l'ACK
             rinunciaAck();
@@ -268,14 +268,14 @@ bool RFM69::ackInSospeso() {
 // Restituisce true se la radio ha ricevuto un ACK per l'ultimo messaggio inviato
 //
 bool RFM69::ricevutoAck() {
-    return ackRicevuto;
+    return stato.ackRicevuto;
 }
 
 
 // Fingi di aver ricevuto un ACK. Se il vero ACK dovesse arrivare dopo l'esecuzione
 // di questa funzione non avrà nessun effetto.
 void RFM69::rinunciaAck() {
-    attesaAck = false;
+    stato.attesaAck = false;
 }
 
 
@@ -309,19 +309,17 @@ void RFM69::isr() {
     sei();
     #endif
     
-    // TEST DURATA isrStart = micros();
     // ## Modalità TX, interrupt su `PacketSent` ## //
 
     // È appena stato trasmesso un messaggio
-    if(trasmissioneMessaggio) {
+    if(stato.trasmissioneMessaggio) {
         bus->usaInIsr(true);
-        if(attesaAck) cambiaModalita(Modalita::rx, false);
+        if(stato.attesaAck) cambiaModalita(Modalita::rx, false);
         else cambiaModalita(modalitaDefault, false);
         bus->usaInIsr(false);
-        trasmissioneMessaggio = false;
+        stato.trasmissioneMessaggio = false;
         messaggiInviati++;
 
-        // TEST DURATA isrStop=micros();
         #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
         #endif
@@ -329,13 +327,12 @@ void RFM69::isr() {
     }
 
     // È appena stato trasmesso un ACK
-    if(trasmissioneAck) {
+    if(stato.trasmissioneAck) {
         bus->usaInIsr(true);
         cambiaModalita(modalitaDefault, false);
         bus->usaInIsr(false);
-        trasmissioneAck = false;
+        stato.trasmissioneAck = false;
 
-        // TEST DURATA isrStop=micros();
         #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
         #endif
@@ -358,7 +355,7 @@ void RFM69::isr() {
         Intestazione intest;
         intest.byte = bus->leggiRegistro(RFM69_00_FIFO);
 
-        if(attesaAck) {
+        if(stato.attesaAck) {
             // Il messaggio dovrebbe essere un ACK. È però possibile che l'altra
             // radio invii a sua volta un messaggio prima di inviare l'ACK
             // (l'ACK è inviato dalla funzione di lettura, chiamata dall'utente,
@@ -381,14 +378,13 @@ void RFM69::isr() {
                 nrAckRicevuti++;
                 sommaAtteseAck += durataUltimaAttesaAck;
 
-                attesaAck = false;
-                ackRicevuto = true;
+                stato.attesaAck = false;
+                stato.ackRicevuto = true;
                 ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
                 cambiaModalita(modalitaDefault, false);
                 bus->usaInIsr(false);
                 // non c'è nient'altro da fare, un ACK non ha contenuto
 
-                // TEST DURATA isrStop=micros();
                 #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
                 attachInterrupt(numeroInterrupt, isrCaller, RISING);
                 #endif
@@ -416,7 +412,6 @@ void RFM69::isr() {
             cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
             bus->usaInIsr(false);
 
-            // TEST DURATA isrStop=micros();
             #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
             attachInterrupt(numeroInterrupt, isrCaller, RISING);
             #endif
@@ -425,7 +420,7 @@ void RFM69::isr() {
 
         // # Il messaggio è un vero messaggio # //
 
-        messaggioRicevuto = true;
+        stato.messaggioRicevuto = true;
         messaggiRicevuti++;
 
         // leggi tutti gli altri bytes
@@ -438,7 +433,6 @@ void RFM69::isr() {
 
         bus->usaInIsr(false);
 
-        // TEST DURATA isrStop=micros();
         #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
         #endif
@@ -474,9 +468,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     if(aspetta) delay(2);
 
     // Prepara il byte da scrivere nel registro
-    uint8_t regOpMode = bus->leggiRegistro(RFM69_01_OP_MODE) & 0xE3;
-
-    // Imposta i 3 bit che stabiliscono la modalità
+    regOpMode &= 0xE3;
     uint8_t codiceMod = 0x0;
     switch(mod) {
         case Modalita::sleep:   codiceMod = 0x0;    break;
@@ -528,7 +520,6 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     // Per attivare la modalita listen basta scrivere il bit 6 dopo aver
     // messo la radio in standby
     if(mod == Modalita::listen) {
-        regOpMode = bus->leggiRegistro(RFM69_01_OP_MODE);
         regOpMode |=  1 << 6;
         bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
     }

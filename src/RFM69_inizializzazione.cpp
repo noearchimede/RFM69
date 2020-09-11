@@ -409,10 +409,12 @@ bool RFM69::caricaImpostazioni() {
     while(registro < RFM69_ULTIMO_REGISTRO) {
         if(!RFM69_RESERVED(registro)) {
             bus->scriviRegistro(registro, VALORE_REGISTRI(indice));
-            indice++;
+            ++indice;
         }
-        registro ++;
+        ++registro;
     }
+
+    regOpMode = VALORE_REGISTRI(0x01);
 
 
     /*/ DEBUG
