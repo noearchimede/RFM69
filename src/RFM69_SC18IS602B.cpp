@@ -21,7 +21,7 @@ da I2C a SPI SC18IS602B.
 #define FID_SPI_RW_2    0x2
 #define FID_SPI_RW_3    0x3
 // tutte le combinazioni (FID_SPI_RW_X & FID_SPI_RW_Y) sono anche possibili
-#define FID_SPI_CONF    0xf // configura l'interfaccia SPI (parametri vedi sotto)
+#define FID_SPI_CONF    0xf0 // configura l'interfaccia SPI (parametri vedi sotto)
 #define FID_CLEAR_INT   0xf1 // rimuovi l'interrupt flag
 #define FID_IDLE        0xf2 // entra in modalità riposo (esce automaticamente
 //  se chiamato sul bus i2c)
