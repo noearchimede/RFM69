@@ -21,7 +21,7 @@ radio.
 // t
 #ifdef MODULO_1
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(2, 3);
+RFM69 radio(RFM69::creaInterfacciaSpi(2), 3);
 // Un LED, 0 per non usarlo
 #define LED 4
 #endif
@@ -29,7 +29,7 @@ RFM69 radio(2, 3);
 // q
 #ifdef MODULO_2
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(A2, 3, A3);
+RFM69 radio(RFM69::creaInterfacciaSpi(2), 3, 4);
 // Un LED, 0 per non usarlo
 #define LED 7
 #endif
@@ -79,7 +79,8 @@ void loop(){
         // Aspetta fino alla ricezione di un ack o al timeout impostato nella classe
         while(radio.ackInSospeso());
         // Controlla se è arrivato un Ack (l'attesa può finire anche senza ack, per timeout)
-        if(radio.ricevutoAck()) ok = true;  else ok = false;
+        if(radio.ricevutoAck()) ok = true;
+        else ok = false;
 
         // calcola il tempo trascorso dall'invio
         t = millis() - t;

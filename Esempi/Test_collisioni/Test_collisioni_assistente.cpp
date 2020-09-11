@@ -32,7 +32,7 @@ non genera statistiche. Non è quindi necessario collegarla a un monitor seriale
 //------------------------------------------------------------------------------
 
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(A2, 3, A3);
+RFM69 radio(RFM69::creaInterfacciaSpi(2), 3, 4);
 
 #define LED_TX 8
 #define LED_ACK 7

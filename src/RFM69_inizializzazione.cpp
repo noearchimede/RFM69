@@ -239,34 +239,31 @@ RFM69* RFM69::pointerRadio = nullptr;
 // ### 4. Constructor e destructor ### //
 
 
-
-RFM69::RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset) :
+RFM69::RFM69(RFM69::Bus* interfaccia, uint8_t pinInterrupt, uint8_t pinReset) :
 pinReset(pinReset),
 numeroInterrupt(digitalPinToInterrupt(pinInterrupt)),
 haReset(pinReset == 0xff ? false : true),
-highPower(HIGH_POWER)
+highPower(HIGH_POWER), // highPower non è constante
+bus(interfaccia)
 {
     nrIstanze++;
-
-    // Impostazioni SPI: la velocità è arbitraria, MSBfirst e cpol0cpha0 sono
-    // richiesti dalla radio
-    bus = new Spi(pinSS, 200000, Spi::BitOrder::MSBFirst, Spi::DataMode::cpol0cpha0);
-
 }
 
 
-RFM69::RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset) :
-pinReset(pinReset),
-numeroInterrupt(digitalPinToInterrupt(pinInterrupt)),
-haReset(pinReset == 0xff ? false : true),
-highPower(HIGH_POWER),
-buffer()
-{
-    nrIstanze++;
-    
-    bus = new SC18IS602B(indirizzo, numeroSS);
+RFM69::Bus* RFM69::creaInterfacciaSpi(uint8_t pinSS) {
+    // Impostazioni SPI: bit order e data mode, MSB first e cpol0cpha0
+    // rispettivamente, sono richiesti dalla radio, mentre la velocità è
+    // arbitraria. Attenzione però a cambiare la velocità (ora 200'000): un test
+    // a 4'000'000 sembra aver generato un errore segnalato da avrdude con
+    // "content mismatch: 0x45 != 0x0c at 0x0000", che si è risolto solo dopo la
+    // reinstallazione del bootloader.
+    return new Spi(pinSS, 200000, Spi::BitOrder::MSBFirst, Spi::DataMode::cpol0cpha0);
 }
 
+
+RFM69::Bus* RFM69::creaInterfacciaSC18IS602B(uint8_t indirizzoSC18, uint8_t numeroSS) {
+    return new SC18IS602B(indirizzoSC18, numeroSS);
+}
 
 
 // Destructor
@@ -275,6 +272,10 @@ RFM69::~RFM69() {
     delete bus;
     nrIstanze--;
 }
+
+
+
+
 
 
 // ### 5. Inizializzazione ### //

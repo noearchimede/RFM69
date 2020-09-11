@@ -39,30 +39,59 @@ public:
     uint8_t testConnessione();
     //!@}
 
-    //! @name Constructor
+
+    //! @name Constructor, destructor ecc.
     //!@{
 
-    //! Constructor per radio connessa tramite SPI
-    /*! @param pinSS          Numero del pin Slave Select
-        @param pinInterrupt   Numero del pin attraverso il quale la radio genera
-            un interrupt sul uC. Deve ovviamente essere un pin di interrupt.
+private:
+    class Bus; //serve al constructor
+public:
+
+    //! Constructor: richiede l'utilizzo di una delle funzioni sottostanti
+    /*! @param pinInterrupt   Numero del pin attraverso il quale la radio genera
+            un interrupt sul uC. Deve essere un pin di interrupt.
         @param pinReset       Numero del pin collegato al pin RESET della radio.
             0xFF significa che il pin di reset non è collegato.
     */
-    RFM69(uint8_t pinSS, uint8_t pinInterrupt, uint8_t pinReset = 0xff);
+   RFM69(Bus* interfaccia, uint8_t pinInterurpt, uint8_t pinReset = 0xff);
 
-    //! Constructor per radio connessa con I2C (tramite SC18IS602B) 
-    /*! @param indirizzo    Indirizzo I2C di SC18IS602B
+   //! Helper per il constructor: usa l'interfaccia SPI
+   /*! Questa funzione genera un oggetto della classe 'RFM69::Spi', che gestisce
+    la comunicazione con la radio.
+        @param pinSS Numero del pin Slave Select
+   */
+   static Bus* creaInterfacciaSpi(uint8_t pinSS);
+
+   //! Helper per il constructor: usa l'interfaccia I2C tramite SC18IS602B
+   /*! Questa funzione genera un oggetto della classe 'RFM69::SC18IS602B', che
+    gestisce la comunicazione con la radio tramite il convertitore SPI - I2C
+    SC18IS602B.
+        @param indirizzo    Indirizzo I2C di SC18IS602B
         @param numeroSS     Numero del pin Slave Select di SC18IS602B utilizzato
             per la radio
-        @param pinInterrupt   Numero del pin attraverso il quale la radio genera
-            un interrupt sul uC. Deve ovviamente essere un pin di interrupt.
-        @param pinReset       Numero del pin collegato al pin RESET della radio.
-            0xFF significa che il pin di reset non è collegato.
+   */
+   static Bus* creaInterfacciaSC18IS602B(uint8_t indirizzoSC18, uint8_t numeroSS);
+
+
+    //! Destructor
+    /*! Dopo aver chiamato il destructor su un'istanza è possibile chiamare
+    `inizializza()` su un'altra senza ricevere l'errore
+    `Errore::ListaErrori::initTroppeRadio`
     */
-   RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t pinReset);
+    ~RFM69();
+    //! Copy Constructor
+    /*! Deleted perché non ha senso copiare una radio
+    */
+    RFM69(const RFM69&) = delete;
+    //! Copy assignment Operator
+    /*! Deleted perché non ha senso copiare una radio
+    */
+    RFM69& operator = (const RFM69&) = delete;
 
     //!@}
+
+
+
     /*! @name Inizializzazione
     Funzione di inizializzazione della classe, da chiamare prima di qualsiasi altra
     */
@@ -548,30 +577,6 @@ public:
         @return il valore del registro selezionato
     */
     uint8_t valoreRegistro(uint8_t indirizzo);
-    //!@}
-
-    /*! @name Destructor, copy constructor, copy operator
-    Queste funzioni servono per evitare perdite di memoria visto che la classe
-    gestisce una risorsa allocata dinamicamente (il buffer) e non dovrebbe mai
-    essere copiata
-    */
-    //!@{
-
-    //! Destructor
-    /*! Dopo aver chiamato il destructor su un'istanza è possibile chiamare
-    `inizializza()` su un'altra senza ricevere l'errore
-    `Errore::ListaErrori::initTroppeRadio`
-    */
-    ~RFM69(); // Implementato
-    //! Copy Constructor
-    /*! Deleted perché non ha senso copiare una radio
-    */
-    RFM69(const RFM69&) = delete;
-    //! Copy Operator
-    /*! Deleted perché non ha senso copiare una radio
-    */
-    RFM69& operator = (const RFM69&) = delete;
-
     //!@}
 
 

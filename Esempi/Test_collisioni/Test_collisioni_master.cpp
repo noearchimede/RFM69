@@ -34,7 +34,7 @@ Nel file Risultati_test_collisioni.md si trovano alcuni esempi di output.
 //------------------------------------------------------------------------------
 
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(2, 3);
+RFM69 radio(RFM69::creaInterfacciaSpi(2), 3);
 
 #define LED_TX 5
 #define LED_ACK 4
