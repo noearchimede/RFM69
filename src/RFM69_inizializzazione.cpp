@@ -234,7 +234,6 @@ static const PROGMEM uint8_t valoreRegistri[80] = {
 // Definizione dei membri `static`di questa classe
 unsigned int RFM69::nrIstanze = 0;
 RFM69* RFM69::pointerRadio = nullptr;
-//volatile uint8_t RFM69::buffer[PAYLOAD_LENGHT]; // DEBUG
 
 
 // ### 4. Constructor e destructor ### //
@@ -260,7 +259,8 @@ RFM69::RFM69(uint8_t indirizzo, uint8_t numeroSS, uint8_t pinInterrupt, uint8_t 
 pinReset(pinReset),
 numeroInterrupt(digitalPinToInterrupt(pinInterrupt)),
 haReset(pinReset == 0xff ? false : true),
-highPower(HIGH_POWER)
+highPower(HIGH_POWER),
+buffer()
 {
     nrIstanze++;
     
@@ -271,7 +271,7 @@ highPower(HIGH_POWER)
 
 // Destructor
 RFM69::~RFM69() {
-    if(buffer != nullptr) free((void*)buffer);
+    // il buffer è in una classe wrapper che si occupa di liberare la memoria
     delete bus;
     nrIstanze--;
 }
@@ -358,12 +358,7 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
     // ## INIZIALIZZAZIONE DI VARIABILI ## //
 
-    // # Allocazione di un'array da usare come buffer #
-    // Il buffer potrebbe essere già stato allocato in una chimata precedente a
-    // questa funzione
-    if(buffer != nullptr) free((void*)buffer);
-    // Allocazione del (nuovo) buffer
-    buffer = (volatile uint8_t *) malloc(sizeof(uint8_t) * lunghezzaMaxMessaggio);
+    buffer.init(lunghezzaMaxMessaggio);
     lungMaxMessEntrata = lunghezzaMaxMessaggio;
 
 

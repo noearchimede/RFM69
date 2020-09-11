@@ -835,8 +835,27 @@ private:
     volatile bool messaggioRicevuto = false;
     // Informazioni sull'ultimo messaggio ricevuto
     volatile InfoMessaggio ultimoMessaggio;
-    // pointer al buffer in cui l'ISR copia la memoria FIFO del messaggio ricevuto
-    volatile uint8_t* buffer = nullptr;
+
+    class Buffer {
+        typedef volatile uint8_t data_type;
+        data_type * dataptr = nullptr;
+        uint8_t len = 0;
+    public:
+        // la dimensione non è nota al momento dela costruzione di RFM69
+        Buffer() = default;
+        void init(uint8_t dimensione) {
+            if(dataptr != nullptr) delete[] dataptr;
+            dataptr = new data_type[dimensione];
+            len = dimensione; }
+        ~Buffer() { delete[] dataptr; }
+        // non copiabile (come RFM69)
+        Buffer(const Buffer&) = delete;
+        Buffer& operator = (const Buffer&) = delete;
+        // operatori di accesso
+        data_type operator [] (unsigned int i) {
+            return i < len ? *(dataptr + i) : 0; }
+        operator data_type*() { return dataptr; }
+    } buffer;
 
 
     // totale di messaggi inviati dall'ultima inizializzazione
