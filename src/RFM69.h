@@ -43,7 +43,7 @@ public:
     //! @name Constructor, destructor ecc.
     //!@{
 
-private:
+//private:
     class Bus; //serve al constructor
 public:
 
@@ -146,6 +146,13 @@ public:
     Devono essere usate in ogni programma per permettere una comunicazione radio
     */
     //!@{
+    
+    
+    //! Da chiamare regolarmente! Aggiorna lo stato, scarica in nuovi messaggi ecc.
+    /*! Questa funzione dipende dall'ISRf
+    */
+    //int controlla() {};
+
 
     //! Invia un messaggio
     /*! @note Spesso nella documentazione ci sono riferimenti a questa funzione.
@@ -664,7 +671,7 @@ public:
         };
     };
 
-private:
+//private:
 
     // All'inizio vale 0 (come tutte le variabili `static`); ogni volta che
     // il constructor di questa classe viene chiamato il suo valore aumenta di
@@ -675,7 +682,7 @@ private:
     // qualche modo l'utilizzo comune di un'unica isr (ad esempio con funzioni
     // "on" ed "off" per ogni radio). Il numero massimo di isr è limitato dal
     // numero di interrupt possibili.
-    static unsigned int nrIstanze;
+    static uint8_t nrIstanze;
 
 
 
@@ -736,8 +743,41 @@ private:
     */
     int cambiaModalita(Modalita, bool aspetta = true);
 
-    //! Imposta rapidamente la modalità su Standby (funzione usata dall'ISR)
-    void standbyRapido();
+    void modalitaStandby();
+
+    enum class AMEnterCond : uint8_t {
+        //none = 0x0 non può essere usata (bisogna impostare sia enter sia exit)
+        fifoNotEmptyRising  = 0x1, // valori validi per il registro corrispondente
+        fifoLevelRising     = 0x2,
+        crcOkRising         = 0x3,
+        payloadReadyRising  = 0x4,
+        syncAddressRising   = 0x05,
+        packetSentRising    = 0x06, 
+        fifoNotEmptyFalling = 0x07
+    };
+    enum class AMExitCond : uint8_t {
+        //none = 0x0 non può essere usata (bisogna impostare sia enter sia exit)
+        fifoNotEmptyFalling = 0x1, // valori validi per il registro corrispondente
+        fifoLevelRising     = 0x2,
+        crcOkRising         = 0x3,
+        payloadReadyRising  = 0x4,
+        syncAddressRising   = 0x05,
+        packetSentRising    = 0x06, 
+        timeoutRising       = 0x07
+    };
+    enum class AMModInter : uint8_t { // non tutte le modalità sono possibili
+        sleep   = 0x0, // valori validi per il registro corrispondente
+        standby = 0x1,
+        rx      = 0x2,
+        tx      = 0x3
+    };
+
+    // Imposta la funzione AutoModes (-> p 42 datasheet)
+    // nota: funzione relativamente lunga, fino a (stima) 5ms
+    void autoModes(Modalita modBase, AMModInter modInter,
+                    AMEnterCond enterCond, AMExitCond exitCond);
+
+
 
     // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza
     void highPowerSettings(bool attiva);
@@ -835,17 +875,26 @@ private:
     volatile InfoMessaggio ultimoMessaggio;
     
     struct {
-    // La radio sta trasmettendo un messaggio
+        // La radio sta trasmettendo un messaggio
         volatile bool trasmissioneMessaggio : 1;
-    // La radio sta trasmettendo un ACK
+        // La radio sta trasmettendo un ACK
         volatile bool trasmissioneAck : 1;
-    // Un ACK richiesto non è ancora stato ricevuto
+        // Un ACK richiesto non è ancora stato ricevuto
         volatile bool attesaAck : 1;
-    // È stato ricevuto un ACK per l'ultimo messaggio inviato
+        // È stato ricevuto un ACK per l'ultimo messaggio inviato
         volatile bool ackRicevuto : 1;
-    // Nella radio c'è un nuovo messaggio da leggere
+        // Nella radio c'è un nuovo messaggio da leggere
         volatile bool messaggioRicevuto : 1;
     } stato;
+
+    enum class Intervento {
+        nessuno,
+
+    };
+
+    // l'ISR imposta questa variabile, la funzione controlla() esegue l'azione
+    // richiesta
+    Intervento richiestaIntervento;
 
     class Buffer {
         typedef volatile uint8_t data_type;

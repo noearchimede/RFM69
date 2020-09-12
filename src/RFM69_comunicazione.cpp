@@ -276,6 +276,7 @@ bool RFM69::ricevutoAck() {
 // di questa funzione non avrà nessun effetto.
 void RFM69::rinunciaAck() {
     stato.attesaAck = false;
+    cambiaModalita(modalitaDefault, false);
 }
 
 
@@ -289,137 +290,13 @@ void RFM69::rinunciaAck() {
 
 // ISR reale, static, che chiama un interrupt handler (la funzione `isr()`) che non essendo static è legata all'istanza della radio
 void RFM69::isrCaller() {
-    #ifdef RFM69_GESTISCI_TUTTO_IN_ISR
+    //isrStart = micros();
     pointerRadio->isr();
-    #endif
+    //isrStop = micros();
 }
 
 
 
-// Nuova ISR, che funziona in collaborazione con 'controlla()'
-// 
-void RFM69::isr() {
-
-    detachInterrupt(numeroInterrupt);
-    // Vedi nota sopra
-    sei();
-    
-    // ## Modalità TX, interrupt su `PacketSent` ## //
-
-    // È appena stato trasmesso un messaggio
-    if(stato.trasmissioneMessaggio) {
-        if(stato.attesaAck) cambiaModalita(Modalita::rx, false);
-        else cambiaModalita(modalitaDefault, false);
-        stato.trasmissioneMessaggio = false;
-        messaggiInviati++;
-
-        attachInterrupt(numeroInterrupt, isrCaller, RISING);
-        return;
-    }
-
-    // È appena stato trasmesso un ACK
-    if(stato.trasmissioneAck) {
-        cambiaModalita(modalitaDefault, false);
-        stato.trasmissioneAck = false;
-
-        attachInterrupt(numeroInterrupt, isrCaller, RISING);
-        return;
-    }
-
-
-    // ## Modalità RX, interrupt su `PayloadReady` ## //
-
-    if(modalita == Modalita::rx || modalita == Modalita::listen) {
-        // # Non si sa ancora se è un vero messaggio o solo un ACK #
-
-
-        Modalita modPrec = modalita; // rx o listen
-        cambiaModalita(Modalita::standby, false);
-
-        // Leggi i primi due bytes (lunghezza e intestazione)
-        uint8_t lung = bus->leggiRegistro(RFM69_00_FIFO);
-        Intestazione intest;
-        intest.byte = bus->leggiRegistro(RFM69_00_FIFO);
-
-        if(stato.attesaAck) {
-            // Il messaggio dovrebbe essere un ACK. È però possibile che l'altra
-            // radio invii a sua volta un messaggio prima di inviare l'ACK
-            // (l'ACK è inviato dalla funzione di lettura, chiamata dall'utente,
-            // mentre il messaggio è scaricato dalla FIFO della radio dall'ISR
-            // subito dopo la ricezione). Quindi se l'utente chiama prima invia()
-            // e poi leggi() sull'altra radio, questa ricevereà prima un messaggio
-            // e poi l'ACK atteso
-
-            if(intest.bit.ack) {
-
-                // # Il messaggio è un ACK # //
-
-                // Calcola attesa attuale, ...
-                durataUltimaAttesaAck = millis() - tempoUltimaTrasmissione;
-                // ... massima ...
-                if(durataUltimaAttesaAck > durataMassimaAttesaAck) {
-                    durataMassimaAttesaAck = durataUltimaAttesaAck;
-                }
-                // ... e media
-                nrAckRicevuti++;
-                sommaAtteseAck += durataUltimaAttesaAck;
-
-                stato.attesaAck = false;
-                stato.ackRicevuto = true;
-                ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
-                cambiaModalita(modalitaDefault, false);
-                // non c'è nient'altro da fare, un ACK non ha contenuto
-
-                attachInterrupt(numeroInterrupt, isrCaller, RISING);
-                return;
-            }
-        }
-
-
-        // # Il messaggio non è un ACK valido # //
-
-        // Esiste anche la possibilità che un ACK arrivi inatteso (ad es. se
-        // l'utente ci ha rinunciato). In tal caso la radio deve restare in
-        // ascolto come se niente fosse, limitandosi a segnalare l'inutile ACK
-        // (un ACK inaspettato segnala che c'è un problema nel programma).
-        //
-        // Siccome è possibile che la modalità fosse listen la funzione
-        // `cambiaModalita()` non può essere usata in modo rapido (secondo
-        // argomento `false`).
-        else if(intest.bit.ack) {
-
-            // # Il messaggio è un ACK indesiderato # //
-
-            ackInattesi++;
-            ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
-            cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
-
-            attachInterrupt(numeroInterrupt, isrCaller, RISING);
-            return;
-        }
-
-        // # Il messaggio è un vero messaggio # //
-
-        stato.messaggioRicevuto = true;
-        messaggiRicevuti++;
-
-        // leggi tutti gli altri bytes
-        bus->leggiSequenza(RFM69_00_FIFO, lung-1, buffer);
-
-        ultimoMessaggio.tempoRicezione = millis();
-        ultimoMessaggio.dimensione = lung - 1;
-        ultimoMessaggio.intestazione.byte = intest.byte;
-        ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
-
-
-        attachInterrupt(numeroInterrupt, isrCaller, RISING);
-        return;
-    }
-
-}
-
-
-#ifdef RFM69_GESTISCI_TUTTO_IN_ISR
 // Reagisce agli interrupt generati dalla radio sul suo pin DI0
 //
 // Nota: questa ISR dura nettamente troppo tempo, ed esiste solo per garantire
@@ -551,7 +428,6 @@ void RFM69::isr() {
     }
 
 }
-#endif
 
 
 

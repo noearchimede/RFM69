@@ -232,7 +232,7 @@ static const PROGMEM uint8_t valoreRegistri[80] = {
 
 
 // Definizione dei membri `static`di questa classe
-unsigned int RFM69::nrIstanze = 0;
+uint8_t RFM69::nrIstanze = 0;
 RFM69* RFM69::pointerRadio = nullptr;
 
 
