@@ -289,53 +289,40 @@ void RFM69::rinunciaAck() {
 
 // ISR reale, static, che chiama un interrupt handler (la funzione `isr()`) che non essendo static è legata all'istanza della radio
 void RFM69::isrCaller() {
+    #ifdef RFM69_GESTISCI_TUTTO_IN_ISR
     pointerRadio->isr();
+    #endif
 }
 
 
-// Questa ISR dura chiaramente troppo tempo: da 2 a 5 ms in operazione
-// normale e fino a 8 ms in caso di errori. Abilitare gli interrupt
-// all'interno di un'ISR non è una buona idea, ma in questo caso non sembra
-// creare particolari problemi (si tratta di un interrupt generato dall'esterno,
-// relativamente lento e quindi poco )
-#define RFM69_ABILITA_INTERRUPT_IN_ISR
 
-// Reagisce agli interrupt generati dalla radio sul suo pin DI0
-//
+// Nuova ISR, che funziona in collaborazione con 'controlla()'
+// 
 void RFM69::isr() {
 
-    #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
     detachInterrupt(numeroInterrupt);
+    // Vedi nota sopra
     sei();
-    #endif
     
     // ## Modalità TX, interrupt su `PacketSent` ## //
 
     // È appena stato trasmesso un messaggio
     if(stato.trasmissioneMessaggio) {
-        bus->usaInIsr(true);
         if(stato.attesaAck) cambiaModalita(Modalita::rx, false);
         else cambiaModalita(modalitaDefault, false);
-        bus->usaInIsr(false);
         stato.trasmissioneMessaggio = false;
         messaggiInviati++;
 
-        #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
-        #endif
         return;
     }
 
     // È appena stato trasmesso un ACK
     if(stato.trasmissioneAck) {
-        bus->usaInIsr(true);
         cambiaModalita(modalitaDefault, false);
-        bus->usaInIsr(false);
         stato.trasmissioneAck = false;
 
-        #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
-        #endif
         return;
     }
 
@@ -345,7 +332,6 @@ void RFM69::isr() {
     if(modalita == Modalita::rx || modalita == Modalita::listen) {
         // # Non si sa ancora se è un vero messaggio o solo un ACK #
 
-        bus->usaInIsr(true);
 
         Modalita modPrec = modalita; // rx o listen
         cambiaModalita(Modalita::standby, false);
@@ -382,12 +368,9 @@ void RFM69::isr() {
                 stato.ackRicevuto = true;
                 ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
                 cambiaModalita(modalitaDefault, false);
-                bus->usaInIsr(false);
                 // non c'è nient'altro da fare, un ACK non ha contenuto
 
-                #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
                 attachInterrupt(numeroInterrupt, isrCaller, RISING);
-                #endif
                 return;
             }
         }
@@ -410,11 +393,8 @@ void RFM69::isr() {
             ackInattesi++;
             ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
             cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
-            bus->usaInIsr(false);
 
-            #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
             attachInterrupt(numeroInterrupt, isrCaller, RISING);
-            #endif
             return;
         }
 
@@ -431,15 +411,147 @@ void RFM69::isr() {
         ultimoMessaggio.intestazione.byte = intest.byte;
         ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
 
-        bus->usaInIsr(false);
 
-        #ifdef RFM69_ABILITA_INTERRUPT_IN_ISR
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
-        #endif
         return;
     }
 
 }
+
+
+#ifdef RFM69_GESTISCI_TUTTO_IN_ISR
+// Reagisce agli interrupt generati dalla radio sul suo pin DI0
+//
+// Nota: questa ISR dura nettamente troppo tempo, ed esiste solo per garantire
+// una (incompleta) compatibilità con versioni precedenti di questa classe (in
+// particolare con la versione di fine 2018; questo commento è scritto nel
+// 2020). Visto che la sua lunga durata può causare problemi ad altre parti di
+// un programma, come ad esempio sfalsando il valore resitito da millis() e
+// funzioni simili, gli interrupt devono essere abilitati durante l'esecuzione
+// di questa ISR. Questo naturalmente potrebbe a sua volta causare problemi, e
+// per questo la modalità di utilizzo consigliata di questa libreria è quella in
+// cui l'utente chiama esplicitamente la funzione controlla() in un loop.
+//
+void RFM69::isr() {
+
+    detachInterrupt(numeroInterrupt);
+    // Vedi nota sopra
+    sei();
+    
+    // ## Modalità TX, interrupt su `PacketSent` ## //
+
+    // È appena stato trasmesso un messaggio
+    if(stato.trasmissioneMessaggio) {
+        if(stato.attesaAck) cambiaModalita(Modalita::rx, false);
+        else cambiaModalita(modalitaDefault, false);
+        stato.trasmissioneMessaggio = false;
+        messaggiInviati++;
+
+        attachInterrupt(numeroInterrupt, isrCaller, RISING);
+        return;
+    }
+
+    // È appena stato trasmesso un ACK
+    if(stato.trasmissioneAck) {
+        cambiaModalita(modalitaDefault, false);
+        stato.trasmissioneAck = false;
+
+        attachInterrupt(numeroInterrupt, isrCaller, RISING);
+        return;
+    }
+
+
+    // ## Modalità RX, interrupt su `PayloadReady` ## //
+
+    if(modalita == Modalita::rx || modalita == Modalita::listen) {
+        // # Non si sa ancora se è un vero messaggio o solo un ACK #
+
+
+        Modalita modPrec = modalita; // rx o listen
+        cambiaModalita(Modalita::standby, false);
+
+        // Leggi i primi due bytes (lunghezza e intestazione)
+        uint8_t lung = bus->leggiRegistro(RFM69_00_FIFO);
+        Intestazione intest;
+        intest.byte = bus->leggiRegistro(RFM69_00_FIFO);
+
+        if(stato.attesaAck) {
+            // Il messaggio dovrebbe essere un ACK. È però possibile che l'altra
+            // radio invii a sua volta un messaggio prima di inviare l'ACK
+            // (l'ACK è inviato dalla funzione di lettura, chiamata dall'utente,
+            // mentre il messaggio è scaricato dalla FIFO della radio dall'ISR
+            // subito dopo la ricezione). Quindi se l'utente chiama prima invia()
+            // e poi leggi() sull'altra radio, questa ricevereà prima un messaggio
+            // e poi l'ACK atteso
+
+            if(intest.bit.ack) {
+
+                // # Il messaggio è un ACK # //
+
+                // Calcola attesa attuale, ...
+                durataUltimaAttesaAck = millis() - tempoUltimaTrasmissione;
+                // ... massima ...
+                if(durataUltimaAttesaAck > durataMassimaAttesaAck) {
+                    durataMassimaAttesaAck = durataUltimaAttesaAck;
+                }
+                // ... e media
+                nrAckRicevuti++;
+                sommaAtteseAck += durataUltimaAttesaAck;
+
+                stato.attesaAck = false;
+                stato.ackRicevuto = true;
+                ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+                cambiaModalita(modalitaDefault, false);
+                // non c'è nient'altro da fare, un ACK non ha contenuto
+
+                attachInterrupt(numeroInterrupt, isrCaller, RISING);
+                return;
+            }
+        }
+
+
+        // # Il messaggio non è un ACK valido # //
+
+        // Esiste anche la possibilità che un ACK arrivi inatteso (ad es. se
+        // l'utente ci ha rinunciato). In tal caso la radio deve restare in
+        // ascolto come se niente fosse, limitandosi a segnalare l'inutile ACK
+        // (un ACK inaspettato segnala che c'è un problema nel programma).
+        //
+        // Siccome è possibile che la modalità fosse listen la funzione
+        // `cambiaModalita()` non può essere usata in modo rapido (secondo
+        // argomento `false`).
+        else if(intest.bit.ack) {
+
+            // # Il messaggio è un ACK indesiderato # //
+
+            ackInattesi++;
+            ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+            cambiaModalita(modPrec, true); // modPrec potrebbe essere `listen`
+
+            attachInterrupt(numeroInterrupt, isrCaller, RISING);
+            return;
+        }
+
+        // # Il messaggio è un vero messaggio # //
+
+        stato.messaggioRicevuto = true;
+        messaggiRicevuti++;
+
+        // leggi tutti gli altri bytes
+        bus->leggiSequenza(RFM69_00_FIFO, lung-1, buffer);
+
+        ultimoMessaggio.tempoRicezione = millis();
+        ultimoMessaggio.dimensione = lung - 1;
+        ultimoMessaggio.intestazione.byte = intest.byte;
+        ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
+
+
+        attachInterrupt(numeroInterrupt, isrCaller, RISING);
+        return;
+    }
+
+}
+#endif
 
 
 
@@ -551,6 +663,20 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
 
 return Errore::ok;
 }
+
+
+// Passa rapidamente in modalità standby (funzione usata dall'ISR)
+//
+void RFM69::modalitaStandby() {
+    // Prepara il byte da scrivere nel registro
+    regOpMode &= 0xE3;
+    regOpMode |= 0x04;
+    //Scrivi il registro RegOpMode
+    bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
+    // Ricorda la modalita attuale della radio
+    modalita = Modalita::standby;
+}
+
 
 
 // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza

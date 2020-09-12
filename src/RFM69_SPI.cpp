@@ -72,8 +72,6 @@ bool RFM69::Spi::inizializza() {
 
     delay(20);
 
-    usaInIsr(false);
-
     return true;
 
 }
@@ -143,7 +141,7 @@ uint8_t RFM69::Spi::trasferisciByte(uint8_t byte) {
 void RFM69::Spi::apriComunicazione() {
 
     // Blocca gli interrupt
-    if(gestisciInterrupt) cli();
+    cli();
 
     // Trova lo stato attuale del pin SS per reimpostarlo alla fine del
     // trasferimento
@@ -181,5 +179,5 @@ void RFM69::Spi::chiudiComunicazione() {
     if(pinSSInput) pinMode(SS, INPUT);
 
     // Ripristina gli interrupt
-    if(gestisciInterrupt) sei();
+    sei();
 }

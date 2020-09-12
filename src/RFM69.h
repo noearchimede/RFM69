@@ -901,13 +901,6 @@ private:
         // leggi una sequenza di len bytes a partire da addr0 e salvali in data
         virtual void leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) = 0;
 
-        // questa funzione deve essere chiamata prima e dopo l'utilizzo di SPI
-        // all'interno di un'ISR (prima cona rgomento `true`, dopo con `false)
-        void usaInIsr(bool x) { gestisciInterrupt = !x; }
-
-    protected:
-        // deve essere false quando SPI è usata in un'ISR
-        bool gestisciInterrupt;
     };
 
     // ### SPI ###

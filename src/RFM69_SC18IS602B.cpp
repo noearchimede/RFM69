@@ -76,8 +76,6 @@ bool RFM69::SC18IS602B::inizializza() {
     Wire.write(ORDER_MSB & MODE_CPOL0CPHA0 & FREQUENCY_1843KHZ);
     Wire.endTransmission();
 
-    usaInIsr(false);
-
     return true;
 
 }
