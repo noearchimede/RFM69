@@ -81,9 +81,9 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
     // Se c'è un messaggio in uscita non si può inviarne un altro. Visto che di
     // solito la trasmissione dura pochi millisecondi, però, si può aspettare.
     // (Se si ha fretta non bisogna chiamare invia due volte di seguito)
-    if(stato.trasmissioneMessaggio || stato.trasmissioneAck) {
+    if(statoOld.trasmissioneMessaggio || statoOld.trasmissioneAck) {
         uint32_t t = millis();
-        while(stato.trasmissioneMessaggio || stato.trasmissioneAck) {
+        while(statoOld.trasmissioneMessaggio || statoOld.trasmissioneAck) {
             // Il messaggio più lungo alla bitrate minima con l'encoding più
             // dispendioso parte in una trentina di ms
             if(millis() - 50 > t) return Errore::inviaTimeoutTxPrecedente;
@@ -92,7 +92,7 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
 
     // Se la classe sta aspettando un ACK ignoralo (se l'utente sta inviando un
     // nuovo messaggio significa che non controllerà più l'ack del precedente)
-    if(stato.attesaAck) rinunciaAck();
+    if(statoOld.attesaAck) rinunciaAck();
 
 
     cambiaModalita(Modalita::standby);
@@ -110,14 +110,20 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
         bus->scriviRegistro(RFM69_00_FIFO, messaggio[i]);
     }
 
-    cambiaModalita(Modalita::tx);
-    stato.trasmissioneMessaggio = true;
+    // metti la radio in modalità trasmissione con l'ordine di passare a ricezione
+    // non appena il pacchetto è stato inviato. In questo modo la radio è da subito pronta
+    // per ricevere un ACK. Siccome la radio non sembra essere capace di eseguire
+    // la sequenza ideale tx -> rx -> standby/modalitaDefault autonomamente, dopo la ricezione di un ACK
+    // rimane in modalità rx. (la condizione
+    // di uscita dalla modalità intermedia (rx) scelta (packetSent) non accade mai
+    autoModes(Modalita::tx, AMModInter::rx, AMEnterCond::packetSentRising, AMExitCond::crcOkRising);
+    statoOld.trasmissioneMessaggio = true;
 
     Intestazione intest;
     intest.byte = intestazione;
-    if(intest.bit.richiestaAck) stato.attesaAck = true;
-    else stato.attesaAck = false;
-    stato.ackRicevuto = false;
+    if(intest.bit.richiestaAck) statoOld.attesaAck = true;
+    else statoOld.attesaAck = false;
+    statoOld.ackRicevuto = false;
     tempoUltimaTrasmissione = millis();
 
     return Errore::ok;
@@ -141,9 +147,9 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
 int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
 
     // Nessun messaggio in entrata
-    if(!stato.messaggioRicevuto) return Errore::leggiNessunMessaggio;
+    if(!statoOld.messaggioRicevuto) return Errore::leggiNessunMessaggio;
 
-    stato.messaggioRicevuto = false;
+    statoOld.messaggioRicevuto = false;
 
     // Messaggio troppo lungo per questa radio
     if(lungMaxMessEntrata < ultimoMessaggio.dimensione) return Errore::messaggioTroppoLungo;
@@ -175,9 +181,9 @@ void RFM69::inviaAck() {
     // Se c'è un messaggio in uscita non si può inviare un altro. Visto che di
     // solito la trasmissione dura pochi millisecondi, però, si può aspettare.
     // Alla fine dell'attesa il messaggio uscente viene bloccato.
-    if(stato.trasmissioneMessaggio) {
+    if(statoOld.trasmissioneMessaggio) {
         uint32_t t = millis();
-        while(stato.trasmissioneMessaggio) {
+        while(statoOld.trasmissioneMessaggio) {
             // Il messaggio più lungo alla bitrate minima con l'encoding più
             // dispendioso parte in una trentina di ms
             if(millis() - 50 > t) break;
@@ -193,7 +199,7 @@ void RFM69::inviaAck() {
     bus->scriviRegistro(RFM69_00_FIFO, intestazione.byte);
 
     cambiaModalita(Modalita::tx);
-    stato.trasmissioneAck = true;
+    statoOld.trasmissioneAck = true;
 }
 
 
@@ -201,7 +207,7 @@ void RFM69::inviaAck() {
 //
 int RFM69::iniziaRicezione() {
     uint32_t t = millis();
-    while(stato.trasmissioneAck || stato.trasmissioneMessaggio) {
+    while(statoOld.trasmissioneAck || statoOld.trasmissioneMessaggio) {
         // timeoutAck è un tempo arbitrario ma dell'ordine di grandezza giusto
         if(t < millis() - timeoutAck) break;
     }
@@ -212,7 +218,7 @@ int RFM69::iniziaRicezione() {
 // Restituisce `true` se un nuovo messaggio è disponibile
 //
 bool RFM69::nuovoMessaggio() {
-    return stato.messaggioRicevuto;
+    return statoOld.messaggioRicevuto;
 }
 
 
@@ -252,7 +258,7 @@ uint8_t RFM69::tempoRicezione() {
 // Restituisce true se la classe sta aspettando un ack
 //
 bool RFM69::ackInSospeso() {
-    if(stato.attesaAck) {
+    if(statoOld.attesaAck) {
         if(millis() - tempoUltimaTrasmissione  > timeoutAck) {
             // timeout, termina l'attesa senza aver ricevuto l'ACK
             rinunciaAck();
@@ -268,14 +274,14 @@ bool RFM69::ackInSospeso() {
 // Restituisce true se la radio ha ricevuto un ACK per l'ultimo messaggio inviato
 //
 bool RFM69::ricevutoAck() {
-    return stato.ackRicevuto;
+    return statoOld.ackRicevuto;
 }
 
 
 // Fingi di aver ricevuto un ACK. Se il vero ACK dovesse arrivare dopo l'esecuzione
 // di questa funzione non avrà nessun effetto.
 void RFM69::rinunciaAck() {
-    stato.attesaAck = false;
+    statoOld.attesaAck = false;
     cambiaModalita(modalitaDefault, false);
 }
 
@@ -318,10 +324,12 @@ void RFM69::isr() {
     // ## Modalità TX, interrupt su `PacketSent` ## //
 
     // È appena stato trasmesso un messaggio
-    if(stato.trasmissioneMessaggio) {
-        if(stato.attesaAck) cambiaModalita(Modalita::rx, false);
+    if(statoOld.trasmissioneMessaggio) {
+        if(statoOld.attesaAck) cambiaModalita(Modalita::rx, false);
         else cambiaModalita(modalitaDefault, false);
-        stato.trasmissioneMessaggio = false;
+        temp = bus->leggiRegistro(0x1);
+        disattivaAutoModes();
+        statoOld.trasmissioneMessaggio = false;
         messaggiInviati++;
 
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
@@ -329,9 +337,9 @@ void RFM69::isr() {
     }
 
     // È appena stato trasmesso un ACK
-    if(stato.trasmissioneAck) {
+    if(statoOld.trasmissioneAck) {
         cambiaModalita(modalitaDefault, false);
-        stato.trasmissioneAck = false;
+        statoOld.trasmissioneAck = false;
 
         attachInterrupt(numeroInterrupt, isrCaller, RISING);
         return;
@@ -352,7 +360,8 @@ void RFM69::isr() {
         Intestazione intest;
         intest.byte = bus->leggiRegistro(RFM69_00_FIFO);
 
-        if(stato.attesaAck) {
+        if(statoOld.attesaAck) {
+
             // Il messaggio dovrebbe essere un ACK. È però possibile che l'altra
             // radio invii a sua volta un messaggio prima di inviare l'ACK
             // (l'ACK è inviato dalla funzione di lettura, chiamata dall'utente,
@@ -375,8 +384,8 @@ void RFM69::isr() {
                 nrAckRicevuti++;
                 sommaAtteseAck += durataUltimaAttesaAck;
 
-                stato.attesaAck = false;
-                stato.ackRicevuto = true;
+                statoOld.attesaAck = false;
+                statoOld.ackRicevuto = true;
                 ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
                 cambiaModalita(modalitaDefault, false);
                 // non c'è nient'altro da fare, un ACK non ha contenuto
@@ -411,7 +420,7 @@ void RFM69::isr() {
 
         // # Il messaggio è un vero messaggio # //
 
-        stato.messaggioRicevuto = true;
+        statoOld.messaggioRicevuto = true;
         messaggiRicevuti++;
 
         // leggi tutti gli altri bytes
@@ -554,6 +563,16 @@ void RFM69::modalitaStandby() {
 }
 
 
+void RFM69::autoModes(Modalita modBase, AMModInter modInter, AMEnterCond enterCond, AMExitCond exitCond) {
+    uint8_t regAutoModes = ((uint8_t)modInter) | ((uint8_t)exitCond << 2) | ((uint8_t)enterCond << 5);
+    bus->scriviRegistro(RFM69_3B_AUTO_MODES, regAutoModes);
+    cambiaModalita(modBase);
+}
+
+
+void RFM69::disattivaAutoModes() {
+    bus->scriviRegistro(RFM69_3B_AUTO_MODES, 0x0);
+}
 
 // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza
 // superiore a 17 dBm).

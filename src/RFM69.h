@@ -481,7 +481,7 @@ public:
 
         @return `true` se la radio sta trasmettendo un messaggio.
     */
-    bool staTrasmettendo() {return (stato.trasmissioneMessaggio || stato.trasmissioneAck);}
+    bool staTrasmettendo() {return (statoOld.trasmissioneMessaggio || statoOld.trasmissioneAck);}
 
     //!@}
     /*! @name Log
@@ -773,11 +773,14 @@ public:
     };
 
     // Imposta la funzione AutoModes (-> p 42 datasheet)
-    // nota: funzione relativamente lunga, fino a (stima) 5ms
+    // nota: funzione relativamente lunga, fino a (stima) 5ms a causa della
+    // chiamata a cambiamodalita() in con l'opzione 'aspetta'
     void autoModes(Modalita modBase, AMModInter modInter,
                     AMEnterCond enterCond, AMExitCond exitCond);
 
+    void disattivaAutoModes();
 
+    uint8_t temp;
 
     // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza
     void highPowerSettings(bool attiva);
@@ -874,7 +877,10 @@ public:
     // Informazioni sull'ultimo messaggio ricevuto
     volatile InfoMessaggio ultimoMessaggio;
     
-    struct {
+    struct StatoOld {
+        StatoOld() : trasmissioneMessaggio(0), trasmissioneAck(0),
+                  attesaAck(0), ackRicevuto(0), messaggioRicevuto(0) {}
+
         // La radio sta trasmettendo un messaggio
         volatile bool trasmissioneMessaggio : 1;
         // La radio sta trasmettendo un ACK
@@ -885,6 +891,13 @@ public:
         volatile bool ackRicevuto : 1;
         // Nella radio c'è un nuovo messaggio da leggere
         volatile bool messaggioRicevuto : 1;
+    } statoOld;
+
+    struct Stato {
+        Stato() : txMessRxAck (0) {}
+
+        // La radio sta trasmettendo un messaggio o aspettando l'ack corrispondente
+        bool txMessRxAck : 1;
     } stato;
 
     enum class Intervento {
