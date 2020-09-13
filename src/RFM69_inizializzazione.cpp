@@ -371,8 +371,7 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
     sommaAtteseAck = 0;
     nrAckRicevuti = 0;
 
-    defaultStandby();
-    standby();
+    standby(true);
 
     return Errore::ok;
 

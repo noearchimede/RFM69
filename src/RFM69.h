@@ -151,7 +151,7 @@ public:
     //! Da chiamare regolarmente! Aggiorna lo stato, scarica in nuovi messaggi ecc.
     /*! Questa funzione dipende dall'ISR
     */
-    void controlla();
+    int controlla();
 
 
     //! Invia un messaggio
@@ -243,12 +243,18 @@ public:
     int leggi(uint8_t messaggio[], uint8_t &lunghezza);
 
     //! Attiva la radio in modo che possa ricevere dei messaggi
-    /*! Per riceve la radio deve essere in modalità ricezione. Nelle altre modalità
-        non si accorgerà nemmeno di aver ricevuto un messaggio. Quindi se non si
-        chiama questa funzione sulla radio ricevente tutti i messaggi inviatile
-        andranno persi.
+    /*! Per riceve la radio deve essere in modalità ricezione. Nelle altre
+        modalità non si accorgerà nemmeno di aver ricevuto un messaggio. Quindi
+        se non si chiama questa funzione sulla radio ricevente tutti i messaggi
+        inviatile andranno persi.
+        @note Questa funzione non garantisce che la modalità sia già rx al proprio
+            termine, perché se la radio è occupata delega il cambiamento di modalità
+            alla funzione `controlla()` che imposterà rx non appena possibile.
+            @param aspetta Blocca il programma fino a che la radioella modalità
+            desiderata. Pue utile se per qualche ragione la funz eccezionaleione
+            'controlla()' non sta girando al momento della chiamata.
     */
-    int iniziaRicezione();
+    void ricevi(bool aspetta = false);
 
 
     //!@}
@@ -257,6 +263,22 @@ public:
     indispensabili
     */
     //!@{
+
+
+    //! Mette la radio in standby (richiederà 1.25mA di corrente)
+    /*! La modalità `standby` serve per mettere la radio in pausa per qualche
+        secondo. Per pause più lunghe conviene usare `sleep()`, soprattutto se
+        l'intero dispositivo deve essere messo in standby per un certo periodo.
+        Se invece il dispositivo utilizza relativamente tanta corrente durante
+        lo standby della radio (ad es. ha accesi diversi LED, un motore, ...) la
+        differenza tra `sleep()` e `standby()` non è rilevante.
+        @note vedi nota per @ref `ricevi()`
+        @param aspetta Blocca il programma fino a che la radio è nella modalità
+            desiderata. Può essere utile se per qualche ragione eccezionale la
+            funzione 'controlla()' non sta girando al momento della chiamata.
+    */
+    void standby(bool aspetta = false);
+
 
     //! Controlla se c'è un nuovo messaggio
     /*! @return `true` se il buffer della classe contiene un nuovo messaggio.
@@ -316,16 +338,6 @@ public:
     */
     bool ricevutoAck();
 
-
-    //! Mette la radio in standby (richiederà 1.25mA di corrente)
-    /*! La modalità `standby` serve per mettere la radio in pausa per qualche secondo.
-        Per pause più lunghe conviene usare `sleep()`, soprattutto se l'intero
-        dispositivo deve essere messo in standby per un certo periodo. Se invece
-        il dispositivo utilizza relativamente tanta corrente durante lo standby
-        della radio (ad es. ha accesi diversi LED, un motore, ...) la differenza
-        tra `sleep()` e `standby()` non è rilevante.
-    */
-    int standby();
 
     //!@}
     /*! @name Funzioni di impostazione
@@ -403,25 +415,20 @@ public:
     /*! `listen` è una modalità particolare che consiste in realtà nella continua
         alternanza tra due modalità: `rx` (ricezione) e `idle` (una specie di
         sleep adattato alla modalità listen).
+        @note vedi nota per @ref `ricevi()`
+        @param aspetta Blocca il programma fino a che la radioella modalità
+            desiderata. Pue utile se per qualche ragione la funz eccezionaleione
+            'controlla()' non sta girando al momento della chiamata.
     */
-    int listen();
+    void listen(bool aspetta = false);
 
     //! Mette la radio in modalità sleep (richiederà 0.1uA di corrente)
-    /* @ref standby()
+    /*! @ref standby()
+        @param aspetta Blocca il programma fino a che la radioella modalità
+            desiderata. Pue utile se per qualche ragione la funz eccezionaleione
+            'controlla()' non sta girando al momento della chiamata.
     */
-    int sleep();
-
-    //! Imposta la modalità di default della radio.
-    /*! Questa funzione non cambia la modalità attuale!\n
-        Ad es.`sleepDefault();` non corrisponde a `sleepDefault(); sleep();`
-    */
-    void defaultSleep();
-    //! @copydoc defaultSleep()
-    void defaultStandby();
-    //! @copydoc defaultSleep()
-    void defaultListen();
-    //! @copydoc defaultSleep()
-    void defaultRicezione();
+    void sleep(bool aspetta = false);
 
     //! Imposta il tempo d'attesa massimo per un ACK
     /*! @param tempoMs Tempo di attesa in millisecondi per la funzione `ackInSospeso()`.
@@ -584,7 +591,7 @@ public:
             - `inviaMessaggio()` (privata) e i suoi derivati pubblici (`leggi()`)
             - `leggi()`
             - `cambiaModalita()` (privata) e i suoi derivati pubblici
-            (`iniziaRicezione()`, `standby()`, ...)
+            (`ricevi()`, `standby()`, ...)
 
             I codici di errore vengono sempre forniti all'utente sotto forma di `int`
             per non costringerlo a usare questa enum se non vuole (i valori dei codici
@@ -655,6 +662,11 @@ public:
             tempo massimo ampiamente sufficiente.
             */
             modTimeout                  = 14,
+
+            /*! controlla(): Registrato un timeout per l'invio di un messaggio
+            (la radio viene sbloccata automaticamente, ma non dovrebbe mai succedere)
+            */
+            controllaTimeoutTx          = 15
         };
     };
 
@@ -709,8 +721,8 @@ public:
 
     // ### GESTIONE COMUNICAZIONI ###
 
-    //! [privata] Funzione di invio dei messaggi
-    /*! Questa funzione è alla base di tutte le funzioni di invio messaggi, che
+    // [privata] Funzione di invio dei messaggi
+    /* Questa funzione è alla base di tutte le funzioni di invio messaggi, che
         si limitano a scrivere l'intestazione del messaggio prima di chiamarla.
         Le funzioni pubbliche di invio sono:
         - `inviaConAck()`
@@ -722,10 +734,10 @@ public:
     int inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza,
                     uint8_t intestazione, bool insisti = true);
 
-    //! Imposta la modalità di funzionamento
-    /*! Cambia la modalità della radio. Questa funzione è chiamata per ogni
+    // Imposta la modalità di funzionamento
+    /* Cambia la modalità della radio. Questa funzione è chiamata per ogni
         cambiamento di modalità, richiesto dall'utente direttamente
-        (`iniziaRicezione();`, `standby();`, ...), indirettamente (`invia()`;, ...)
+        (`ricevi();`, `standby();`, ...), indirettamente (`invia()`;, ...)
         o dall'`isr()`. Se richiesta dall'utente può bloccare il programma per
         qualche millisecondo, soprattutto in caso di cambiamento verso la modalità
         listen, o da o verso la modalità trasmissione, mentre è molto rapida se
@@ -734,6 +746,8 @@ public:
     int cambiaModalita(Modalita, bool aspetta = true);
 
     void modalitaStandby();
+
+    // Aspetta che la 
 
     enum class AMEnterCond : uint8_t {
         //none = 0x0 non può essere usata (bisogna impostare sia enter sia exit)
@@ -781,8 +795,8 @@ public:
     // handler `isr()`
     static void isrCaller();
 
-    //! Interrupt handler
-    /*! Funzione chiamata quando la radio richiede un interrupt tramite il proprio
+    // Interrupt handler
+    /* Funzione chiamata quando la radio richiede un interrupt tramite il proprio
     pin DIO0. I momenti in cui può essere chiamata sono illustrati in uno schema
     nella sezione Protocollo di comunicazione della descrizione generale della
     classe @ref RFM69.
@@ -806,7 +820,8 @@ public:
 
     // ## Specifiche di ogni radio ##
 
-    // Modalità usata quando non ne è specificata un'altra
+    // Modalità usata quando non ne è specificata un'altra per eseguire un'azione
+    // particolare
     Modalita modalitaDefault;
 
     // Dimensione massima dei messaggi in entrata
@@ -834,13 +849,25 @@ public:
 
     // ### VARIABILI ###
 
-    // # Gestione ACK # //
+    // controllo ISR (serve sia per debug che per le statistiche sugli ACK qui sotto)
+    uint32_t tempoUltimaEsecuzioneIsr; // in ms
 
+    // # Timeout #
     // Tempo massimo di attesa dell'ACK (deve essere scelto in base alla frequenza
     // con cui viene chiamata la funzione `leggi()` sull'altra radio;
     // 250 è un valore arbitrario.
     uint16_t timeoutAck = 250;
-    // Durata dell'ultima attesa di un ACK (non contano le attese terminate per timeout).
+    // Tempo massimo per aspettare che la radio si liberi prima di inviare un
+    // messaggio cambiare modalità ecc. 30 ms sembra essere un ragionevole tempoo
+    // massimo per inviare un messaggio della lunghezza massima
+    // TODO sostituire questa attesa con un sistema che rimandi l'azione in questione
+    // a quando la radio sarà libera sfruttando la funzione controlla(
+    uint8_t timeoutAspetta = 30;
+
+    // # Statistiche Ack # 
+
+    // Durata dell'ultima attesa di un ACK (se timoeuut, =~ tiemoutAck).
+    // Calcolata solo se l'ACK è arrivato ed è stato verificato
     // [attesa ACK] = [trasmissione] + [decodificazione] + [TEMPO PRIMA DELLA CHIAMATA
     // ALLA FUNZIONE leggi()] + [trasmissione ACK]
     // Questa variabile ha un 'getter' pubblico
@@ -886,13 +913,14 @@ public:
         volatile bool messaggioRicevuto : 1;
     } statoOld;
 
+
     enum class Stato {
         // nessuna azione in corso, tranne eventualmente ascolto passivo (rx, listen)
         pronto,
         // questo è uno stato di transizione possibile tra un'esecuzione
         // dell'ISR e la successiva chiamata di controlla(). Per gli interventi
         // in questione vedi poco sotto.
-        attesaIntervento,
+        attesaConcludiAzione,
         // La radio sta trasmettendo un messaggio con richiesta di ack
         invioMessConAck,
         // Sta trasmettendo un messaggio senza richesta di Ack
@@ -903,20 +931,34 @@ public:
     };
     volatile Stato stato = Stato::pronto;
 
+    // Restituisce true se la radio è pronta per eseguire un novo compito
+    // (inviare, cambiare modalità, ...) Rispetto a un semplice controllo della
+    // variabile `stato` questa funzione chiama 'controlla()' se necessario e
+    // offre la possiblità di aspettare fino a `timeoutAspetta` ms che la radio
+    // sia pronta
+    bool radioPronta(bool aspetta);
+
+
+
     // l'ISR imposta queste variabili, la funzione controlla() esegue le azioni
     // richieste
     struct Intervento {
-        // la modalità attuale deve essere al più presto sostituita con quella di default
-        bool impostaModDefault : 1;
         // AutoModes ha eseguito la transizione di cui è incaricato, non serve più
-        bool disattivaAutoModes : 1;
+        bool disattivaAutoModes;
         // è arrivato un messaggio, scaricalo nella memoria interna per liberare la radio
-        bool scaricaMesasggio : 1;
+        bool scaricaMesasggio;
         // è arrivato un mesasggio che dovrebbe essere un ACK, verifica se lo è davvero
-        bool verificaAck : 1;
+        bool verificaAck;
 
     };
-    volatile Intervento richiesteIntervento {};
+    // NOTA: dopo l'intervento in concludiAzione l'azione in corso è conclusa.
+    // Per implementare un'azione intermedia bisognerebbe usare un'altra
+    // variabile Intervento
+    volatile Intervento concludiAzione {};
+
+    // piccoli helper
+    inline void set(volatile bool& x) { x = true; }
+    inline void clear(volatile bool& x) { x = false; }
 
     class Buffer {
         typedef uint8_t data_type;
