@@ -149,9 +149,9 @@ public:
     
     
     //! Da chiamare regolarmente! Aggiorna lo stato, scarica in nuovi messaggi ecc.
-    /*! Questa funzione dipende dall'ISRf
+    /*! Questa funzione dipende dall'ISR
     */
-    //int controlla() {};
+    void controlla();
 
 
     //! Invia un messaggio
@@ -283,16 +283,13 @@ public:
     uint8_t titoloMessaggio();
 
     //! Restituisce true se la classe sta aspettando un ACK
-    /*! @return `true` se la classe sta aspettando un ack, cioé se ha inviato un
-            messaggio con richiesta di ACK e non lo ha ancora ricevuto.
-
-        Questa funzione contiene un sistema di timeout. Se chiamata dopo lo scadere
-        del tempo chiama `rinunciaAck()` e restituisce `false`.
-
-        @warning `false` ha due signifcati opposti:
-              1. L'ACK è stato ricevuto
-              2. L'ACK non è arrivato, ma il tempo massimo di attesa ê scaduto.
-            Per questo è necessario chiamare _sempore_ anche ricevutoAck().
+    /*! @return `true` se e solo se la classe sta aspettando un ack, cioé se ha
+            inviato un messaggio con richiesta di ACK e non lo ha ancora ricevuto
+            oppure non ha ancora verificato se un messaggio che dovrebbe esesere
+            un ack lo è davvero.
+        @note Chiama internamente `controlla()`, quindi è possibile scrivere
+            `while(ackInSospeso());` per aspettare la ricezione di un Ack o lo
+            scadere del tempo `timeoutAck()`.
     */
     bool ackInSospeso();
 
@@ -305,11 +302,13 @@ public:
 
         Esempio:
         ~~~{.cpp}
+        // prova per tre volte al massimo di inviare un messaggio
         for(int i = 0; i < 3; i++) {
-            invia();
+            invia(...);
             while(ackInSospeso());
             if(ricevutoAck()) break;
         }
+        // se anche il terzo tentativo fallisce stampa un messaggio
         if(!ricevutoAck()) {
             print("Trasmissione messaggio fallita");
         }
@@ -317,20 +316,6 @@ public:
     */
     bool ricevutoAck();
 
-    //! Simula la ricezione di un ACK.
-    /*!
-        @note Normalmente questa funzione non dovrebbe mai essere chiamata.
-
-        Questa funzione è chiamata automaticamente da ackInSospeso() allo scadere
-        del tempo massimo. Può essere usata dall'utente per terminare l'attesa
-        prima di quella scadenza.
-            In caso di invio di un secondo messaggio prima della ricezione dell'ACK
-        (ad es. per trasmettere un'informazione urgente) è chiamata automaticamente.
-
-        Se il vero ACK dovesse arrivare dopo l'esecuzione di questa funzione
-        non avrà nessun effetto.
-    */
-    void rinunciaAck();
 
     //! Mette la radio in standby (richiederà 1.25mA di corrente)
     /*! La modalità `standby` serve per mettere la radio in pausa per qualche secondo.
@@ -640,11 +625,13 @@ public:
             /*! inviaMessaggio(): La lunghezza del messaggio è nulla
             */
             inviaMessaggioVuoto         = 8,
-            /*! inviaMessaggio(): invia() è stata chiamata mentre c'era un messaggio
-            in uscita, la funzione ha aspettato per più del tempo massimo di invio di
-            un messaggio e alla fine dell'attesa il messaggio non era ancora partito
+            /*! inviaMessaggio(): invia() è stata chiamata mentre la classe
+            stava eseguendo un'altra operazione, e quest'ultima non è stata
+            completata entro il tempo d'attesa massimo scelto per questa
+            situazione oppure l'opzione 'insisti' non era selezionata
+            (equivalente a un timeout nullo).
             */
-            inviaTimeoutTxPrecedente    = 9,
+            inviaTimeout                = 9,
 
 
             /*! leggi(): Non c'è nessun nuovo messaggio da leggere
@@ -729,8 +716,11 @@ public:
         - `inviaConAck()`
         - `inviaFinoAck()`
         - `invia()`
+        @note l'opzione `insisti` non è attualmente utilizzata, cioé nessuna
+        funzione a disposizione dell'utente la usa ed è quindi sempre `true`
     */
-    int inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t intestazione);
+    int inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza,
+                    uint8_t intestazione, bool insisti = true);
 
     //! Imposta la modalità di funzionamento
     /*! Cambia la modalità della radio. Questa funzione è chiamata per ogni
@@ -780,7 +770,6 @@ public:
 
     void disattivaAutoModes();
 
-    uint8_t temp;
 
     // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza
     void highPowerSettings(bool attiva);
@@ -868,6 +857,10 @@ public:
     uint16_t nrAckRicevuti;
     // Valore RSSI più recente disponibile
     int8_t ultimoRssi;
+    // l'ultimo ack richiesto è stato ricevuto, non ricevuto, oppure si sta
+    // la radio lo sta aspettando o sta aspettando che un possibile ack sia
+    // verificato
+    enum class StatoAck {pendente, attesaVerifica, ricevuto, nonRicevuto} statoUltimoAck;
 
 
     // Modalità in cui si trova attualmente la radio
@@ -893,24 +886,40 @@ public:
         volatile bool messaggioRicevuto : 1;
     } statoOld;
 
-    struct Stato {
-        Stato() : txMessRxAck (0) {}
-
-        // La radio sta trasmettendo un messaggio o aspettando l'ack corrispondente
-        bool txMessRxAck : 1;
-    } stato;
-
-    enum class Intervento {
-        nessuno,
+    enum class Stato {
+        // nessuna azione in corso, tranne eventualmente ascolto passivo (rx, listen)
+        pronto,
+        // questo è uno stato di transizione possibile tra un'esecuzione
+        // dell'ISR e la successiva chiamata di controlla(). Per gli interventi
+        // in questione vedi poco sotto.
+        attesaIntervento,
+        // La radio sta trasmettendo un messaggio con richiesta di ack
+        invioMessConAck,
+        // Sta trasmettendo un messaggio senza richesta di Ack
+        invioMessSenzaAck,
+        // Sta aspettando un ack
+        attesaAck
 
     };
+    volatile Stato stato = Stato::pronto;
 
-    // l'ISR imposta questa variabile, la funzione controlla() esegue l'azione
-    // richiesta
-    Intervento richiestaIntervento;
+    // l'ISR imposta queste variabili, la funzione controlla() esegue le azioni
+    // richieste
+    struct Intervento {
+        // la modalità attuale deve essere al più presto sostituita con quella di default
+        bool impostaModDefault : 1;
+        // AutoModes ha eseguito la transizione di cui è incaricato, non serve più
+        bool disattivaAutoModes : 1;
+        // è arrivato un messaggio, scaricalo nella memoria interna per liberare la radio
+        bool scaricaMesasggio : 1;
+        // è arrivato un mesasggio che dovrebbe essere un ACK, verifica se lo è davvero
+        bool verificaAck : 1;
+
+    };
+    volatile Intervento richiesteIntervento {};
 
     class Buffer {
-        typedef volatile uint8_t data_type;
+        typedef uint8_t data_type;
         data_type * dataptr = nullptr;
         uint8_t len = 0;
     public:
