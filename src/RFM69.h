@@ -254,7 +254,7 @@ public:
             desiderata. Pue utile se per qualche ragione la funz eccezionaleione
             'controlla()' non sta girando al momento della chiamata.
     */
-    void ricevi(bool aspetta = false);
+    void modalitaRicezione(bool aspetta = false);
 
 
     //!@}
@@ -420,7 +420,7 @@ public:
             desiderata. Pue utile se per qualche ragione la funz eccezionaleione
             'controlla()' non sta girando al momento della chiamata.
     */
-    void listen(bool aspetta = false);
+    void modalitaListen(bool aspetta = false);
 
     //! Mette la radio in modalità sleep (richiederà 0.1uA di corrente)
     /*! @ref standby()
@@ -473,7 +473,7 @@ public:
 
         @return `true` se la radio sta trasmettendo un messaggio.
     */
-    bool staTrasmettendo() {return (statoOld.trasmissioneMessaggio || statoOld.trasmissioneAck);}
+    bool staTrasmettendo();
 
     //!@}
     /*! @name Log
@@ -890,46 +890,43 @@ public:
     enum class StatoAck {pendente, attesaVerifica, ricevuto, nonRicevuto} statoUltimoAck;
 
 
-    // Modalità in cui si trova attualmente la radio
-    volatile Modalita modalita = Modalita::sleep;
+    // Modalità in cui si trova attualmente la radio.
+    // NOTA: nella prima versione della classe questa corrispondeva sempre alla
+    // modalità effettiva di RFM69 (come nel registo 0x1). Dopo l'introduzione
+    // della funzione AutoModes in questa classe però questo non vale più.
+    // In particolare modalita::rx può rappresentare una modalità AutoMode
+    // (rx/stby), e modalita::tx non è mai usato senza AutoModes.
+    Modalita modalita = Modalita::sleep;
+
     // "ora" di trasmissione dell'ultimo messaggio (ms)
-    volatile uint32_t tempoUltimaTrasmissione = 0;
+    uint32_t tempoUltimaTrasmissione = 0;
     // Informazioni sull'ultimo messaggio ricevuto
-    volatile InfoMessaggio ultimoMessaggio;
-    
-    struct StatoOld {
-        StatoOld() : trasmissioneMessaggio(0), trasmissioneAck(0),
-                  attesaAck(0), ackRicevuto(0), messaggioRicevuto(0) {}
+    InfoMessaggio ultimoMessaggio;
 
-        // La radio sta trasmettendo un messaggio
-        volatile bool trasmissioneMessaggio : 1;
-        // La radio sta trasmettendo un ACK
-        volatile bool trasmissioneAck : 1;
-        // Un ACK richiesto non è ancora stato ricevuto
-        volatile bool attesaAck : 1;
-        // È stato ricevuto un ACK per l'ultimo messaggio inviato
-        volatile bool ackRicevuto : 1;
-        // Nella radio c'è un nuovo messaggio da leggere
-        volatile bool messaggioRicevuto : 1;
-    } statoOld;
-
-
+    // Stato dalla classe. NOTA: l'ascolto passivo di segnali radio (rx o
+    // listen) non è considerato uno stato speciale perché può essere interrotto
+    // in qualsisi momento.
     enum class Stato {
-        // nessuna azione in corso, tranne eventualmente ascolto passivo (rx, listen)
-        pronto,
-        // questo è uno stato di transizione possibile tra un'esecuzione
-        // dell'ISR e la successiva chiamata di controlla(). Per gli interventi
-        // in questione vedi poco sotto.
-        attesaConcludiAzione,
+        // nessuna azione in corso, tranne eventualmente ascolto passivo (rx, modalitaListen)
+        passivo,
+        // questo è uno stato di transizione generico possibile tra
+        // un'esecuzione dell'ISR e la successiva chiamata di controlla(). Per
+        // gli interventi in questione vedi poco sotto.
+        attesaAzione,
         // La radio sta trasmettendo un messaggio con richiesta di ack
         invioMessConAck,
         // Sta trasmettendo un messaggio senza richesta di Ack
         invioMessSenzaAck,
         // Sta aspettando un ack
-        attesaAck
+        attesaAck,
+        // trasmissione di un ack
+        invioAck
 
     };
-    volatile Stato stato = Stato::pronto;
+    volatile Stato stato = Stato::passivo;
+    // NuovoMessaggio è una flag separata da 'stato' perché mentre c'è un nuovo
+    // messaggio (già estratto dalla FIFO) si può usare la radio
+    bool messaggioRicevuto = false;
 
     // Restituisce true se la radio è pronta per eseguire un novo compito
     // (inviare, cambiare modalità, ...) Rispetto a un semplice controllo della
@@ -943,18 +940,24 @@ public:
     // l'ISR imposta queste variabili, la funzione controlla() esegue le azioni
     // richieste
     struct Intervento {
-        // AutoModes ha eseguito la transizione di cui è incaricato, non serve più
-        bool disattivaAutoModes;
+        // Termina l'azione in corso e torna allo stato passivo impostanto la modalita corretta
+        bool terminaProcesso;
         // è arrivato un messaggio, scaricalo nella memoria interna per liberare la radio
-        bool scaricaMesasggio;
+        bool scaricaMessaggio;
         // è arrivato un mesasggio che dovrebbe essere un ACK, verifica se lo è davvero
         bool verificaAck;
+        // Se richiesto invia un ack, altrimenti termina il processo
+        bool inviaAckOTermina;
+        // annuncia un nuovo messaggio all'utente. Non può essere fatto nell'isr
+        // perché prima bisogna estrarlo dalla FIFO della radio
+        bool annunciaMessaggio;
 
     };
-    // NOTA: dopo l'intervento in concludiAzione l'azione in corso è conclusa.
+    // NOTA: dopo l'intervento in richiestaAzione l'azione in corso è conclusa.
     // Per implementare un'azione intermedia bisognerebbe usare un'altra
     // variabile Intervento
-    volatile Intervento concludiAzione {};
+    volatile Intervento richiestaAzione {};
+    uint8_t temp = 0;
 
     // piccoli helper
     inline void set(volatile bool& x) { x = true; }
@@ -983,9 +986,9 @@ public:
 
 
     // totale di messaggi inviati dall'ultima inizializzazione
-    volatile uint16_t messaggiInviati;
+    uint16_t messaggiInviati;
     // totale di messaggi ricevuti dall'ultima inizializzazione
-    volatile uint16_t messaggiRicevuti;
+    uint16_t messaggiRicevuti;
 
     // Numero di ACK ricevuti mentre `attesaAck == false`
     uint16_t ackInattesi = 0;

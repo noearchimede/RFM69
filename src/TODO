@@ -1,0 +1,14 @@
+Attualmente la radio funziona, ma non riesce a trasmettere gli ACK.
+Il problema sembra essere dal lato della ricevente (cioé la radio che manda gli
+ack): installando una vecchia versione già testata sulla ricevente e la nuova
+sulla trasmittente il sistema di ack funziona.
+
+La prossima cosa sensata da fare è disegnare uno schemino con tutti gli stati,
+l'isr, controlla() ecc.
+
+Questo dovrebbe anche aiutare ad identificare un problema che fa si che dopo
+alcune modifiche apparentemente non legate tra loro e non rilevanti il programma
+della ricevente si blocca, mentre altre volte pur non riuscendo a mandare ack
+almeno riceve. Nella versione attuale (quella nell'ultimo commit, che è
+provvisorio) la ricevente sembra bloccarsi se si accende prima la ricevente e
+poi la trasmitente ma non se si fa l'opposto (o era al contrario?).
