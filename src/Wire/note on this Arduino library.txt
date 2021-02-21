@@ -1,0 +1,4 @@
+This version of Wire is the one currently in the standard Arduino framework. I
+copied it here because the MightyCore version (the one PlatformIO would use if
+this one wasn't here) doesn't seem to work: testing it with the I2C scanner by
+Nick Gammon always returned a list of all possible addresses, on both devices.

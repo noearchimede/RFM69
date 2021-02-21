@@ -9,7 +9,7 @@ da I2C a SPI SC18IS602B.
 */
 
 #include "RFM69.h"
-#include "Wire.h" // dal framework di Arduino
+#include "Wire/src/Wire.h" // dal framework di Arduino
 
 
 
