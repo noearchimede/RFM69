@@ -229,13 +229,35 @@ void RFM69::isr() {
 //
 int RFM69::controlla() {
 
+#if 1
+    Serial.flush();
+    Serial.print("[");
+    switch(stato) {
+        case Stato::passivo: Serial.print("pas "); break;
+        case Stato::attesaAzione : Serial.print("aaz ");break;
+        case Stato::invioMessConAck : Serial.print("imc ");break;
+        case Stato::invioMessSenzaAck : Serial.print("ims ");break;
+        case Stato::attesaAck : Serial.print("aak ");break;
+        case Stato::invioAck : Serial.print("iak ");break;
+    }
+    if(messaggioRicevuto) Serial.print("mr ");
+    Serial.print("- ");
+    if(richiestaAzione.terminaProcesso ) Serial.print("tpr ");
+    if(richiestaAzione.scaricaMessaggio ) Serial.print("sme ");
+    if(richiestaAzione.verificaAck ) Serial.print("vak ");
+    if(richiestaAzione.inviaAckOTermina ) Serial.print("iat ");
+    if(richiestaAzione.annunciaMessaggio ) Serial.print("ame ");
+    if(richiestaAzione.modalitaRxSePossibile ) Serial.print("mrp ");
+    Serial.print("]\n");
+
+#endif
+
     int errore = Errore::ok; // returned alla fine
 
     // # 1. controlla timeout #
     if(stato == Stato::attesaAck) {
         if(millis() - tempoUltimaTrasmissione > timeoutAck) {
             // a questo punto, ack non ancora ricevuto = ack non arriverà mai
-            Serial.println("Timeout ACK");
             statoUltimoAck = StatoAck::nonRicevuto;
             stato = Stato::attesaAzione;
             set(richiestaAzione.terminaProcesso);
@@ -245,7 +267,6 @@ int RFM69::controlla() {
     if(stato == Stato::invioMessConAck || stato == Stato::invioMessSenzaAck) {
         // usa arbitrariamente 100 ms come tempo massimo per trasmettere
         if(millis() - tempoUltimaTrasmissione > 100) {
-            Serial.println("Timeout trasmissione");
             errore = Errore::controllaTimeoutTx;
             stato = Stato::attesaAzione;
             set(richiestaAzione.terminaProcesso);
@@ -259,11 +280,11 @@ int RFM69::controlla() {
     //  dalla precedente esecuzione di altre
 
     if(stato == Stato::attesaAzione) {
-        Serial.println("Azione Controlla: ");
-
-        // per verificare l'ack è necessario prima scaricare l'intestazione
+        // il blocco per "scaricaMessaggio" deve venire prima di quelli
+        // riguardanti l'ACK (se il messaggio è un ack per verificarlo bisogna
+        // prima scaricarlo, se è un messaggio normale bisogna leggerne
+        // l'intestazione per sapere se è richiesto un ACK)
         if(richiestaAzione.scaricaMessaggio) {
-        Serial.println("   scaricaMessaggio");
             clear(richiestaAzione.scaricaMessaggio );
 
             ultimoMessaggio.tempoRicezione = tempoUltimaEsecuzioneIsr;
@@ -283,7 +304,6 @@ int RFM69::controlla() {
         }
 
         if(richiestaAzione.verificaAck) {
-        Serial.println("   verificaAck");
             clear(richiestaAzione.verificaAck);
 
             if(ultimoMessaggio.intestazione.bit.ack) {
@@ -302,13 +322,12 @@ int RFM69::controlla() {
         }
 
         if(richiestaAzione.inviaAckOTermina) {
-        Serial.println("   inviaAck");
             clear(richiestaAzione.inviaAckOTermina);
 
             if(ultimoMessaggio.intestazione.bit.richiestaAck) {
                 inviaAck();
-                // inviaAck mette lo stato su Stato::invioAck, poi l'isr lo cambia
-                // a passivo
+                // inviaAck mette lo stato su Stato::invioAck, poi l'isr lo
+                // cambierà a passivo
             }
             else set(richiestaAzione.terminaProcesso);
         }
@@ -316,21 +335,25 @@ int RFM69::controlla() {
         if(richiestaAzione.annunciaMessaggio) {
             clear(richiestaAzione.annunciaMessaggio);
 
-            // controlla che non si tratti di un ack inatteso
-            if(ultimoMessaggio.intestazione.bit.ack) ++ackInattesi;
+            // controlla che non si tratti di un ack (inatteso, perché un ack
+            // atteso non porta ad alzare la flag annunciaMessaggio)
+            if(ultimoMessaggio.intestazione.bit.ack) {
+                ++ackInattesi;
+            }
             else {
                 set(messaggioRicevuto);
             }
         }
 
         // Un processo è terminato, torna alla modalità di default
+        // Il blocco per "terminaProcesso" deve essere eseguito per ultimo (altri
+        // blocchi possono richiederlo)
         if(richiestaAzione.terminaProcesso) {
-        Serial.println("   terminaProcesso");
             clear(richiestaAzione.terminaProcesso);
 
             stato = Stato::passivo;
-            // introduzione di AutoModes: rx in realtà corrisponde a un modo
-            // automatico particolare
+            // introduzione di AutoModes: 'Modalita::rx' non è più la modalità
+            // omonima della radio ma una particolare configurazione AutoModes
             if(modalitaDefault == Modalita::rx) {
                 // non serve disattivare AutoModes perché modalitaRicezione lo reimposta
                 modalitaRicezione();
@@ -338,6 +361,18 @@ int RFM69::controlla() {
             else {
                 disattivaAutoModes();
                 cambiaModalita(modalitaDefault);
+            }
+        }
+
+
+        // Questo blocco è l'unico a poter essere richiesto (quasi) direttamente
+        // dall'utente (chiamando modalitaRicezione() mentre la radio è
+        // occupata). Per questo prima di rimuovere la propria flag controlla se
+        // ora la radio è libera.
+        if(richiestaAzione.modalitaRxSePossibile) {
+            if(stato == Stato::passivo) {
+                clear(richiestaAzione.modalitaRxSePossibile);
+                modalitaRicezione();
             }
         }
         
@@ -350,6 +385,51 @@ int RFM69::controlla() {
 
 
 // ### 5. Gestione modalità ###
+
+
+// Attiva la radio in modo che possa ricevere dei messaggi
+//
+void RFM69::modalitaRicezione(bool aspetta) {
+    modalitaDefault = Modalita::rx;
+    if(radioPronta(aspetta)) {
+        // metti la radio in modalità rx con un'impostazione autoModes tale che
+        // appena un messaggio è ricevuto correttamente (crcOk) la radio passa
+        // in standby (quindi non riceve più).
+        // La condizione selezionata per uscire dallo standby non si verifica
+        // mai. Nello stesso momento in cui AutoModes cambia la modalità viene
+        // chiamata l'ISR, che segnala a `controlla()` l'arrivo di un messaggio.
+        autoModes(Modalita::rx, AMModInter::standby, AMEnterCond::crcOkRising, AMExitCond::packetSentRising);
+    }
+    else {
+        // La radio non è pronta per cambiare modalità -> delega a `controlla()`
+        set(richiestaAzione.modalitaRxSePossibile);
+    }
+}
+
+
+
+bool RFM69::radioPronta(bool aspetta) {
+    if(stato != Stato::passivo) {
+        // forse basta aggiornare le variabili di stato (un controllo dura poco)
+        controlla();
+        if(stato != Stato::passivo) {
+            // aspettare un attimo o uscire subito con un errore?
+            if (aspetta) {
+                uint32_t t = millis();
+                while (stato != Stato::passivo) {
+                    yield();
+                    controlla();
+                    if (millis() - timeoutAspetta > t) return false;
+                }
+            }
+            else { // !aspetta
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 
 
 
@@ -456,8 +536,9 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
 }
 
 
-// ### 6. Impostazioni ### //
 
+
+// ### 6. Impostazioni ### //
 
 
 

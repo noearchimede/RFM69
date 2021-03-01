@@ -251,8 +251,8 @@ public:
             termine, perché se la radio è occupata delega il cambiamento di modalità
             alla funzione `controlla()` che imposterà rx non appena possibile.
             @param aspetta Blocca il programma fino a che la radioella modalità
-            desiderata. Pue utile se per qualche ragione la funz eccezionaleione
-            'controlla()' non sta girando al momento della chiamata.
+            desiderata. Può essere utile se per qualche ragione la funzione
+            'controlla()' non sta (ancora) girando al momento della chiamata.
     */
     void modalitaRicezione(bool aspetta = false);
 
@@ -745,8 +745,6 @@ public:
     */
     int cambiaModalita(Modalita, bool aspetta = true);
 
-    void modalitaStandby();
-
     // Aspetta che la 
 
     enum class AMEnterCond : uint8_t {
@@ -951,7 +949,8 @@ public:
         // annuncia un nuovo messaggio all'utente. Non può essere fatto nell'isr
         // perché prima bisogna estrarlo dalla FIFO della radio
         bool annunciaMessaggio;
-
+        // Metti la radio in modalità ricezione
+        bool modalitaRxSePossibile;
     };
     // NOTA: dopo l'intervento in richiestaAzione l'azione in corso è conclusa.
     // Per implementare un'azione intermedia bisognerebbe usare un'altra

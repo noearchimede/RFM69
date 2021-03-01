@@ -159,47 +159,7 @@ bool RFM69::ricevutoAck() {
 // ### 5. Gestione modalità ###
 
 
-bool RFM69::radioPronta(bool aspetta) {
-    if(stato != Stato::passivo) {
-        // forse basta aggiornare le variabili di stato (un controllo dura poco)
-        controlla();
-        if(stato != Stato::passivo) {
-            // aspettare un attimo (insisti) o uscire subito con un errore?
-            if (aspetta) {
-                uint32_t t = millis();
-                while (stato != Stato::passivo) {
-                    // a disposizione di altre classi, questa è un'attesa non
-                    // critica. Occhio però a non abusare di questa funzione! il
-                    // comportamento del programma diventa facilmente
-                    // incomprensibilmente incorretto.
-                    yield();
-                    controlla();
-                    if (millis() - timeoutAspetta > t) return false;
-                }
-            }
-            else { // !aspetta
-                return false;
-            }
-        }
-    }
-    return true;
-}
 
-
-// Attiva la radio in modo che possa ricevere dei messaggi
-//
-void RFM69::modalitaRicezione(bool aspetta) {
-    modalitaDefault = Modalita::rx;
-    if(radioPronta(aspetta)) {
-        // automodes qui è usato solo per entrare in standby, la condizione di
-        // uscita è volutamente irragigungibile per peché l'uscita è gestita da
-        // controlla()
-        autoModes(Modalita::rx, AMModInter::standby, AMEnterCond::crcOkRising, AMExitCond::packetSentRising);
-    }
-    autoModes(Modalita::rx, AMModInter::standby, AMEnterCond::crcOkRising, AMExitCond::packetSentRising);
-    // else l'ISR e controlla() si occuperanno di impostare la modalità default,
-    // che ora è rx    
-}
 
 void  RFM69::modalitaListen(bool aspetta) {
     modalitaDefault = Modalita::listen;
@@ -216,17 +176,17 @@ void  RFM69::sleep(bool aspetta) {
     if(radioPronta(aspetta)) cambiaModalita(Modalita::sleep);
 }
 
-// Passa in modalità standby (ottimizzata per poter essere usata in `controlla()`)
-//
-void RFM69::modalitaStandby() {
-    // Prepara il byte da scrivere nel registro
-    regOpMode &= 0xE3;
-    regOpMode |= 0x04;
-    //Scrivi il registro RegOpMode
-    bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
-    // Ricorda la modalita attuale della radio
-    modalita = Modalita::standby;
-}
+// // Passa in modalità standby (ottimizzata per poter essere usata in `controlla()`)
+// //
+// void RFM69::modalitaStandby() {
+//     // Prepara il byte da scrivere nel registro
+//     regOpMode &= 0xE3;
+//     regOpMode |= 0x04;
+//     //Scrivi il registro RegOpMode
+//     bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
+//     // Ricorda la modalita attuale della radio
+//     modalita = Modalita::standby;
+// }
 
 
 
@@ -272,6 +232,7 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto
 
     if(contesto) {
 
+        serial.print(F("RFM69: "));
         switch(errore) {
             case Errore::ok :
             case Errore::errore :
@@ -283,19 +244,27 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto
             case Errore::initVersioneRadioNon0x24 :
             case Errore::initPinInterruptNonValido :
             case Errore::initErroreImpostazione :
-            serial.print(F("RFM69: init: ")); break;
+            serial.print(F("init: ")); break;
 
             case Errore::inviaMessaggioVuoto :
             case Errore::inviaTimeout :
-            serial.print(F("RFM69: invia: ")); break;
+            serial.print(F("invia: ")); break;
 
             case Errore::leggiNessunMessaggio :
             case Errore::leggiArrayTroppoCorta :
-            serial.print(F("RFM69: leggi: ")); break;
+            case Errore::messaggioTroppoLungo :
+            serial.print(F("leggi: ")); break;
 
             case Errore::modImpossibile:
             case Errore::modTimeout :
-            serial.print(F("RFM69: cambiaMod: ")); break;
+            serial.print(F("cambiaMod: ")); break;
+
+            case Errore::controllaTimeoutTx:
+            serial.print(F("controlla: ")); break;
+
+            default:
+            serial.print(F("Errore sconosciuto: "));
+            serial.print(errore);
         }
     }
     switch(errore) {
@@ -326,11 +295,16 @@ void RFM69::stampaErroreSerial(HardwareSerial& serial, int errore, bool contesto
         serial.print(F("nessun messaggio")); break;
         case Errore::leggiArrayTroppoCorta :
         serial.print(F("array troppo corta")); break;
+        case Errore::messaggioTroppoLungo :
+        serial.print(F("messaggio troppo lungo")); break;
 
         case Errore::modImpossibile:
         serial.print(F("impossibile cambiare")); break;
         case Errore::modTimeout :
         serial.print(F("timeout")); break;
+        
+        case Errore::controllaTimeoutTx:
+        serial.print(F("timeout tx")); break;
     }
     serial.println();
 }
