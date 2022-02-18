@@ -69,13 +69,14 @@ Tipi pubblici</h2></td></tr>
 <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda32c665bd126049272eb5710b008ece38">initErroreImpostazione</a> = 7, 
 <br />
 &#160;&#160;<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda4d48113ce753ed19515cbba0e4e3254d">inviaMessaggioVuoto</a> = 8, 
-<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcdadace715f3b64b0f1451f0b3e1ad2f8bc">inviaTimeoutTxPrecedente</a> = 9, 
+<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda7d35654a18cd25b422dc5ad1eb1a1d6f">inviaTimeout</a> = 9, 
 <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda1583adf79e38254e02bc63462a603d11">leggiNessunMessaggio</a> = 10, 
 <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda861572d60591d746df9b50e7bd8b44e8">leggiArrayTroppoCorta</a> = 11, 
 <br />
 &#160;&#160;<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcdaf50bfb0610211410576402c4bc4f4c2a">messaggioTroppoLungo</a> = 12, 
 <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda64b615f7c90ce1b5a0d8345e12b37be9">modImpossibile</a> = 13, 
-<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcdaf85197a251391776666b27969ed42d26">modTimeout</a> = 14
+<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcdaf85197a251391776666b27969ed42d26">modTimeout</a> = 14, 
+<a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcda05a3a10d2ca49f315f02d1701658ddfe">controllaTimeoutTx</a> = 15
 <br />
  }<tr class="memdesc:a4dadb6af0e4d38eaac18d3afe26e5bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lista degli errori che le funzioni della classe possono restituire.  <a href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd">Continua...</a><br /></td></tr>
 </td></tr>
@@ -85,7 +86,7 @@ Tipi pubblici</h2></td></tr>
 <div class="textblock"><p>Contenitore dell'<code>enum</code> <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd" title="Lista degli errori che le funzioni della classe possono restituire. ">Errore::ListaErrori</a>. </p>
 <p>vedi <a class="el" href="struct_r_f_m69_1_1_errore.html#a4dadb6af0e4d38eaac18d3afe26e5bcd">ListaErrori</a> per dettagli sui codici di errore </p>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00570">570</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00586">586</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 </div><h2 class="groupheader">Documentazione dei tipi enumerati (enum)</h2>
 <a id="a4dadb6af0e4d38eaac18d3afe26e5bcd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4dadb6af0e4d38eaac18d3afe26e5bcd">&#9670;&nbsp;</a></span>ListaErrori</h2>
@@ -104,7 +105,7 @@ Tipi pubblici</h2></td></tr>
 <li><code><a class="el" href="class_r_f_m69.html#ad3f48e5290ae7a04fcb82c79386eff68" title="Inizializza la radio. Deve essere chiamato all&#39;inizio del programma. ">inizializza()</a></code></li>
 <li><code>inviaMessaggio()</code> (privata) e i suoi derivati pubblici (<code><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a></code>)</li>
 <li><code><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a></code></li>
-<li><code>cambiaModalita()</code> (privata) e i suoi derivati pubblici (<code><a class="el" href="class_r_f_m69.html#a6b17f375887fff59187de5984045a212" title="Attiva la radio in modo che possa ricevere dei messaggi. ">iniziaRicezione()</a></code>, <code><a class="el" href="class_r_f_m69.html#a641eb4b586c56cba627a73cc6006a63e" title="Mette la radio in standby (richiederà 1.25mA di corrente) ">standby()</a></code>, ...)</li>
+<li><code>cambiaModalita()</code> (privata) e i suoi derivati pubblici (<code>ricevi()</code>, <code><a class="el" href="class_r_f_m69.html#af99075e6623090f855f4af50ec8f23b1" title="Mette la radio in standby (richiederà 1.25mA di corrente) ">standby()</a></code>, ...)</li>
 </ul>
 <p>I codici di errore vengono sempre forniti all'utente sotto forma di <code>int</code> per non costringerlo a usare questa enum se non vuole (i valori dei codici sono espliciti, dunque l'untente può limitarsi a stamparli e guardare a che errore corrispondono leggendo la definizione dell'<code>enum</code>). </p>
 <table class="fieldtable">
@@ -126,7 +127,7 @@ Tipi pubblici</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a4dadb6af0e4d38eaac18d3afe26e5bcda4d48113ce753ed19515cbba0e4e3254d"></a>inviaMessaggioVuoto&#160;</td><td class="fielddoc"><p>inviaMessaggio(): La lunghezza del messaggio è nulla </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a4dadb6af0e4d38eaac18d3afe26e5bcdadace715f3b64b0f1451f0b3e1ad2f8bc"></a>inviaTimeoutTxPrecedente&#160;</td><td class="fielddoc"><p>inviaMessaggio(): <a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a> è stata chiamata mentre c'era un messaggio in uscita, la funzione ha aspettato per più del tempo massimo di invio di un messaggio e alla fine dell'attesa il messaggio non era ancora partito </p>
+<tr><td class="fieldname"><a id="a4dadb6af0e4d38eaac18d3afe26e5bcda7d35654a18cd25b422dc5ad1eb1a1d6f"></a>inviaTimeout&#160;</td><td class="fielddoc"><p>inviaMessaggio(): <a class="el" href="class_r_f_m69.html#aaaa68e53a33554a638cefe55089e2295" title="Invia un messaggio. ">invia()</a> è stata chiamata mentre la classe stava eseguendo un'altra operazione, e quest'ultima non è stata completata entro il tempo d'attesa massimo scelto per questa situazione oppure l'opzione 'insisti' non era selezionata (equivalente a un timeout nullo). </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a4dadb6af0e4d38eaac18d3afe26e5bcda1583adf79e38254e02bc63462a603d11"></a>leggiNessunMessaggio&#160;</td><td class="fielddoc"><p><a class="el" href="class_r_f_m69.html#ade25e9bc296b574729d8136f88815384" title="Restituisce un messaggio, se ce n&#39;è uno da leggere. ">leggi()</a>: Non c'è nessun nuovo messaggio da leggere </p>
 </td></tr>
@@ -138,14 +139,16 @@ Tipi pubblici</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a4dadb6af0e4d38eaac18d3afe26e5bcdaf85197a251391776666b27969ed42d26"></a>modTimeout&#160;</td><td class="fielddoc"><p>cambiaModalita(): Il cambio di modalità non è avvenuto entro un tempo massimo ampiamente sufficiente. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="a4dadb6af0e4d38eaac18d3afe26e5bcda05a3a10d2ca49f315f02d1701658ddfe"></a>controllaTimeoutTx&#160;</td><td class="fielddoc"><p><a class="el" href="class_r_f_m69.html#a9999477f093ebd8b95260530e964884b" title="Da chiamare regolarmente! Aggiorna lo stato, scarica in nuovi messaggi ecc. ">controlla()</a>: Registrato un timeout per l'invio di un messaggio (la radio viene sbloccata automaticamente, ma non dovrebbe mai succedere) </p>
+</td></tr>
 </table>
 
-<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00585">585</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l00601">601</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
 
 </div>
 </div>
 <hr/>La documentazione per questa struct è stata generata a partire dal seguente file:<ul>
-<li>/Users/noe/Documents/Robot/Librerie/RFM69/src/<a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a></li>
+<li>/Users/noe/Personale/Informatica/Arduino/Quadricottero/Versione 3/Quadcopter/libraries/RFM69/src/<a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
