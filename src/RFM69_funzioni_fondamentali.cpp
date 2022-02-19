@@ -300,7 +300,7 @@ int RFM69::controlla() {
             // qualsiasi messagio (ack, messaggio, atteso o no) porta
             // l'informazione più recente sulla distanza dell'altra radio
             //[RSSI = - REG_0x24 / 2, vedi datasheet]
-            ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE/2));
+            ultimoRssi = -(bus->leggiRegistro(RFM69_24_RSSI_VALUE)/2);
         }
 
         if(richiestaAzione.verificaAck) {
@@ -326,8 +326,6 @@ int RFM69::controlla() {
 
             if(ultimoMessaggio.intestazione.bit.richiestaAck) {
                 inviaAck();
-                // inviaAck mette lo stato su Stato::invioAck, poi l'isr lo
-                // cambierà a passivo
             }
             else set(richiestaAzione.terminaProcesso);
         }
