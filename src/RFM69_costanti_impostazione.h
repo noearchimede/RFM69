@@ -120,32 +120,35 @@ nel file RFM69_inizializzazioe.h
 #define DCC_FREQ_0_25                   6
 #define DCC_FREQ_0_125                  7
 
+// macro ausiliaria per rendere la definizione della macro sotto più chiara
+#define BUILD_RX_BW_VAL(rxBwMant, rxBwExp) ((rxBwMant << 3) | rxBwExp)
+// Restituisce il valore del registro RX_BW in base alla tabella a p. 26 del datasheet
 // mod (modulation): 0 per FSK e 1 per OOK
 #define RX_BW_VAL(x, mod) ( \
-    (x >= (  1300 * (mod + 1)) ? ((2 << 3) || 7) : \
-    (x >= (  1600 * (mod + 1)) ? ((1 << 3) || 7) : \
-    (x >= (  2000 * (mod + 1)) ? ((0 << 3) || 7) : \
-    (x >= (  2600 * (mod + 1)) ? ((2 << 3) || 6) : \
-    (x >= (  3100 * (mod + 1)) ? ((1 << 3) || 6) : \
-    (x >= (  3900 * (mod + 1)) ? ((0 << 3) || 6) : \
-    (x >= (  5200 * (mod + 1)) ? ((2 << 3) || 5) : \
-    (x >= (  6300 * (mod + 1)) ? ((1 << 3) || 5) : \
-    (x >= (  7800 * (mod + 1)) ? ((0 << 3) || 5) : \
-    (x >= ( 10400 * (mod + 1)) ? ((2 << 3) || 4) : \
-    (x >= ( 12500 * (mod + 1)) ? ((1 << 3) || 4) : \
-    (x >= ( 15600 * (mod + 1)) ? ((0 << 3) || 4) : \
-    (x >= ( 20800 * (mod + 1)) ? ((2 << 3) || 3) : \
-    (x >= ( 25000 * (mod + 1)) ? ((1 << 3) || 3) : \
-    (x >= ( 31300 * (mod + 1)) ? ((0 << 3) || 3) : \
-    (x >= ( 41700 * (mod + 1)) ? ((2 << 3) || 2) : \
-    (x >= ( 50000 * (mod + 1)) ? ((1 << 3) || 2) : \
-    (x >= ( 62500 * (mod + 1)) ? ((0 << 3) || 2) : \
-    (x >= ( 83300 * (mod + 1)) ? ((2 << 3) || 1) : \
-    (x >= (100000 * (mod + 1)) ? ((1 << 3) || 1) : \
-    (x >= (125000 * (mod + 1)) ? ((0 << 3) || 1) : \
-    (x >= (166700 * (mod + 1)) ? ((2 << 3) || 0) : \
-    (x >= (200000 * (mod + 1)) ? ((1 << 3) || 0) : \
-    (x >= (250000 * (mod + 1)) ? ((0 << 3) || 0) : \
+    (x <= (  1300L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 7) : \
+    (x <= (  1600L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 7) : \
+    (x <= (  2000L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 7) : \
+    (x <= (  2600L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 6) : \
+    (x <= (  3100L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 6) : \
+    (x <= (  3900L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 6) : \
+    (x <= (  5200L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 5) : \
+    (x <= (  6300L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 5) : \
+    (x <= (  7800L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 5) : \
+    (x <= ( 10400L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 4) : \
+    (x <= ( 12500L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 4) : \
+    (x <= ( 15600L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 4) : \
+    (x <= ( 20800L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 3) : \
+    (x <= ( 25000L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 3) : \
+    (x <= ( 31300L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 3) : \
+    (x <= ( 41700L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 2) : \
+    (x <= ( 50000L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 2) : \
+    (x <= ( 62500L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 2) : \
+    (x <= ( 83300L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 1) : \
+    (x <= (100000L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 1) : \
+    (x <= (125000L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 1) : \
+    (x <= (166700L * (2 - mod)) ? BUILD_RX_BW_VAL(2, 0) : \
+    (x <= (200000L * (2 - mod)) ? BUILD_RX_BW_VAL(1, 0) : \
+    (x <= (250000L * (2 - mod)) ? BUILD_RX_BW_VAL(0, 0) : \
     0 \
 )))))))))))))))))))))))))
 
