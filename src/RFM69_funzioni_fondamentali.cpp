@@ -125,10 +125,6 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
 
 void RFM69::inviaAck() {
 
-    // nell'implementazione attuale inviaAck è chiamata solo in un punto, e lì
-    // la modalità è per forza gestisciNuovoMessaggio, quindi non controllare
-    // if(stato != Stato::gestisciNuovoMessaggio) return codiceErrore;
-
     cambiaModalita(Modalita::standby);
     disattivaAutoModes();
 
@@ -310,7 +306,7 @@ int RFM69::controlla() {
                 statoUltimoAck = StatoAck::ricevuto;
                 // statistiche
                 durataUltimaAttesaAck = ultimoMessaggio.tempoRicezione - tempoUltimaTrasmissione;
-                if(durataMassimaAttesaAck > durataMassimaAttesaAck) {
+                if(durataUltimaAttesaAck > durataMassimaAttesaAck) {
                     durataMassimaAttesaAck = durataUltimaAttesaAck;
                 }
                 ++nrAckRicevuti;
@@ -465,7 +461,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
 
     // *Listen* (1/3) - Disattiva
     if (modalita == Modalita::listen) {
-        regOpMode &= !(1 << 6); // clear ListenOn
+        regOpMode &= ~(1 << 6); // clear ListenOn
         regOpMode |= 1 << 5; // set ListenAbort
     }
 
@@ -474,7 +470,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
 
     // *Listen* (2/3) - Disattiva
     if (modalita == Modalita::listen) {
-        regOpMode &= !(1 << 5); // clear ListenAbort
+        regOpMode &= ~(1 << 5); // clear ListenAbort
         // Scrivi di nuovo RegOpMode senza il bit ListenAbort
         bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
     }
