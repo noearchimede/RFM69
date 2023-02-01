@@ -1,0 +1,14 @@
+A volte la ricevente si blocca in modalit!a defalut (per riprodurre il problema
+accendere le due radio contemporaneamente o quasi, forse serve qualche tentativo).
+
+Sembra che, quando la lettura del messaggio fallisce con errore "mess. troppo
+lungo, la radio appena entrata in autoModes passa alla modalità intermedia (quindi
+riceve un secondo messaggio che però non viene segnalato dall'isr)
+
+È sicuramente necessario capire perché il messaggio non viene segnalato (crcOkRising,
+che fa cmabiare la modalità, dovrebbe anche chiamare l'ISR; è il caso?). Visto
+questo il problema potrebbe essere risolto introducendo un ritardo minimo prima
+di cambiare modalità in caso di errore (ma solo con qualche forma di giustificazione!).
+
+
+Il prossimo step sarà capire perché la ricevente non riesce ad inviare l'ACK.

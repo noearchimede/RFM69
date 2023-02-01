@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RFM69: Riferimenti per la classe RFM69::Spi</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">RFM69
+   </div>
+   <div id="projectbrief">Driver per i moduli radio RFM69</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','Cerca');
+});
+</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="class_r_f_m69.html">RFM69</a></li><li class="navelem"><a class="el" href="class_r_f_m69_1_1_spi.html">Spi</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Tipi pubblici</a> &#124;
+<a href="#pub-methods">Membri pubblici</a> &#124;
+<a href="class_r_f_m69_1_1_spi-members.html">Elenco di tutti i membri</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per la classe RFM69::Spi</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Diagramma delle classi per RFM69::Spi</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_r_f_m69_1_1_spi.png" usemap="#RFM69::Spi_map" alt=""/>
+  <map id="RFM69::Spi_map" name="RFM69::Spi_map">
+<area href="class_r_f_m69_1_1_bus.html" alt="RFM69::Bus" shape="rect" coords="0,0,80,24"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Tipi pubblici</h2></td></tr>
+<tr class="memitem:a4476dc6edfe378752b003f2f3217134c"><td class="memItemLeft" align="right" valign="top"><a id="a4476dc6edfe378752b003f2f3217134c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>BitOrder</b> { <b>LSBFirst</b>, 
+<b>MSBFirst</b>
+ }</td></tr>
+<tr class="separator:a4476dc6edfe378752b003f2f3217134c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86e5f866709d5a61b06e0d1e37b07614"><td class="memItemLeft" align="right" valign="top"><a id="a86e5f866709d5a61b06e0d1e37b07614"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>DataMode</b> { <b>cpol0cpha0</b>, 
+<b>cpol0cpha1</b>, 
+<b>cpol1cpha0</b>, 
+<b>cpol1cpha1</b>
+ }</td></tr>
+<tr class="separator:a86e5f866709d5a61b06e0d1e37b07614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Membri pubblici</h2></td></tr>
+<tr class="memitem:a395f943d950672f2a1d3808c40bf6aab"><td class="memItemLeft" align="right" valign="top"><a id="a395f943d950672f2a1d3808c40bf6aab"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Spi</b> (uint8_t pinSS, uint32_t frequenzaHz, BitOrder bitOrder, DataMode dataMode)</td></tr>
+<tr class="separator:a395f943d950672f2a1d3808c40bf6aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a766faa7655e0907b49c953359d4f2abb"><td class="memItemLeft" align="right" valign="top"><a id="a766faa7655e0907b49c953359d4f2abb"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>inizializza</b> () override</td></tr>
+<tr class="separator:a766faa7655e0907b49c953359d4f2abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54288d76807a6068bebf9976ccd4da8f"><td class="memItemLeft" align="right" valign="top"><a id="a54288d76807a6068bebf9976ccd4da8f"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>leggiRegistro</b> (uint8_t addr) override</td></tr>
+<tr class="separator:a54288d76807a6068bebf9976ccd4da8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a740bcabf30ef6f933b5b43fed7120fcd"><td class="memItemLeft" align="right" valign="top"><a id="a740bcabf30ef6f933b5b43fed7120fcd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scriviRegistro</b> (uint8_t addr, uint8_t val) override</td></tr>
+<tr class="separator:a740bcabf30ef6f933b5b43fed7120fcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d721d93dc6c4946f3bd0307e40c73bf"><td class="memItemLeft" align="right" valign="top"><a id="a5d721d93dc6c4946f3bd0307e40c73bf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>leggiSequenza</b> (uint8_t addr0, uint8_t len, uint8_t *data) override</td></tr>
+<tr class="separator:a5d721d93dc6c4946f3bd0307e40c73bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
+<div class="textblock">
+<p class="definition">Definizione alla linea <a class="el" href="_r_f_m69_8h_source.html#l01031">1031</a> del file <a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a>.</p>
+</div><hr/>La documentazione per questa classe è stata generata a partire dai seguenti file:<ul>
+<li>/Users/noe/Personale/Informatica/Arduino/Quadricottero/Versione 3/Quadcopter/libraries/RFM69/src/<a class="el" href="_r_f_m69_8h_source.html">RFM69.h</a></li>
+<li>/Users/noe/Personale/Informatica/Arduino/Quadricottero/Versione 3/Quadcopter/libraries/RFM69/src/<a class="el" href="_r_f_m69___s_p_i_8cpp_source.html">RFM69_SPI.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generato da &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

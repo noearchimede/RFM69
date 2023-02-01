@@ -13,10 +13,13 @@ Driver Arduino per i moduli radio RFM69
 La libreria RFM69 permette di collegare due microcontrollori tramite una coppia
 di moduli radio della famiglia RFM69 di HopeRF, in particolare del modello
 [RFM69HCW](http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html).
+È stata testata sui microcontrollori ATmega238P e ATmega1284 (con il framework MightyCore).
+
+[**TODO** determinare se e in che modo la libreria dipende da MightyCore, e in generale creare una lista esplicita di dipendenze]
 
 I moduli radio devono essere collegati al microcontrollore tramite un'interfaccia SPI.
-Qualora questo non fosse possibile, però, è anche possibile usare un chip di conversione tra I2C e SPI e collegare quest'ultimo tramite I2C al microcontrollore.
-Questa libreria contiene il codice necessario per controllare la radio tramite il chip SC18IS602B di NXP Semiconductors (facilemte adattabile anche a dispositivi simili, probabilmente).
+Qualora questo non fosse possibile è anche possibile usare un chip di conversione tra I2C e SPI e collegare quest'ultimo tramite I2C al microcontrollore.
+Questa libreria contiene il codice necessario per controllare la radio tramite il chip SC18IS602B di NXP Semiconductors.
 
 Il codice della libreria è ampiamente commentato in italiano. I commenti normali
 (`// ...`), presenti soprattutto nei files di implementazione (`.cpp`), forniscono

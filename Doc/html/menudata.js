@@ -4,9 +4,11 @@ var menudata={children:[
 {text:"Classi",url:"annotated.html",children:[
 {text:"Elenco dei tipi composti",url:"annotated.html"},
 {text:"Indice dei tipi composti",url:"classes.html"},
+{text:"Gerarchia delle classi",url:"hierarchy.html"},
 {text:"Membri dei composti",url:"functions.html",children:[
 {text:"Tutto",url:"functions.html",children:[
 {text:"a",url:"functions.html#index_a"},
+{text:"c",url:"functions.html#index_c"},
 {text:"d",url:"functions.html#index_d"},
 {text:"e",url:"functions.html#index_e"},
 {text:"i",url:"functions.html#index_i"},
@@ -21,9 +23,11 @@ var menudata={children:[
 {text:"~",url:"functions.html#index_0x7e"}]},
 {text:"Funzioni",url:"functions_func.html",children:[
 {text:"a",url:"functions_func.html#index_a"},
+{text:"c",url:"functions_func.html#index_c"},
 {text:"d",url:"functions_func.html#index_d"},
 {text:"i",url:"functions_func.html#index_i"},
 {text:"l",url:"functions_func.html#index_l"},
+{text:"m",url:"functions_func.html#index_m"},
 {text:"n",url:"functions_func.html#index_n"},
 {text:"o",url:"functions_func.html#index_o"},
 {text:"r",url:"functions_func.html#index_r"},

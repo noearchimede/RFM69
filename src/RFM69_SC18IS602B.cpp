@@ -9,7 +9,7 @@ da I2C a SPI SC18IS602B.
 */
 
 #include "RFM69.h"
-#include "Wire.h" // dal framework di Arduino
+#include "Wire/src/Wire.h" // dal framework di Arduino
 
 
 
@@ -75,8 +75,6 @@ bool RFM69::SC18IS602B::inizializza() {
     // ordine e modalità sono richiesti dalla radio, la frequenza è arbitraria
     Wire.write(ORDER_MSB & MODE_CPOL0CPHA0 & FREQUENCY_1843KHZ);
     Wire.endTransmission();
-
-    usaInIsr(false);
 
     return true;
 
