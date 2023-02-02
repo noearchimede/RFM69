@@ -753,9 +753,9 @@ public:
         fifoLevelRising     = 0x2,
         crcOkRising         = 0x3,
         payloadReadyRising  = 0x4,
-        syncAddressRising   = 0x05,
-        packetSentRising    = 0x06, 
-        fifoNotEmptyFalling = 0x07
+        syncAddressRising   = 0x5,
+        packetSentRising    = 0x6, 
+        fifoNotEmptyFalling = 0x7
     };
     enum class AMExitCond : uint8_t {
         //none = 0x0 non può essere usata (bisogna impostare sia enter sia exit)
@@ -763,9 +763,9 @@ public:
         fifoLevelRising     = 0x2,
         crcOkRising         = 0x3,
         payloadReadyRising  = 0x4,
-        syncAddressRising   = 0x05,
-        packetSentRising    = 0x06, 
-        timeoutRising       = 0x07
+        syncAddressRising   = 0x5,
+        packetSentRising    = 0x6, 
+        timeoutRising       = 0x7
     };
     enum class AMModInter : uint8_t { // non tutte le modalità sono possibili
         sleep   = 0x0, // valori validi per il registro corrispondente
