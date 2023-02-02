@@ -824,6 +824,11 @@ public:
     // particolare
     Modalita modalitaDefault;
 
+    // Invece di rimanere in RX, passa automaticamente a standby non appena arriva
+    // un messaggio. Questo impedisce a messaggi seguenti di sovrascriverlo prima
+    // della prossima chiamata a 'controlla()'
+    const bool usaAutoModesPerRX = true;
+
     // Dimensione massima dei messaggi in entrata
     // costante dopo l'inizializzazione, può essere modificato da un'init. successiva
     uint8_t lungMaxMessEntrata;
@@ -900,6 +905,9 @@ public:
 
     // Segnala se la modalità della radio è attualmente gestita da AutoModes
     bool autoModesAttivo = false;
+    // ... in questo caso, segnala se è consentito cambiare modalità in qualsiasi
+    // momento
+    bool interruzioneAutoModesAutorizzata = false;
 
     // "ora" di trasmissione dell'ultimo messaggio (ms)
     uint32_t tempoUltimaTrasmissione = 0;
@@ -912,6 +920,9 @@ public:
     enum class Stato {
         // nessuna azione in corso, tranne eventualmente ascolto passivo (rx, modalitaListen)
         passivo,
+        // in attesa che la radio termini una sequenza AutoModes, poi si
+        // passerà automaticamente a 'passivo'
+        sequenzaAutoInCorso,
         // questo è uno stato di transizione generico possibile tra
         // un'esecuzione dell'ISR e la successiva chiamata di controlla(). Per
         // gli interventi in questione vedi poco sotto.
@@ -944,7 +955,7 @@ public:
     // richieste
     struct Intervento {
         // Termina l'azione in corso e torna allo stato passivo impostanto la modalita corretta
-        bool terminaProcesso;
+        bool tornaInModalitaDefault;
         // è arrivato un messaggio, scaricalo nella memoria interna per liberare la radio
         bool scaricaMessaggio;
         // è arrivato un mesasggio che dovrebbe essere un ACK, verifica se lo è davvero
@@ -954,14 +965,21 @@ public:
         // annuncia un nuovo messaggio all'utente. Non può essere fatto nell'isr
         // perché prima bisogna estrarlo dalla FIFO della radio
         bool annunciaMessaggio;
-        // Metti la radio in modalità ricezione
-        bool modalitaRxSePossibile;
+        // termina una sequenza AutoModes
+        bool concludiSequenzaAutoModes;
     };
     // NOTA: dopo l'intervento in richiestaAzione l'azione in corso è conclusa.
     // Per implementare un'azione intermedia bisognerebbe usare un'altra
     // variabile Intervento
     volatile Intervento richiestaAzione {};
-    uint8_t temp = 0;
+
+    // questa variabile segnala che l'utente desidera mettere la radio nella modalità
+    // di default; questo sarà fatto in 'controlla()' appena la radio è disponibile.
+    // Non è insieme alle altre richieste azione questa può essere impostata
+    // inaspettatamente dall'utente, mentre quelle sono impostate dall'ISR in
+    // maniera prevedibile.
+    bool richiestaModalitaDefaultAppenaPossibile = false;
+
 
     // piccoli helper
     inline void set(volatile bool& x) { x = true; }

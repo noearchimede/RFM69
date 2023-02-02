@@ -100,11 +100,9 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
     if(!messaggioRicevuto) return Errore::leggiNessunMessaggio;
     clear(messaggioRicevuto);
 
-    // termina il processo e torna alla modalità di default
-    stato = Stato::attesaAzione;
-    
-    set(richiestaAzione.terminaProcesso);
-    controlla(); // solo la parte di terminaProcesso è eseguita in questa situazione
+    // dichiara l'intenzione di tornare alla modalità di default
+    richiestaModalitaDefaultAppenaPossibile = true;
+    Serial.println(controlla()); // solo la parte di terminaProcesso è eseguita in questa situazione
 
     // Messaggio troppo lungo per questa radio
     if(lungMaxMessEntrata < ultimoMessaggio.dimensione) return Errore::messaggioTroppoLungo;
@@ -188,8 +186,9 @@ void RFM69::isr() {
         // fine della trasmissione
         case Stato::invioMessSenzaAck:
             ++messaggiInviati;
-            // siamo ancora in modalità tx, che non serve più
-            set(richiestaAzione.terminaProcesso);
+            // concludi la sequenza tx->standby usata per inviare l'ack
+            set(richiestaAzione.concludiSequenzaAutoModes);
+            set(richiestaAzione.tornaInModalitaDefault);
             stato = Stato::attesaAzione;
             break;
             
@@ -209,12 +208,25 @@ void RFM69::isr() {
             statoUltimoAck = StatoAck::attesaVerifica;
             set(richiestaAzione.scaricaMessaggio);
             set(richiestaAzione.verificaAck);
-            set(richiestaAzione.terminaProcesso);
+            // concludi la sequenza tx->rx usata per inviare il messaggio e riceve l'ack
+            set(richiestaAzione.concludiSequenzaAutoModes);
+            // Non tornare in modalità default: rimani in standby (la modalità che
+            // risulta dal disattivare AutoModes in questo momento) fino a quando
+            // la funzione leggi() richiederà di tornare in modalità default.
+            // Questo fa sì che se default=RX non si riceveranno nuovi messaggi
+            // prima di leggere questo. Una possibile alternativa sarebbe
+            // richiedere mod. def. qui e non interagire con le modalità della
+            // radio in 'leggi()', ma questo permetterebbe a un messaggio di
+            // sovrascrivere quello corrente per il quale la trasmittente ha
+            // già ricevuto un ACK e quindi si aspetta che sia stato letto.
+            // >> set(richiestaAzione.tornaInModalitaDefault); <<
             stato = Stato::attesaAzione;
             break;
 
         case Stato::invioAck:
-            set(richiestaAzione.terminaProcesso);
+            // concludi la sequenza tx->standby usata per inviare l'ack
+            set(richiestaAzione.concludiSequenzaAutoModes);
+            set(richiestaAzione.tornaInModalitaDefault);
             stato = Stato::attesaAzione;
             break;
 
@@ -247,7 +259,7 @@ int RFM69::controlla() {
     if(richiestaAzione.verificaAck ) Serial.print("vak ");
     if(richiestaAzione.inviaAckOTermina ) Serial.print("iat ");
     if(richiestaAzione.annunciaMessaggio ) Serial.print("ame ");
-    if(richiestaAzione.modalitaRxSePossibile ) Serial.print("mrp ");
+    if(richiestaAzione.modalitaDefaultAppenaPossibile) Serial.print("mrp ");
     Serial.print("]\n");
 
 #endif
@@ -260,7 +272,8 @@ int RFM69::controlla() {
             // a questo punto, ack non ancora ricevuto = ack non arriverà mai
             statoUltimoAck = StatoAck::nonRicevuto;
             stato = Stato::attesaAzione;
-            set(richiestaAzione.terminaProcesso);
+            set(richiestaAzione.concludiSequenzaAutoModes);
+            set(richiestaAzione.tornaInModalitaDefault);
         }
     }
 
@@ -269,12 +282,29 @@ int RFM69::controlla() {
         if(millis() - tempoUltimaTrasmissione > 100) {
             errore = Errore::controllaTimeoutTx;
             stato = Stato::attesaAzione;
-            set(richiestaAzione.terminaProcesso);
+            set(richiestaAzione.concludiSequenzaAutoModes);
+            set(richiestaAzione.tornaInModalitaDefault);
+        }
+    }
+
+
+    // # 2. Gestisci richieste esplicite dall'utente #
+
+    // Questa richiesta azione è impostata dall'utente con ad es. la funzione
+    // modalitaRicezione(). La differenza rispetto a tornaInModalitaDefault
+    // è che quest'ultima azione può cambiare lo stato della radio, mentre
+    // modalitaDefaultAppenaPossibile richiede che la radio sia già in
+    // stato "passivo"
+    if(richiestaModalitaDefaultAppenaPossibile) {
+        // la richiesta azione è tolta sotto, in 'tornaInModalitaDefault'
+        if(stato == Stato::passivo) {
+            stato = Stato::attesaAzione;
+            set(richiestaAzione.tornaInModalitaDefault);
         }
     }
 
     
-    // # 2. Esegui compiti ordinati dall'ISR per concludere un'azione #
+    // # 3. Esegui compiti ordinati dall'ISR per concludere un'azione #
 
     // nota: l'ordine di esecuzione è rilevante, perché alcune azioni dipendono
     //  dalla precedente esecuzione di altre
@@ -327,7 +357,7 @@ int RFM69::controlla() {
             if(ultimoMessaggio.intestazione.bit.richiestaAck) {
                 inviaAck();
             }
-            else set(richiestaAzione.terminaProcesso);
+            else set(richiestaAzione.tornaInModalitaDefault);
         }
 
         if(richiestaAzione.annunciaMessaggio) {
@@ -343,37 +373,44 @@ int RFM69::controlla() {
             }
         }
 
+        if(richiestaAzione.concludiSequenzaAutoModes) {
+            clear(richiestaAzione.concludiSequenzaAutoModes);
+            disattivaAutoModes();
+        }
+
         // Un processo è terminato, torna alla modalità di default
         // Il blocco per "terminaProcesso" deve essere eseguito per ultimo (altri
         // blocchi possono richiederlo)
-        if(richiestaAzione.terminaProcesso) {
-            clear(richiestaAzione.terminaProcesso);
-
-            stato = Stato::passivo;
-            // introduzione di AutoModes: 'Modalita::rx' non è più la modalità
-            // omonima della radio ma una particolare configurazione AutoModes
-            if(modalitaDefault == Modalita::rx) {
-                disattivaAutoModes();
-                modalitaRicezione();
+        // Se la radio sta eseguendo una sequenza AutoModes rimanda questa
+        // azione alla prossima esecuzione di 'controlla()' fino a quando non lo
+        // sarà più
+        if(richiestaAzione.tornaInModalitaDefault) {
+            if(autoModesAttivo && !interruzioneAutoModesAutorizzata) {
+                // non fare nulla e aspetta la prossima esecuzione di controlla()
             }
             else {
-                disattivaAutoModes();
-                cambiaModalita(modalitaDefault);
+                clear(richiestaAzione.tornaInModalitaDefault);
+                richiestaModalitaDefaultAppenaPossibile = false;
+                stato = Stato::passivo;
+                // automodes non è usato solo per le "seqenuze automatiche" escluse
+                // dall'if sopra ma anche per la modalità ricezione!
+                disattivaAutoModes(); 
+                if(usaAutoModesPerRX && modalitaDefault == Modalita::rx) {
+                    // metti la radio in modalità rx con un'impostazione autoModes tale che
+                    // appena un messaggio è ricevuto correttamente (crcOk) la radio passa
+                    // in standby (quindi non riceve più).
+                    // La condizione selezionata per uscire dallo standby non si verifica
+                    // mai. Nello stesso momento in cui AutoModes cambia la modalità viene
+                    // chiamata l'ISR, che segnala a `controlla()` l'arrivo di un messaggio.
+                    autoModes(Modalita::rx, AMModInter::standby, AMEnterCond::crcOkRising, AMExitCond::packetSentRising);
+                    interruzioneAutoModesAutorizzata = true;
+                }
+                else {
+                    cambiaModalita(modalitaDefault);
+                }
             }
         }
 
-
-        // Questo blocco è l'unico a poter essere richiesto (quasi) direttamente
-        // dall'utente (chiamando modalitaRicezione() mentre la radio è
-        // occupata). Per questo prima di rimuovere la propria flag controlla se
-        // ora la radio è libera.
-        if(richiestaAzione.modalitaRxSePossibile) {
-            if(stato == Stato::passivo) {
-                clear(richiestaAzione.modalitaRxSePossibile);
-                modalitaRicezione();
-            }
-        }
-        
     }
     
     return errore;
@@ -389,19 +426,8 @@ int RFM69::controlla() {
 //
 void RFM69::modalitaRicezione(bool aspetta) {
     modalitaDefault = Modalita::rx;
-    if(radioPronta(aspetta)) {
-        // metti la radio in modalità rx con un'impostazione autoModes tale che
-        // appena un messaggio è ricevuto correttamente (crcOk) la radio passa
-        // in standby (quindi non riceve più).
-        // La condizione selezionata per uscire dallo standby non si verifica
-        // mai. Nello stesso momento in cui AutoModes cambia la modalità viene
-        // chiamata l'ISR, che segnala a `controlla()` l'arrivo di un messaggio.
-        autoModes(Modalita::rx, AMModInter::standby, AMEnterCond::crcOkRising, AMExitCond::packetSentRising);
-    }
-    else {
-        // La radio non è pronta per cambiare modalità -> delega a `controlla()`
-        set(richiestaAzione.modalitaRxSePossibile);
-    }
+    richiestaModalitaDefaultAppenaPossibile = true;
+    controlla();
 }
 
 
@@ -439,8 +465,11 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     // procedure speciali. Le aggiunte rispetto al codice per l'impostazione delle
     // altre modalità sono marcate con "// *Listen*" (all'inizio di ogni blocco)
 
-    // Se AutoModes deve essere disattivato esplicitamente
-    if(autoModesAttivo) return Errore::modBloccataAutoModAttivo;
+    // AutoModes deve essere disattivato esplicitamente a meno che la flag
+    // "interruzioneAutoModesAutorizzata" è impostata
+    if(autoModesAttivo && !interruzioneAutoModesAutorizzata) {
+        return Errore::modBloccataAutoModAttivo;
+    }
 
     // La modalità listen non è impostabile senza attesa
     if(!aspetta && (mod == Modalita::listen)) return Errore::modImpossibile;
@@ -553,6 +582,7 @@ void RFM69::autoModes(Modalita modBase, AMModInter modInter, AMEnterCond enterCo
     cambiaModalita(modBase);
     // flag
     autoModesAttivo = true;
+    interruzioneAutoModesAutorizzata = false;
 }
 
 
@@ -563,4 +593,6 @@ void RFM69::disattivaAutoModes() {
     bus->scriviRegistro(RFM69_3B_AUTO_MODES, 0x0);
     // flag
     autoModesAttivo = false;
+    // nota che il valore di interruzioneAutoModesAutorizzata non è definito
+    // quando autoModesAttivo == false
 }
