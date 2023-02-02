@@ -629,6 +629,14 @@ void RFM69::stampaRegistriSerial(HardwareSerial& serial) {
 }
 
 
+void RFM69::stampaRegistroSerial(HardwareSerial& Serial, uint8_t indirizzo, uint8_t base) {
+    Serial.print("R-0x");
+    if(indirizzo < 10) Serial.print('0');
+    Serial.print(indirizzo, 16);
+    Serial.print("->");
+    Serial.println(valoreRegistro(indirizzo), base);
+}
+
 
 uint8_t RFM69::valoreRegistro(uint8_t indirizzo) {
     return bus->leggiRegistro(indirizzo);

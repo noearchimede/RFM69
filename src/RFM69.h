@@ -569,6 +569,10 @@ public:
     /*! Strampa il valore di tutti i registri della radio
     */
     void stampaRegistriSerial(HardwareSerial& Serial);
+    //! Stampa il valore di un registro sul monitor seriale
+    /*! Stampa il valore di un registro sul monitor seriale
+    */
+    void stampaRegistroSerial(HardwareSerial& Serial, uint8_t indirizzo, uint8_t base=10);
     //! Leggi il valore di un registro della radio
     /*  @param indirizzo l'indirizzo del registro da leggere. Si consignlia di
                          `#include`re il file RFM69_registri.h per avere un elenco
@@ -920,9 +924,6 @@ public:
     enum class Stato {
         // nessuna azione in corso, tranne eventualmente ascolto passivo (rx, modalitaListen)
         passivo,
-        // in attesa che la radio termini una sequenza AutoModes, poi si
-        // passerà automaticamente a 'passivo'
-        sequenzaAutoInCorso,
         // questo è uno stato di transizione generico possibile tra
         // un'esecuzione dell'ISR e la successiva chiamata di controlla(). Per
         // gli interventi in questione vedi poco sotto.
