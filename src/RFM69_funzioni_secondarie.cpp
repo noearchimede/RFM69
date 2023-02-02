@@ -82,6 +82,7 @@ bool RFM69::staTrasmettendo() {
         case Stato::passivo:
             return false;
     }
+    return false;
 }
 
 

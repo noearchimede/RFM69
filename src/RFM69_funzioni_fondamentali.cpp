@@ -137,6 +137,8 @@ void RFM69::inviaAck() {
     bus->scriviRegistro(RFM69_00_FIFO, intestazione.byte);
 
 
+    //TODOOOOOOO: vorrei usare AutoModes, ma in tal caso l'ISR sembra non essere chiamata mai... rivedere
+
     // "controlla()" si occupa di uscire dalla modalità intermedia
     //autoModes(Modalita::tx, AMModInter::standby, AMEnterCond::packetSentRising, AMExitCond::crcOkRising);
     cambiaModalita(Modalita::tx, true);
@@ -212,6 +214,7 @@ void RFM69::isr() {
 
         case Stato::invioAck:
             set(richiestaAzione.terminaProcesso);
+            stato = Stato::attesaAzione;
             break;
 
         default: break;
@@ -225,7 +228,7 @@ void RFM69::isr() {
 //
 int RFM69::controlla() {
 
-#if 1
+#if 0
     Serial.flush();
     Serial.print("[");
     switch(stato) {
