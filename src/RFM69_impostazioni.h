@@ -81,16 +81,16 @@ dell'implementazione della classe RFM69).
 #define CRC_EN                          ON
 // [0x2C, 0x2D] Size of the preamble to be sent
 // x [bytes], 0 - 65'536
-#define PREAMBLE_SIZE                   4
+#define PREAMBLE_SIZE                   8
 // [0x2E] Enables the Sync word generation and detection
 // ON OFF
 #define SYNC_EN                         ON
 // [0x2E] Number of tolerated bit errors in Sync word
 // x, 0 - 7
-#define SYNC_TOL                        0
+#define SYNC_TOL                        2
 // [0x2E] Size of the Sync word
 // x [auto] ; bytes
-#define SYNC_SIZE                       2
+#define SYNC_SIZE                       4
 // [0x2F ... 0x36] Sync bytes (bytes 2 to 8 are used only sync size is big enough)
 // byte1, byte2, ... , byte8
 #define SYNC_VAL                        0x6A,0xE5,0xA7,0x56,0x6A,0xE5,0xA7,0x56
