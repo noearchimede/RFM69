@@ -430,6 +430,26 @@ void RFM69::modalitaRicezione(bool aspetta) {
     controlla();
 }
 
+void  RFM69::modalitaListen(bool aspetta) {
+    modalitaDefault = Modalita::listen;
+    richiestaModalitaDefaultAppenaPossibile = true;
+    controlla();
+}
+
+void  RFM69::standby(bool aspetta) {
+    modalitaDefault = Modalita::standby;
+    richiestaModalitaDefaultAppenaPossibile = true;
+    controlla();
+}
+
+void  RFM69::sleep(bool aspetta) {
+    modalitaDefault = Modalita::sleep;
+    richiestaModalitaDefaultAppenaPossibile = true;
+    controlla();
+}
+
+
+
 
 
 bool RFM69::radioPronta(bool aspetta) {

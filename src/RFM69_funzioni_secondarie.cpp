@@ -157,44 +157,13 @@ bool RFM69::ricevutoAck() {
 
 
 
-// ### 5. Gestione modalità ###
+// ### 5. Gestione modalità ### //
 
-
-
-
-void  RFM69::modalitaListen(bool aspetta) {
-    modalitaDefault = Modalita::listen;
-    if(radioPronta(aspetta)) cambiaModalita(Modalita::listen);
-}
-
-void  RFM69::standby(bool aspetta) {
-    modalitaDefault = Modalita::standby;
-    if(radioPronta(aspetta)) cambiaModalita(Modalita::standby);
-}
-
-void  RFM69::sleep(bool aspetta) {
-    modalitaDefault = Modalita::sleep;
-    if(radioPronta(aspetta)) cambiaModalita(Modalita::sleep);
-}
-
-// // Passa in modalità standby (ottimizzata per poter essere usata in `controlla()`)
-// //
-// void RFM69::modalitaStandby() {
-//     // Prepara il byte da scrivere nel registro
-//     regOpMode &= 0xE3;
-//     regOpMode |= 0x04;
-//     //Scrivi il registro RegOpMode
-//     bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
-//     // Ricorda la modalita attuale della radio
-//     modalita = Modalita::standby;
-// }
-
+// nessuna funzione "derivata"
 
 
 
 // ### 6. Impostazioni ### //
-
-
 
 
 
