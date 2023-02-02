@@ -663,10 +663,12 @@ public:
             */
             modTimeout                  = 14,
 
+            modBloccataAutoModAttivo    = 15,
+
             /*! controlla(): Registrato un timeout per l'invio di un messaggio
             (la radio viene sbloccata automaticamente, ma non dovrebbe mai succedere)
             */
-            controllaTimeoutTx          = 15
+            controllaTimeoutTx          = 16
         };
     };
 
@@ -895,6 +897,9 @@ public:
     // In particolare modalita::rx può rappresentare una modalità AutoMode
     // (rx/stby), e modalita::tx non è mai usato senza AutoModes.
     Modalita modalita = Modalita::sleep;
+
+    // Segnala se la modalità della radio è attualmente gestita da AutoModes
+    bool autoModesAttivo = false;
 
     // "ora" di trasmissione dell'ultimo messaggio (ms)
     uint32_t tempoUltimaTrasmissione = 0;

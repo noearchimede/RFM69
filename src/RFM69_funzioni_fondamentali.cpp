@@ -33,8 +33,8 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
     // la condizione ostacolante sia risolta
     if(!radioPronta(insisti)) return Errore::inviaTimeout;
 
-    cambiaModalita(Modalita::standby, true);
     disattivaAutoModes();
+    cambiaModalita(Modalita::standby, true);
 
     // Il primo byte contiene la lunghezza del messaggio compresa l'intestazione
     // ma sé stesso escluso.
@@ -65,12 +65,15 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
         // controlla(). Non si può però tornare alla modalità tx perché questo
         // passaggio cancella la memoria FIFO, e non sembra esserci modo per passare
         // a una terza modalità senza dover scrivere registri della radio nell'ISR.
-        autoModes(Modalita::tx, AMModInter::rx, AMEnterCond::packetSentRising, AMExitCond::crcOkRising);
+        autoModes(Modalita::tx, AMModInter::rx, AMEnterCond::packetSentRising, AMExitCond::packetSentRising);
         stato = Stato::invioMessConAck;
         statoUltimoAck = StatoAck::pendente;
     }
     else {
-        cambiaModalita(Modalita::tx);
+        // Imposta la radio in modo che esca da TX non appena il pacchetto è inviato
+        // e rimanga in standby fino a nuovo ordine (packetSent) non accade mai in
+        // standby)
+        autoModes(Modalita::tx, AMModInter::standby, AMEnterCond::packetSentRising, AMExitCond::packetSentRising);
         stato = Stato::invioMessSenzaAck;
     }
 
@@ -125,8 +128,8 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
 
 void RFM69::inviaAck() {
 
-    cambiaModalita(Modalita::standby);
     disattivaAutoModes();
+    cambiaModalita(Modalita::standby);
 
     // Lunghezza, obbligatoria perché serve alla radio
     bus->scriviRegistro(RFM69_00_FIFO, 1);
@@ -136,15 +139,12 @@ void RFM69::inviaAck() {
     intestazione.bit.ack = 1;
     bus->scriviRegistro(RFM69_00_FIFO, intestazione.byte);
 
-
-    //TODOOOOOOO: vorrei usare AutoModes, ma in tal caso l'ISR sembra non essere chiamata mai... rivedere
-
-    // "controlla()" si occupa di uscire dalla modalità intermedia
-    //autoModes(Modalita::tx, AMModInter::standby, AMEnterCond::packetSentRising, AMExitCond::crcOkRising);
-    cambiaModalita(Modalita::tx, true);
-    // while(bus->leggiRegistro(RFM69_28_IRQ_FLAGS_2) & RFM69_FLAGS_2_PACKET_SENT);
-    // set(richiestaAzione.terminaProcesso);
-    // controlla();
+    // 'packetSentRising' non succede mai in modalità standby; "controlla()" si
+    // occuperà di tornare alla modalità corretta.
+    // L'uso di AutoModes qui (invece di mettere semplicemente la radio in
+    // modalità TX) serve solo per evitare di trasmettere più a lungo del
+    // necessario uscendo immediatamente da TX.
+    autoModes(Modalita::tx, AMModInter::standby, AMEnterCond::packetSentRising, AMExitCond::packetSentRising);
 
     stato = Stato::invioAck;
 
@@ -198,7 +198,8 @@ void RFM69::isr() {
             ++messaggiInviati;
             // non è richiesta nessuna azione perché il passaggio da tx a rx
             // necessario in questo momento è gestito autonomamente dalla radio
-            // grazie alla funtione AutoModes
+            // grazie alla funtione AutoModes. Cambiare lo stato a 'attesaAck'
+            // serve comunque per segnalare che il messaggio è stato inviato.
             stato = Stato::attesaAck;
             break;
 
@@ -352,7 +353,7 @@ int RFM69::controlla() {
             // introduzione di AutoModes: 'Modalita::rx' non è più la modalità
             // omonima della radio ma una particolare configurazione AutoModes
             if(modalitaDefault == Modalita::rx) {
-                // non serve disattivare AutoModes perché modalitaRicezione lo reimposta
+                disattivaAutoModes();
                 modalitaRicezione();
             }
             else {
@@ -438,6 +439,9 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     // procedure speciali. Le aggiunte rispetto al codice per l'impostazione delle
     // altre modalità sono marcate con "// *Listen*" (all'inizio di ogni blocco)
 
+    // Se AutoModes deve essere disattivato esplicitamente
+    if(autoModesAttivo) return Errore::modBloccataAutoModAttivo;
+
     // La modalità listen non è impostabile senza attesa
     if(!aspetta && (mod == Modalita::listen)) return Errore::modImpossibile;
 
@@ -447,6 +451,7 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     // Al momento della scrittura di questa funzione, questo può succedere solo se
     // l'impostazione TEMPO_MINIMO_FRA_MESSAGGI è 0 in caso di più invii di seguito
     if(aspetta) delay(2);
+    // TODO: ^^^ rimuovere o giustificare meglio
 
     // Prepara il byte da scrivere nel registro
     regOpMode &= 0xE3;
@@ -507,12 +512,12 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
     // Imposta l'interrupt generato sul pin DIO0
     uint8_t dio0 = 0;
     switch(mod) {
-        case Modalita::sleep:                 break; // non importa
-        case Modalita::listen:    dio0 = 1;   break;
-        case Modalita::standby:               break; // non importa
-        case Modalita::fs:                    break; // non importa
-        case Modalita::tx:        dio0 = 0;   break;
-        case Modalita::rx:        dio0 = 1;   break;
+        case Modalita::sleep:                 break; // (non importa)
+        case Modalita::listen:    dio0 = 1;   break; // PacketSent? (non sono sicuro)
+        case Modalita::standby:               break; // (non importa)
+        case Modalita::fs:                    break; // (non importa)
+        case Modalita::tx:        dio0 = 0;   break; // PacketSent
+        case Modalita::rx:        dio0 = 1;   break; // PayloadReady
     }
 
     bus->scriviRegistro(RFM69_25_DIO_MAPPING_1, dio0 << 6);
@@ -539,13 +544,23 @@ int RFM69::cambiaModalita(RFM69::Modalita mod, bool aspetta) {
 
 
 
+// Imposta AutoModes e poni la radio nella modalità di partenza
 void RFM69::autoModes(Modalita modBase, AMModInter modInter, AMEnterCond enterCond, AMExitCond exitCond) {
+    // attiva automodes
     uint8_t regAutoModes = ((uint8_t)modInter) | ((uint8_t)exitCond << 2) | ((uint8_t)enterCond << 5);
     bus->scriviRegistro(RFM69_3B_AUTO_MODES, regAutoModes);
-    cambiaModalita(modBase, true);
+    // imposta modalità di partenza
+    cambiaModalita(modBase);
+    // flag
+    autoModesAttivo = true;
 }
 
 
+// Nota: questa funzione non cambia la modalità della radio! Dopo aver chiamato
+// questa funzione bisognerebbe chiamare cambiaModalita().
 void RFM69::disattivaAutoModes() {
+    // disattiva AutoModes
     bus->scriviRegistro(RFM69_3B_AUTO_MODES, 0x0);
+    // flag
+    autoModesAttivo = false;
 }

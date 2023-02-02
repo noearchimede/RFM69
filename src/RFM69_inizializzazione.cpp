@@ -29,13 +29,17 @@ Il file è suddiviso in 5 sezioni:
 // dalla stessa, e che perciò non fanno parte del file di impostazione.
 
 // [0x2] Data processing mode
+// Per cambiare questo parametro a "sync" bisognerebbe riscrivere interamente la libreria!
 // _PACKET, _CONTINUOUS_SYNC, _CONTINUOUS_NO_SYNC
 #define DATA_MODE                       DATA_MODE_PACKET
 // [0x37] Defines the packet format used
 // _FIXED, _VARIABLE
 #define PACKET_FORMAT                   PACKET_FORMAT_VARIABLE
 // [0x38] Packet->fixed: payload length; ->variable: max length in Rx, not used in Tx.
-// x ; max per la radio: 255 se AES è OFF, 64 se AES è ON
+// Max per la radio è 64 con AES, 255 senza AES, ma per consentire pacchetti più
+// lunghi di 64 bytes è necessario implementare un modo per scrivere/leggere la
+// FIFO, che ha 66 bytes in totale, mentre la trasmissione è in corso (mentre
+// fino a 64 bytes possono essere scritti/letti prima/dopo la trasmissione) 
 // MAX PER LA LIBRERIA: 64
 #define PAYLOAD_LENGHT                  64
 // [0x2E] FIFO filling condition
