@@ -254,13 +254,15 @@ int RFM69::controlla() {
     }
     if(messaggioRicevuto) Serial.print("mr ");
     Serial.print("- ");
-    if(richiestaAzione.terminaProcesso ) Serial.print("tpr ");
+    if(richiestaAzione.tornaInModalitaDefault ) Serial.print("tmd ");
     if(richiestaAzione.scaricaMessaggio ) Serial.print("sme ");
     if(richiestaAzione.verificaAck ) Serial.print("vak ");
     if(richiestaAzione.inviaAckOTermina ) Serial.print("iat ");
     if(richiestaAzione.annunciaMessaggio ) Serial.print("ame ");
-    if(richiestaAzione.modalitaDefaultAppenaPossibile) Serial.print("mrp ");
-    Serial.print("]\n");
+    if(richiestaAzione.concludiSequenzaAutoModes) Serial.print("csa ");
+    Serial.print("]");
+    if(richiestaModalitaDefaultAppenaPossibile) Serial.print("+rmdap");
+    Serial.print("\n");
 
 #endif
 
@@ -376,6 +378,7 @@ int RFM69::controlla() {
         if(richiestaAzione.concludiSequenzaAutoModes) {
             clear(richiestaAzione.concludiSequenzaAutoModes);
             disattivaAutoModes();
+            stato = Stato::passivo;
         }
 
         // Un processo è terminato, torna alla modalità di default
