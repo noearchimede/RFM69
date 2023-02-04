@@ -192,7 +192,7 @@ void RFM69::isr() {
         case Stato::invioMessSenzaAck:
             ++messaggiInviati;
             // concludi la sequenza tx->standby usata per inviare l'ack
-            set(richiestaAzione.concludiSequenzaAutoModes);
+            interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
             stato = Stato::attesaAzione;
             break;
@@ -214,7 +214,7 @@ void RFM69::isr() {
             set(richiestaAzione.scaricaMessaggio);
             set(richiestaAzione.verificaAck);
             // concludi la sequenza tx->rx usata per inviare il messaggio e riceve l'ack
-            set(richiestaAzione.concludiSequenzaAutoModes);
+            interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
             stato = Stato::attesaAzione;
             break;
@@ -278,7 +278,7 @@ int RFM69::controlla() {
             // a questo punto, ack non ancora ricevuto = ack non arriverà mai
             statoUltimoAck = StatoAck::nonRicevuto;
             stato = Stato::attesaAzione;
-            set(richiestaAzione.concludiSequenzaAutoModes);
+            interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
         }
     }
@@ -288,7 +288,7 @@ int RFM69::controlla() {
         if(millis() - tempoUltimaTrasmissione > 100) {
             errore = Errore::controllaTimeoutTx;
             stato = Stato::attesaAzione;
-            set(richiestaAzione.concludiSequenzaAutoModes);
+            interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
         }
     }
@@ -315,7 +315,7 @@ int RFM69::controlla() {
     // da leggere significa che il messaggio è stato letto, quindi esci
     // dallo standby
     if(stato == Stato::standbyAttendendoLettura && !messaggioRicevuto) {
-        set(richiestaAzione.concludiSequenzaAutoModes);
+        interruzioneAutoModesAutorizzata = true;
         set(richiestaAzione.tornaInModalitaDefault);
         stato = Stato::attesaAzione;
     }
@@ -387,12 +387,6 @@ int RFM69::controlla() {
             else {
                 set(messaggioRicevuto);
             }
-        }
-
-        if(richiestaAzione.concludiSequenzaAutoModes) {
-            clear(richiestaAzione.concludiSequenzaAutoModes);
-            disattivaAutoModes();
-            stato = Stato::passivo;
         }
 
         // Questo blocco deve essere eseguito per ultimo (altri blocchi possono
@@ -624,6 +618,12 @@ void RFM69::autoModes(Modalita modBase, AMModInter modInter, AMEnterCond enterCo
 // Nota: questa funzione non cambia la modalità della radio! Dopo aver chiamato
 // questa funzione bisognerebbe chiamare cambiaModalita().
 void RFM69::disattivaAutoModes() {
+    // metti la radio in standby per evitare di tornare nella modalità base di
+    // AutoModes, che potrebbe non essere appropriata
+    regOpMode &= 0xE3;
+    uint8_t codiceMod = 0x1; // <<< standby
+    regOpMode |= (codiceMod << 2);
+    bus->scriviRegistro(RFM69_01_OP_MODE, regOpMode);
     // disattiva AutoModes
     bus->scriviRegistro(RFM69_3B_AUTO_MODES, 0x0);
     // flag
