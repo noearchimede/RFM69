@@ -935,7 +935,9 @@ public:
         // Sta aspettando un ack
         attesaAck,
         // trasmissione di un ack
-        invioAck
+        invioAck,
+        // radio in standby, in attesa che l'utente legga un messagio
+        standbyAttendendoLettura
 
     };
     volatile Stato stato = Stato::passivo;

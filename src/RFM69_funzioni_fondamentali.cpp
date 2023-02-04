@@ -100,9 +100,14 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
     if(!messaggioRicevuto) return Errore::leggiNessunMessaggio;
     clear(messaggioRicevuto);
 
-    // dichiara l'intenzione di tornare alla modalità di default
-    richiestaModalitaDefaultAppenaPossibile = true;
-    Serial.println(controlla()); // solo la parte di terminaProcesso è eseguita in questa situazione
+    // Questa chiamata a 'controlla' serve principalmente a uscire dallo standby
+    // imposto mentre si aspettava la lettura del messaggio.
+    // Se l'ISR ha piazzato la radio in stato 'standbyAttendendoLettura',
+    // concludi la sequenza AutoModes tx -> standby usata per inviare il
+    // messaggio e torna in modalità default. Fare questo passo separatamente (e
+    // non nell'ISR) garantisce che il messaggio per cui è stato inviato l'ACK è
+    // effettivamente letto (e non sovrascritto da messaggi successivi).
+    controlla();
 
     // Messaggio troppo lungo per questa radio
     if(lungMaxMessEntrata < ultimoMessaggio.dimensione) return Errore::messaggioTroppoLungo;
@@ -210,24 +215,22 @@ void RFM69::isr() {
             set(richiestaAzione.verificaAck);
             // concludi la sequenza tx->rx usata per inviare il messaggio e riceve l'ack
             set(richiestaAzione.concludiSequenzaAutoModes);
-            // Non tornare in modalità default: rimani in standby (la modalità che
-            // risulta dal disattivare AutoModes in questo momento) fino a quando
-            // la funzione leggi() richiederà di tornare in modalità default.
-            // Questo fa sì che se default=RX non si riceveranno nuovi messaggi
-            // prima di leggere questo. Una possibile alternativa sarebbe
-            // richiedere mod. def. qui e non interagire con le modalità della
-            // radio in 'leggi()', ma questo permetterebbe a un messaggio di
-            // sovrascrivere quello corrente per il quale la trasmittente ha
-            // già ricevuto un ACK e quindi si aspetta che sia stato letto.
-            // >> set(richiestaAzione.tornaInModalitaDefault); <<
+            set(richiestaAzione.tornaInModalitaDefault);
             stato = Stato::attesaAzione;
             break;
 
         case Stato::invioAck:
-            // concludi la sequenza tx->standby usata per inviare l'ack
-            set(richiestaAzione.concludiSequenzaAutoModes);
-            set(richiestaAzione.tornaInModalitaDefault);
-            stato = Stato::attesaAzione;
+            // Mantieni la radio in standby dopo la sequenza AutoModes tx ->
+            // standby usata per inviare l'ACK (l'alternativa sarebbe tornare in
+            // modalità default). Questo fa sì che se default=RX non si
+            // riceveranno nuovi messaggi prima di leggere questo. Una possibile
+            // alternativa sarebbe richiedere di uscire dalla sequenza AutoModes
+            // e entrare in modalita default qui e non interagire con le
+            // modalità della radio in 'leggi()', ma questo permetterebbe a un
+            // messaggio di sovrascrivere quello corrente per il quale la
+            // trasmittente ha già ricevuto un ACK e quindi si aspetta che sia
+            // stato letto.
+            stato = Stato::standbyAttendendoLettura;
             break;
 
         default: break;
@@ -251,6 +254,7 @@ int RFM69::controlla() {
         case Stato::invioMessSenzaAck : Serial.print("ims ");break;
         case Stato::attesaAck : Serial.print("aak ");break;
         case Stato::invioAck : Serial.print("iak ");break;
+        case Stato::standbyAttendendoLettura : Serial.print("sal");break;
     }
     if(messaggioRicevuto) Serial.print("mr ");
     Serial.print("- ");
@@ -290,7 +294,7 @@ int RFM69::controlla() {
     }
 
 
-    // # 2. Gestisci richieste esplicite dall'utente #
+    // # 2. Gestisci richieste dall'utente #
 
     // Questa richiesta azione è impostata dall'utente con ad es. la funzione
     // modalitaRicezione(). La differenza rispetto a tornaInModalitaDefault
@@ -305,8 +309,18 @@ int RFM69::controlla() {
         }
     }
 
+    // # 3. Sblocca la radio dopo aver letto un messaggio e inviato l'ACK #
     
-    // # 3. Esegui compiti ordinati dall'ISR per concludere un'azione #
+    // se la radio aspetta la lettura di un messaggio ma non ci sono messaggi
+    // da leggere significa che il messaggio è stato letto, quindi esci
+    // dallo standby
+    if(stato == Stato::standbyAttendendoLettura && !messaggioRicevuto) {
+        set(richiestaAzione.concludiSequenzaAutoModes);
+        set(richiestaAzione.tornaInModalitaDefault);
+        stato = Stato::attesaAzione;
+    }
+    
+    // # 4. Esegui compiti ordinati dall'ISR per concludere un'azione #
 
     // nota: l'ordine di esecuzione è rilevante, perché alcune azioni dipendono
     //  dalla precedente esecuzione di altre
@@ -381,12 +395,10 @@ int RFM69::controlla() {
             stato = Stato::passivo;
         }
 
-        // Un processo è terminato, torna alla modalità di default
-        // Il blocco per "terminaProcesso" deve essere eseguito per ultimo (altri
-        // blocchi possono richiederlo)
-        // Se la radio sta eseguendo una sequenza AutoModes rimanda questa
-        // azione alla prossima esecuzione di 'controlla()' fino a quando non lo
-        // sarà più
+        // Questo blocco deve essere eseguito per ultimo (altri blocchi possono
+        // richiederlo). Se la radio sta eseguendo una sequenza AutoModes
+        // rimanda questa azione alla prossima esecuzione di 'controlla()' fino
+        // a quando non lo sarà più
         if(richiestaAzione.tornaInModalitaDefault) {
             if(autoModesAttivo && !interruzioneAutoModesAutorizzata) {
                 // non fare nulla e aspetta la prossima esecuzione di controlla()
