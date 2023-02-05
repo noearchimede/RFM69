@@ -29,15 +29,49 @@ Nel file Risultati_test_collisioni.md si trovano alcuni esempi di output.
 // **************************  | IMPOSTAZIONI |  *******************************
 // **************************  +--------------+  *******************************
 
-//------------------------------------------------------------------------------
-//----------------- Descrizione dell'hardware di questa radio ------------------
-//------------------------------------------------------------------------------
+#ifndef IMPOSTAZIONI_ESTERNE
 
-// Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(RFM69::creaInterfacciaSpi(2), 3);
+//*** interfaccia di comunicazione con la radio (definire solo uno dei due!) ***
+#define INTERFACCIA_SPI
+//#define INTERFACCIA_SC18IS602B
 
-#define LED_TX 5
-#define LED_ACK 4
+//*** pin comunicazione ***
+#define PIN_SS 2  // solo per SPI
+//#define NUMERO_SS 1 // solo per SC18IS602B
+//#define INDIRIZZO_I2C 0x20 // solo per SC18IS602B
+
+//*** pin connesso al pin DIO0 della radio ***
+#define PIN_INTERRUPT 3
+
+//*** pin per i LED ***
+#define LED_TX 8
+#define LED_RX 7
+
+//*** lunghezza dei messaggi usati nel test ***
+// NOTA: deve essere almeno 2!
+#define LUNGHEZZA_MESSAGGI 4
+
+//*** tempo massimo per aspettare un ACK ***
+#define TIMEOUT_ACK 100
+
+
+//*** Impostazioni per la radio che gestisce il test ***
+// tolleranza nel calcolo della stabilità della frequenza per passare al prossimo test
+// (valore più basso -> test più preciso ma più lento)
+#define TOLLERANZA 200
+// durata minima di un singolo test (cioé test a una frequenza determinata)
+#define DURATA_MINIMA_TEST 30000
+// frequenza di invio messaggi iniziale
+#define FREQUENZA_TX_INIZIALE 50
+// incremento di frequenza tra un test e il successivo
+#define FREQUENZA_TX_INCREMENTO 50
+// numero massimo di frequenze testate (il test si ferma prima se non è
+// possibile raggiungere la frequenza di invio desiderata o se il numero di
+// messaggi inviati con successo scende sotto a un certo livello)
+#define NR_TEST_MAX 100
+
+#endif
+
 
 //------------------------------------------------------------------------------
 // ## Impostszioni che devono essere identiche sulle due radio ## //
@@ -46,9 +80,9 @@ RFM69 radio(RFM69::creaInterfacciaSpi(2), 3);
 // Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
 // 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
 // a questo si aggiunge il preamble che è lungo per default 4 bytes
-const uint8_t lunghezzaMessaggi = 4;
+const uint8_t lunghezzaMessaggi = LUNGHEZZA_MESSAGGI;
 // Tempo massimo di attesa per un ACK
-const uint8_t timeoutAck = 25;
+const uint8_t timeoutAck = TIMEOUT_ACK;
 
 
 //------------------------------------------------------------------------------
@@ -56,23 +90,19 @@ const uint8_t timeoutAck = 25;
 //------------------------------------------------------------------------------
 
 // Più è piccolo più il test sarà preciso (e lungo)
-const uint16_t tolleranza = 200;
+const uint16_t tolleranza = TOLLERANZA;
 // Durata minima del test di una singola frequenza
-const uint32_t durataMinimaTest = 40000;
+const uint32_t durataMinimaTest = DURATA_MINIMA_TEST;
 // Frequenza di trasmissione iniziale (messaggi al minuto)
-const uint16_t frequenzaTxIniziale = 25;
+const uint16_t frequenzaTxIniziale = FREQUENZA_TX_INIZIALE;
 // Incremento della frequenza ad ogni test
-const uint16_t incrementoFrequenzaTx = 25;
+const uint16_t incrementoFrequenzaTx = FREQUENZA_TX_INCREMENTO;
 // Numero massimo di test
-const uint8_t nrTestMax = 100;
+const uint8_t nrTestMax = NR_TEST_MAX;
 
 
 // *****************************************************************************
 // *****************************************************************************
-
-
-
-
 
 
 
@@ -102,6 +132,8 @@ bool fineTest = false;
 // ### Prototipi ### //
 
 // I prototipi rispettano l'ordine di apparizione delle relative implementazioni
+void funzioneSetup();
+void funzioneLoop();
 void invia();
 void leggi();
 void accendiLed(uint8_t);
@@ -116,20 +148,44 @@ void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
 void fineProgramma();
 
 
+// ### Instanza della classe Radio ### //
+
+#if defined(INTERFACCIA_SPI)
+RFM69 radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT);
+#elif defined(INTERFACCIA_SC18IS602B)
+RFM69 radio(RFM69::creaInterfacciaSC18IS602B(INDIRIZZO_I2C, NUMERO_SS), PIN_INTERRUPT);
+#endif
+
+// ### Esecuzione programma ### //
+
+#ifndef DEFINISCI_FUNZIONE_ESEGUI_TEST
+void setup() {
+    funzioneSetup();
+}
+void loop() {
+    funzioneLoop();
+}
+#else
+void eseguiTest() {
+    funzioneSetup();
+    while(true) funzioneLoop();
+}
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Inizializzazione
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void setup() {
+void funzioneSetup() {
 
     Serial.begin(115200);
 
     Serial.println("\n\n\n\nRFM69 - Test collisione messaggi\n\n\n");
 
     if(LED_TX) pinMode(LED_TX, OUTPUT);
-    if(LED_ACK) pinMode(LED_ACK, OUTPUT);
+    if(LED_RX) pinMode(LED_RX, OUTPUT);
 
     // Inizializza la radio. Deve essere chiamato una volta all'inizio del programma.
     // Se come secondo argomento si fornisce un riferimento a Serial, la funzione
@@ -146,11 +202,12 @@ void setup() {
     for(int i = 0; i < 20; i++) {
         Serial.print(".");
         radio.inviaConAck(mess, 2);
-        delay(1000);
+        while(radio.ackInSospeso());
         if(radio.ricevutoAck()) {
             connessioneOk = true;
             break;
         }
+        delay(1000 - timeoutAck);
     }
 
     if(!connessioneOk) {
@@ -176,16 +233,15 @@ void setup() {
 }
 
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // Loop principale
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void loop() {
+void funzioneLoop() {
 
     leggi();
+    delay(2);
     invia();
     stampaNovita();
 
@@ -205,7 +261,7 @@ void loop() {
     }
 
     spegniLed();
-    delay(1);
+    radio.controlla();
 }
 
 
@@ -227,7 +283,7 @@ void invia() {
     microsInviaPrec = t;
 
     // `decisione` vale `true` con una probabilita di [messPerMin * deltaT / 1 min]
-    bool decisione = (messPerMin * deltaT > random(60000000));
+    bool decisione = (messPerMin * deltaT > (uint32_t)random(60000000));
 
     if(!decisione) return;
 
@@ -244,9 +300,9 @@ void invia() {
     radio.inviaConAck(mess, lunghezzaMessaggi);
     while(radio.ackInSospeso());
 
+    // Controlla ACK
     if(radio.ricevutoAck()) {
         messInviati++;
-        accendiLed(LED_ACK);
     }
     else {
         messNonInviati++;
@@ -270,7 +326,7 @@ void leggi() {
     // crea un'array in cui copiarlo
     uint8_t mess[lung];
 
-    accendiLed(LED_ACK);
+    accendiLed(LED_RX);
 
     // leggi il messaggio
     int erroreLettura = radio.leggi(mess, lung);
@@ -289,9 +345,9 @@ void leggi() {
 
 
 void accendiLed(uint8_t led) {
-    if (led) digitalWrite(led, HIGH);
+    if(led) digitalWrite(led, HIGH);
     if(led == LED_TX) tAccensioneTx = millis();
-    if(led == LED_ACK) tAccensioneRx = millis();
+    if(led == LED_RX) tAccensioneRx = millis();
 }
 
 
@@ -299,8 +355,8 @@ void accendiLed(uint8_t led) {
 
 
 void spegniLed() {
-    if(millis() - tAccensioneRx > 10) digitalWrite(LED_TX, LOW);
-    if(millis() - tAccensioneTx > 10) digitalWrite(LED_ACK, LOW);
+    if(millis() - tAccensioneTx > 50) digitalWrite(LED_TX, LOW);
+    if(millis() - tAccensioneRx > 50) digitalWrite(LED_RX, LOW);
 }
 
 
@@ -327,17 +383,15 @@ void imposta(uint32_t mpm) {
     Serial.println(mpm);
     Serial.println();
 
-    // con `defaultRicezione()` basta chiamare una volta sola `iniziaRicezione()`
-    radio.defaultRicezione();
-    radio.iniziaRicezione();
+    radio.modalitaRicezione();
 
-    uint8_t mess[2] = {mpm << 8, mpm};
-    radio.inviaConAck(mess, 2);
-    delay(100);
-    radio.inviaConAck(mess, 2);
-    delay(100);
-    radio.inviaConAck(mess, 2);
-    delay(100);
+    uint8_t mpm_h = (uint8_t)mpm << 8;
+    uint8_t mpm_l = (uint8_t)mpm;
+    uint8_t mess[2] = {mpm_h, mpm_l};
+    do {
+        radio.inviaConAck(mess, 2);
+    } while(radio.ricevutoAck());
+
     tInizio = millis();
 
 }
@@ -418,13 +472,13 @@ void fineProgramma() {
 
     Serial.println();
     Serial.print(F("Spengo l'altra radio.."));
-        // Per al massimo 10 secondi cerca di spegnere l'altra radio
-    uint8_t mess[3] = {0,0,0x7B};
+    // Cerca di spegnere l'altra radio 20 volte, poi rinuncia
+    uint8_t mess[2] = {0xff,0xff};
     bool ok = false;
     for(int i = 0; i < 20; i++) {
         Serial.print(".");
-        radio.inviaConAck(mess, 3);
-        delay(1000);
+        radio.inviaConAck(mess, 2);
+        while(radio.ackInSospeso());
         if(radio.ricevutoAck()) {
             ok = true;
             break;
@@ -450,7 +504,7 @@ void fineProgramma() {
     uint32_t t = millis();
     while(true) {
         if(millis() - t > 2000) {
-            digitalWrite(LED_ACK, statoLed);
+            digitalWrite(LED_RX, statoLed);
             digitalWrite(LED_TX, !statoLed);
             statoLed = !statoLed;
             t = millis();
@@ -560,7 +614,7 @@ void stampaRiassunto() {
     Serial.println(F("   | #  | durata | mess inviati | mess/min | m/m esatti | successo |"));
 
     Serial.print("   ");
-    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
+    for(int i = 0; i < 65; i++) {Serial.print('-');} Serial.println();
     for(int i = 0; i < nrTest; i++) {
         Serial.print("   | ");
         stampaLarghezzaFissa(i+1, 2);
@@ -580,7 +634,7 @@ void stampaRiassunto() {
         Serial.println();
     }
     Serial.print("   ");
-    for(int i = 0; i < 65; i++) Serial.print('-'); Serial.println();
+    for(int i = 0; i < 65; i++) {Serial.print('-');} Serial.println();
 
 
 
@@ -610,14 +664,14 @@ void stampaRiassunto() {
     // Stampa grafico
     Serial.println("    %");
 
-    for(int y = altezza; y > 0; y--) {
+    for(unsigned int y = altezza; y > 0; y--) {
 
         if((y * 100 / altezza) % divisoreAltezza == 0 || y == altezza)
         stampaLarghezzaFissa(y * 100 / altezza, 3);
         else Serial.print("   ");
         Serial.print(" | ");
 
-        for(int x = 0; x < larghezza; x++) {
+        for(unsigned int x = 0; x < larghezza; x++) {
 
             bool punto = false;
 
