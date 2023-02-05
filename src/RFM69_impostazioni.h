@@ -49,12 +49,12 @@ dell'implementazione della classe RFM69).
 
 // [0x3, 0x4] Bit Rate (Chip Rate when Manchester encoding is enabled)
 // x [auto] ; FSK: 1'200 - 300'000 , OOK: 1'200 - 32'768
-#define BIT_RATE                        9600
+#define BIT_RATE                        19200
 // [0x5, 0x6] FSK frequency deviation
 // x [auto] ; 600 - 300'000 ; constraints:
 //  1) (1/5)*BIT_RATE < FREQ_DEV < 5*BIT_RATE
 //  2) 600 < FREQ_DEV < 500'000 - (BIT_RATE / 2)
-#define FREQ_DEV                        30000
+#define FREQ_DEV                        38400
 // [Modulation index = (2 * FREQ_DEV) / BIT_RATE]
 
 // [0x7, 0x8, 0x9] RF carrier frequency
@@ -87,7 +87,7 @@ dell'implementazione della classe RFM69).
 #define SYNC_EN                         ON
 // [0x2E] Number of tolerated bit errors in Sync word
 // x, 0 - 7
-#define SYNC_TOL                        2
+#define SYNC_TOL                        0
 // [0x2E] Size of the Sync word
 // x [auto] ; bytes
 #define SYNC_SIZE                       4
