@@ -264,6 +264,7 @@ int RFM69::controlla() {
             stato = Stato::attesaAzione;
             interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
+            statoUltimoAck = StatoAck::nonRicevuto;
         }
     }
 
