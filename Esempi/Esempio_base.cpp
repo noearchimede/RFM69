@@ -11,8 +11,8 @@ radio.
 
 // #define MODULO_1 o MODULO_2 per compilare uno dei due programmi
 //------------------------------------------------------------------------------
-#define MODULO_2
-// #define MODULO_2
+#define MODULO_1
+//#define MODULO_2
 //------------------------------------------------------------------------------
 
 
@@ -21,7 +21,7 @@ radio.
 // t
 #ifdef MODULO_1
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(RFM69::creaInterfacciaSpi(2), 3);
+RFM69 radio(RFM69::creaInterfacciaSpi(23), 2);
 // Un LED, 0 per non usarlo
 #define LED 4
 #endif
@@ -29,9 +29,9 @@ RFM69 radio(RFM69::creaInterfacciaSpi(2), 3);
 // q
 #ifdef MODULO_2
 // Pin SS, pin Interrupt, (eventualmente pin Reset)
-RFM69 radio(RFM69::creaInterfacciaSpi(2), 3, 4);
+RFM69 radio(RFM69::creaInterfacciaSC18IS602B(0x2f, 1), 11);
 // Un LED, 0 per non usarlo
-#define LED 7
+#define LED 29
 #endif
 
 
@@ -58,7 +58,7 @@ void loop(){
 
     // crea un messaggio
     uint8_t lung = 4;
-    uint8_t mess[lung] = {0,0x13, 0x05, 0x98};
+    uint8_t mess[lung] = {0,0x13, 0x14, 0x15};
 
     unsigned long t;
     bool ok;
@@ -115,7 +115,7 @@ void loop(){
 void loop(){
 
     // metti la radio in modalità ricezione
-    radio.iniziaRicezione();
+    radio.modalitaRicezione();
 
     // aspetta un messaggio
     while(!radio.nuovoMessaggio());
