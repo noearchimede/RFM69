@@ -567,6 +567,8 @@ public:
 
     //! Stampa il valore di tutti i registri della radio sul monitor seriale
     /*! Strampa il valore di tutti i registri della radio
+        @param serial un oggetto di `HardwareSerial`. Tipicamente sarà `Serial`
+              (o ev. `Serial1` ecc. se si usa un Arduino Mega).
     */
     void stampaRegistriSerial(HardwareSerial& Serial);
     //! Stampa il valore di un registro sul monitor seriale
@@ -574,12 +576,24 @@ public:
     */
     void stampaRegistroSerial(HardwareSerial& Serial, uint8_t indirizzo, uint8_t base=10);
     //! Leggi il valore di un registro della radio
-    /*  @param indirizzo l'indirizzo del registro da leggere. Si consignlia di
+    /*  @param serial un oggetto di `HardwareSerial`. Tipicamente sarà `Serial`
+              (o ev. `Serial1` ecc. se si usa un Arduino Mega).
+        @param indirizzo l'indirizzo del registro da leggere. Si consignlia di
                          `#include`re il file RFM69_registri.h per avere un elenco
                          `#define`d dei nomi dei registri con il loro indirizzo.
         @return il valore del registro selezionato
     */
     uint8_t valoreRegistro(uint8_t indirizzo);
+
+    //! Stampa alcune delle principali variabili di stato della classe
+    /* Per ogni variabile attualmente 'true' viene stampato un codice di 3 lettere.
+        Vedi implementazione per il sigificato di ogni codice.
+
+        @param serial un oggetto di `HardwareSerial`. Tipicamente sarà `Serial`
+              (o ev. `Serial1` ecc. se si usa un Arduino Mega).
+    */
+   void stampaStatoSerial(HardwareSerial& Serial);
+
     //!@}
 
 

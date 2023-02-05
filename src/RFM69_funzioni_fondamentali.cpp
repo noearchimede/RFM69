@@ -244,32 +244,6 @@ void RFM69::isr() {
 //
 int RFM69::controlla() {
 
-#if 0
-    Serial.flush();
-    Serial.print("[");
-    switch(stato) {
-        case Stato::passivo: Serial.print("pas "); break;
-        case Stato::attesaAzione : Serial.print("aaz ");break;
-        case Stato::invioMessConAck : Serial.print("imc ");break;
-        case Stato::invioMessSenzaAck : Serial.print("ims ");break;
-        case Stato::attesaAck : Serial.print("aak ");break;
-        case Stato::invioAck : Serial.print("iak ");break;
-        case Stato::standbyAttendendoLettura : Serial.print("sal");break;
-    }
-    if(messaggioRicevuto) Serial.print("mr ");
-    Serial.print("- ");
-    if(richiestaAzione.tornaInModalitaDefault ) Serial.print("tmd ");
-    if(richiestaAzione.scaricaMessaggio ) Serial.print("sme ");
-    if(richiestaAzione.verificaAck ) Serial.print("vak ");
-    if(richiestaAzione.inviaAckOTermina ) Serial.print("iat ");
-    if(richiestaAzione.annunciaMessaggio ) Serial.print("ame ");
-    if(richiestaAzione.concludiSequenzaAutoModes) Serial.print("csa ");
-    Serial.print("]");
-    if(richiestaModalitaDefaultAppenaPossibile) Serial.print("+rmdap");
-    Serial.print("\n");
-
-#endif
-
     int errore = Errore::ok; // returned alla fine
 
     // # 1. controlla timeout #
