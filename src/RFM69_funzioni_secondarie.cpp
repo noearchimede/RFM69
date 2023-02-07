@@ -69,7 +69,7 @@ int RFM69::inviaFinoAck(uint16_t& tentativi, uint16_t intervallo, const uint8_t 
         delay(intervalloReale);
     }
 
-    if(!ricevutoAck()) return Errore::errore;
+    if(!ricevutoAck()) return Errore::inviaFinoAckNoRisposta;
     tentativi = i;
     return Errore::ok;
 }

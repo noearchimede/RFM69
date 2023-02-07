@@ -689,7 +689,12 @@ public:
             /*! controlla(): Registrato un timeout per l'invio di un messaggio
             (la radio viene sbloccata automaticamente, ma non dovrebbe mai succedere)
             */
-            controllaTimeoutTx          = 16
+            controllaTimeoutTx          = 16,
+
+            /*! inviaFinoAck(): Dopo aver provato per il numero di volte specificato
+            a contattare l'altra radio non c'è stata risposta.
+            */
+           inviaFinoAckNoRisposta       = 17
         };
     };
 
