@@ -34,6 +34,16 @@ non genera statistiche. Non è quindi necessario collegarla a un monitor seriale
 // È anche possibile definire 'DEFINISCI_FUNZIONE_ESEGUI_TEST' per far si che 
 // invece di eseguire il test questo file lo "impacchetti" in una funzione chiamata
 // 'eseguiTest()'.
+// Infine, se esiste già un'istanza di 'RFM69' nel contesto in cui è importato
+// questo file, definire 'USA_RADIO_ESISTENTE' per non creare una seconda
+// istanza (la classe non funziona se ci sono due istanze). In tal caso tutte le
+// impostazioni inerenti alla connesseione hardware con la radio possono essere
+// tralasciate.
+//
+//#define IMPOSTAZIONI_ESTERNE
+//#define DEFINISCI_FUNZIONE_ESEGUI_TEST
+//#define USA_RADIO_ESISTENTE
+
 
 #ifndef IMPOSTAZIONI_ESTERNE
 
@@ -101,10 +111,12 @@ void fineProgramma();
 
 // ### Instanza della classe Radio ### //
 
+#ifndef USA_RADIO_ESISTENTE
 #if defined(INTERFACCIA_SPI)
 RFM69 radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT);
 #elif defined(INTERFACCIA_SC18IS602B)
 RFM69 radio(RFM69::creaInterfacciaSC18IS602B(INDIRIZZO_I2C, NUMERO_SS), PIN_INTERRUPT);
+#endif
 #endif
 
 // ### Esecuzione programma ### //
