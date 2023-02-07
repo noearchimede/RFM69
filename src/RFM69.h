@@ -206,13 +206,14 @@ public:
         @param tentativi[in/out]  /b prima: numero di tentativi da effettuare prima
                                   di rinunciare alla trasmissione del messaggio
                                   /b dopo: numero di tentativi effettuati
+        @param intervallo [in]    attesa in millisecondi tra un tentativo e un altro
         @param messaggio[in]      array di bytes (`uint8_t`) che costituiscono il messaggio
         @param lunghezza[in]      lunghezza del messaggio in bytes
         @param titolo   [in]  cfr. il commento alla funzione `titoloMessaggio()`
 
         @return Codice di errore definito nell'enum RFM69::Errore::ListaErrori
     */
-    int inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0);
+    int inviaFinoAck(uint16_t& tentativi, uint16_t intervallo, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0);
 
     //! Versione di `inviaFinoAck` senza restituzione del numero di tentativi
     /*! Questa funzione corrisponde ad `inviaFinoAck(uint16_t&, const uin8_t, uint8_t, uint8_t)`
@@ -220,7 +221,9 @@ public:
         si è interessati a sapere il numero di tentativi effettuati oppure
         se si passa come argomentoun valore e non una variabile.
     */
-    int inviaFinoAck(const uint16_t &&tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0) {uint16_t t = tentativi; return inviaFinoAck(t, &messaggio[0], lunghezza, titolo);}
+    int inviaFinoAck(const uint16_t &&tentativi, uint16_t intervallo, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo = 0) {
+        uint16_t t = tentativi; return inviaFinoAck(t, intervallo, &messaggio[0], lunghezza, titolo);
+    }
 
     //! Restituisce un messaggio, se ce n'è uno da leggere
     /*! Il messaggio è trasferito dalla radio al microcontrollore già nell'isr().

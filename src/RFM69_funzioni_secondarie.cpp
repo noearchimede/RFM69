@@ -44,12 +44,16 @@ int RFM69::inviaConAck(const uint8_t messaggio[], uint8_t lunghezza, uint8_t tit
 // Invia un messaggio di dimensione compresa tra 1 e 64 bytes richiedendo
 // un ACK all'altra radio
 //
-int RFM69::inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo) {
+int RFM69::inviaFinoAck(uint16_t& tentativi, uint16_t intervallo, const uint8_t messaggio[], uint8_t lunghezza, uint8_t titolo) {
 
     Intestazione intestazione;
     intestazione.bit.richiestaAck = 1;
     if(titolo > valMaxTitolo) titolo = 0;
     intestazione.bit.titolo = titolo;
+
+    // calcola l'attesa addizionale per raggiungere l'intervallo richiesto dall'utente
+    uint16_t intervalloReale = intervallo - timeoutAck;
+    if(intervalloReale < 0) intervalloReale = 0;
 
     int errore;
     uint16_t i = 0;
@@ -61,6 +65,8 @@ int RFM69::inviaFinoAck(uint16_t& tentativi, const uint8_t messaggio[], uint8_t 
         while(ackInSospeso());
         // controllo
         if(ricevutoAck()) break;
+        // attesa addizionale (opzionale)
+        delay(intervalloReale);
     }
 
     if(!ricevutoAck()) return Errore::errore;
