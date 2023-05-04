@@ -111,7 +111,9 @@ void fineProgramma();
 
 // ### Instanza della classe Radio ### //
 
-#ifndef USA_RADIO_ESISTENTE
+#ifdef USA_RADIO_ESISTENTE
+RFM69& radio = USA_RADIO_ESISTENTE;
+#else
 #if defined(INTERFACCIA_SPI)
 RFM69 radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT);
 #elif defined(INTERFACCIA_SC18IS602B)

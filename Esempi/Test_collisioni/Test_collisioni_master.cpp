@@ -44,7 +44,7 @@ Nel file Risultati_test_collisioni.md si trovano alcuni esempi di output.
 //
 //#define IMPOSTAZIONI_ESTERNE
 //#define DEFINISCI_FUNZIONE_ESEGUI_TEST
-//#define USA_RADIO_ESISTENTE
+//#define USA_RADIO_ESISTENTE <nome istanza RFM69>
 
 #ifndef IMPOSTAZIONI_ESTERNE
 
@@ -167,7 +167,9 @@ void fineProgramma();
 
 // ### Instanza della classe Radio ### //
 
-#ifndef USA_RADIO_ESISTENTE
+#ifdef USA_RADIO_ESISTENTE
+RFM69& radio = USA_RADIO_ESISTENTE
+#else
 #if defined(INTERFACCIA_SPI)
 RFM69 radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT);
 #elif defined(INTERFACCIA_SC18IS602B)
