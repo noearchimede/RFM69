@@ -117,8 +117,12 @@ public:
         @note Sarà allocata un'array di `lunghezzaMaxMessaggio` bytes.
 
         @param lunghezzaMaxMessaggio  Lunghezza massima dei messagi ricevuti da
-            questa radio. Può essere diverso dalla lunghezza massima dei messaggi
-            inviati (quindi da questo stesso parametro sull'altra radio)
+        questa radio. Può essere diverso dalla lunghezza massima dei messaggi
+        inviati. Il valore massimo è 64 (RFM69 permette di inviare messaggi
+        lunghi fino a 255 bytes, ma per estrarli è necessario leggere la memoria
+        interna mentre la radio li sta ricevendo, mentre nell'attuale
+        implementazione di questa libreria è possibile leggerli solo dopo che
+        sono arrivati).
 
         @return Codice di errore definito nell'enum RFM69::Errore::ListaErrori
     */
@@ -648,53 +652,57 @@ public:
             /*! inizializza(): %Errore nella scrittura dei registri della radio
             */
             initErroreImpostazione      = 7,
+            /*! inizializza(): %Lunghezza massima messaggi troppo grande (>64)
+             * grande
+            */
+            initLunghMaxMessEccessiva   = 8,
 
 
             /*! inviaMessaggio(): La lunghezza del messaggio è nulla
             */
-            inviaMessaggioVuoto         = 8,
+            inviaMessaggioVuoto         = 9,
             /*! inviaMessaggio(): invia() è stata chiamata mentre la classe
             stava eseguendo un'altra operazione, e quest'ultima non è stata
             completata entro il tempo d'attesa massimo scelto per questa
             situazione oppure l'opzione 'insisti' non era selezionata
             (equivalente a un timeout nullo).
             */
-            inviaTimeout                = 9,
+            inviaTimeout                = 10,
 
 
             /*! leggi(): Non c'è nessun nuovo messaggio da leggere
             */
-            leggiNessunMessaggio        = 10,
+            leggiNessunMessaggio        = 11,
             /*! leggi(): l'array in cui la funzion `leggi()` dovrerbbe copiare il
             messaggio è troppo corta per contenerlo
             */
-            leggiArrayTroppoCorta       = 11,
+            leggiArrayTroppoCorta       = 12,
             /*! leggi(): il messaggio è troppo lungo per essere letto da questa
             istanza della classe, che è stata inizializzata con un buffer di
             dimensione inferiore
             */
-            messaggioTroppoLungo        = 12,
+            messaggioTroppoLungo        = 13,
 
             /*! cambiaModalita(): Nel contesto in cui è stata chiamata non è possibile
             passare alla modalità richiesta
             */
-            modImpossibile              = 13,
+            modImpossibile              = 14,
             /*! cambiaModalita(): Il cambio di modalità non è avvenuto entro un
             tempo massimo ampiamente sufficiente.
             */
-            modTimeout                  = 14,
+            modTimeout                  = 15,
 
-            modBloccataAutoModAttivo    = 15,
+            modBloccataAutoModAttivo    = 16,
 
             /*! controlla(): Registrato un timeout per l'invio di un messaggio
             (la radio viene sbloccata automaticamente, ma non dovrebbe mai succedere)
             */
-            controllaTimeoutTx          = 16,
+            controllaTimeoutTx          = 17,
 
             /*! inviaFinoAck(): Dopo aver provato per il numero di volte specificato
             a contattare l'altra radio non c'è stata risposta.
             */
-           inviaFinoAckNoRisposta       = 17
+           inviaFinoAckNoRisposta       = 18
         };
     };
 
@@ -865,8 +873,9 @@ public:
 
     // Pin
     const uint8_t pinReset; //non usato se `haReset == false`
-    // Numero dell'external interrupt usato dalla radio
-    const uint8_t numeroInterrupt;
+    // Numero dell'external interrupt usato dalla radio (signed perché il valore
+    // -1 è usato da digitalPinToInterrupt per segnalare un errore)
+    const int8_t numeroInterrupt;
     // Il microcontrollore può controllare il pin Reset della radio
     const bool haReset;
 

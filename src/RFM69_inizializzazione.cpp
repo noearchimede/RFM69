@@ -363,6 +363,11 @@ int RFM69::inizializza(uint8_t lunghezzaMaxMessaggio) {
 
     // ## INIZIALIZZAZIONE DI VARIABILI ## //
 
+    // PAYLOAD_LENGHT è il valore del registro 0x38, che in modalità pacchetti
+    // variabili (l'unica modalità usata in questa classe) determina la
+    // lunghezza massima dei messagi ricevuti.
+    // PAYLOAD_LENGHT massima nell'implementazioen attuale: 64
+    if(lunghezzaMaxMessaggio > PAYLOAD_LENGHT) return Errore::initLunghMaxMessEccessiva;
     buffer.init(lunghezzaMaxMessaggio);
     lungMaxMessEntrata = lunghezzaMaxMessaggio;
 
