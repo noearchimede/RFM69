@@ -104,8 +104,28 @@ void RFM69::SC18IS602B::scriviRegistro(uint8_t addr, uint8_t val) {
 // Legge una sequenza di bytes adiacenti
 //
 void RFM69::SC18IS602B::leggiSequenza(uint8_t addr0, uint8_t len, uint8_t* data) {
-    sc18_inviaDati(codiceCS, addr0, len, nullptr);
-    sc18_richiediDati(len, data);
+
+    // 1: Implementazione desiderata: usa la funzione di lettura sequenza
+    //    fornita dalla radio, che tiene il canale di comunicazione aperto
+    //    invece di continuamente inviare l'indirizzo del dispositivo e
+    //    l'indirizzo dello stesso registro per la richiesta di dati.
+    //
+    //sc18_inviaDati(codiceCS, addr0, len, nullptr);
+    //sc18_richiediDati(len, data);
+
+    // 2: Correzione temporanea: implementa la lettura di una sequenza come una
+    //    sequenza di letture singole
+    //
+    // implemtazione 2 (due righe):
+    for(int i=0; i < len; ++i) {
+        data[i] = leggiRegistro(addr0); }
+
+    // L'implementazione (1) funziona per pochi byte (3-4), ma se la sequenza è
+    // più lunga restituisce 0xFF per alcuni o tutti i byte.  Per constatare il
+    // problema commenta le due righe (2), attiva le due righe (1) ed esegui un
+    // programma di test (quello nell'esempio in questa classe o il test
+    // basilare nel programma del quadricottero v3) e modifica la lunghezza
+    // massima dei messagi da 4 (dovrebbe funzionare) a 20 (non funzionerà).
 }
 
 
