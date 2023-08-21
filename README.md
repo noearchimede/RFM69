@@ -26,9 +26,7 @@ Il codice della libreria è ampiamente commentato in italiano. I commenti normal
 dettagli sull'implementazione. I commenti "speciali" (`//! ...` o `/*! ... */`)
 sono concentrati nel file header e costituiscono una documentazione per l'utilizzatore
 della libreria che non desidera conoscere i dettagli del suo funzionamento.
-Questa documentazione può essere riunita da Doxygen in un unico file o pagina html;
-la versione html più recente è consultabile
-[qui](http://htmlpreview.github.io/?https://rawgit.com/noearchimede/RFM69/master/Doc/html/index.html).
+Questa documentazione può essere riunita da Doxygen in una pagina html.
 
 ---
 
