@@ -23,9 +23,9 @@ non genera statistiche. Non è quindi necessario collegarla a un monitor seriale
 #include "RFM69.h"
 
 
-//**************************  +--------------+  ********************************
-//**************************  | IMPOSTAZIONI |  ********************************
-//**************************  +--------------+  ********************************
+// **************************  +--------------+  *******************************
+// **************************  | IMPOSTAZIONI |  *******************************
+// **************************  +--------------+  *******************************
 
 // Questo esempio può essere compilato direttamente oppure importato ('#include')
 // da un altro file. Nel primo caso usare le impostazioni qui sotto, nel secondo
@@ -33,17 +33,11 @@ non genera statistiche. Non è quindi necessario collegarla a un monitor seriale
 // di impostazioni nell'altro file prima di importare questo.
 // È anche possibile definire 'DEFINISCI_FUNZIONE_ESEGUI_TEST' per far si che 
 // invece di eseguire il test questo file lo "impacchetti" in una funzione chiamata
-// 'eseguiTest()'.
-// Infine, se esiste già un'istanza di 'RFM69' nel contesto in cui è importato
-// questo file, definire 'USA_RADIO_ESISTENTE' per non creare una seconda
-// istanza (la classe non funziona se ci sono due istanze). In tal caso tutte le
-// impostazioni inerenti alla connesseione hardware con la radio possono essere
-// tralasciate.
+// 'eseguiTest()'. Questo permette di eseguire il test da un file che #include
+// questo file.
 //
 //#define IMPOSTAZIONI_ESTERNE
 //#define DEFINISCI_FUNZIONE_ESEGUI_TEST
-//#define USA_RADIO_ESISTENTE
-
 
 #ifndef IMPOSTAZIONI_ESTERNE
 
@@ -73,69 +67,108 @@ non genera statistiche. Non è quindi necessario collegarla a un monitor seriale
 #endif
 
 
-//------------------------------------------------------------------------------
-// ## Impostszioni che devono essere identiche sulle due radio ## //
-//------------------------------------------------------------------------------
 
-// Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
-// 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
-// a questo si aggiunge il preamble che è lungo per default 4 bytes
-const uint8_t lunghezzaMessaggi = LUNGHEZZA_MESSAGGI;
-// Tempo massimo di attesa per un ACK
-const uint8_t timeoutAck = TIMEOUT_ACK;
-
-
-//******************************************************************************
-//******************************************************************************
+// *********************  +-------------------------+  *************************
+// *********************  | DEFINIZIONE CLASSE TEST |  *************************
+// *********************  +-------------------------+  *************************
 
 
 
-// ### Variabili e costanti globali ### //
+class TestCollisioniAssistente {
 
-uint32_t tAccensioneRx, tAccensioneTx;
-uint32_t microsInviaPrec = 0;
-uint32_t messPerMin = 0;
-uint32_t tUltimoMessaggio = 0;
+public:
+
+    //----------------------------------------------------------------------
+    // ## Impostszioni che devono essere identiche sulle due radio ## //
+    //----------------------------------------------------------------------
+
+    // Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
+    // 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
+    // a questo si aggiunge il preamble che è lungo per default 4 bytes
+    const uint8_t lunghezzaMessaggi = LUNGHEZZA_MESSAGGI;
+    // Tempo massimo di attesa per un ACK
+    const uint8_t timeoutAck = TIMEOUT_ACK;
 
 
-// ### Prototipi ### //
+    //**********************************************************************
+    //**********************************************************************
 
-void funzioneSetup();
-void funzioneLoop();
-void invia();
-void leggi();
-void accendiLed(uint8_t);
-void spegniLed();
-void pausa();
-void fineProgramma();
 
-// ### Instanza della classe Radio ### //
+    // ### Constructor e istanza della classe Radio ### //
 
-#ifdef USA_RADIO_ESISTENTE
-RFM69& radio = USA_RADIO_ESISTENTE;
-#else
+
 #if defined(INTERFACCIA_SPI)
-RFM69 radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT);
+    TestCollisioniAssistente() : radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT) {}
 #elif defined(INTERFACCIA_SC18IS602B)
-RFM69 radio(RFM69::creaInterfacciaSC18IS602B(INDIRIZZO_I2C, NUMERO_SS), PIN_INTERRUPT);
-#endif
+    TestCollisioniAssistente() : radio(RFM69::creaInterfacciaSC18IS602B(INDIRIZZO_I2C, NUMERO_SS), PIN_INTERRUPT) {}
 #endif
 
-// ### Esecuzione programma ### //
+    // istanza della radio usata per i test
+    RFM69 radio;
+    // Nota: una versione precedente di questo programma aveva un secondo #ifdef
+    // (disponibile soltanto se DEFINISCI_FUNZIONE_ESEGUI_TEST) usato per usare
+    // 'RFM69& radio' invece di 'RFM69 radio' (cioé per usare una reference), e
+    // in tal caso il constructor era TestColl...(RFM69& radio) e la funzione
+    // 'eseguiTest()' era definita come 'eseguiTest(RFM69& radio)'. Questo
+    // permetteva di usare un'istanza radio definita altrove. Rimosso perché
+    // sembrava inutile dopo l'ultima ristrutturazioen di questo programma.
+
+
+    // ### Variabili e costanti globali ### //
+
+    uint32_t tAccensioneRx, tAccensioneTx;
+    uint32_t microsInviaPrec = 0;
+    uint32_t messPerMin = 0;
+    uint32_t tUltimoMessaggio = 0;
+
+
+    // ### Prototipi ### //
+
+    void funzioneSetup();
+    void funzioneLoop();
+    void invia();
+    void leggi();
+    void accendiLed(uint8_t);
+    void spegniLed();
+    void pausa();
+    void fineProgramma();
+
+};
+
+
+
+// **********************  +----------------------+  ***************************
+// **********************  | ESECUZIONE PROGRAMMA |  ***************************
+// **********************  +----------------------+  ***************************
+
 
 #ifndef DEFINISCI_FUNZIONE_ESEGUI_TEST
 void setup() {
-    funzioneSetup();
+    TestCollisioniAssistente esecutoreTest;
+    esecutoreTest.funzioneSetup();
+    while (true) {
+      esecutoreTest.funzioneLoop();
+    }
 }
 void loop() {
-    funzioneLoop();
 }
 #else
 void eseguiTest() {
-    funzioneSetup();
-    while(true) funzioneLoop();
+    TestCollisioniAssistente esecutoreTest;
+    esecutoreTest.funzioneSetup();
+    while (true) {
+      esecutoreTest.funzioneLoop();
+    }
 }
 #endif
+
+
+
+// ********************  +--------------------------+  *************************
+// ********************  | IMPLEMENTAZIONE FUNZIONI |  *************************
+// ********************  +--------------------------+  *************************
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,7 +176,7 @@ void eseguiTest() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void funzioneSetup() {
+void TestCollisioniAssistente::funzioneSetup() {
 
     Serial.begin(115200);
 
@@ -175,7 +208,7 @@ void funzioneSetup() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void funzioneLoop() {
+void TestCollisioniAssistente::funzioneLoop() {
     leggi();
     delay(2);
     invia();
@@ -188,7 +221,7 @@ void funzioneLoop() {
 
 
 
-void invia() {
+void TestCollisioniAssistente::invia() {
 
 
     // Decidi a caso se inviare o no, con una probabilità tale da avvicinarsi alla
@@ -221,7 +254,7 @@ void invia() {
 
 
 
-void leggi() {
+void TestCollisioniAssistente::leggi() {
 
     // c'è un nuovo messaggio? se non c'è return
     if(!radio.nuovoMessaggio()) return;
@@ -258,13 +291,13 @@ void leggi() {
 
 
 
-void accendiLed(uint8_t led) {
+void TestCollisioniAssistente::accendiLed(uint8_t led) {
     if(led) digitalWrite(led, HIGH);
     if(led == LED_TX) tAccensioneTx = millis();
     if(led == LED_RX) tAccensioneRx = millis();
 }
 
-void spegniLed() {
+void TestCollisioniAssistente::spegniLed() {
     if(millis() - tAccensioneTx > 50) digitalWrite(LED_TX, LOW);
     if(millis() - tAccensioneRx > 50) digitalWrite(LED_RX, LOW);
 }
@@ -272,7 +305,7 @@ void spegniLed() {
 
 
 
-void pausa() {
+void TestCollisioniAssistente::pausa() {
     if(millis() - tUltimoMessaggio < 5000) return;
 
     Serial.println("-- Aspetto altra radio --");
@@ -301,7 +334,7 @@ void pausa() {
 
 
 
-void fineProgramma() {
+void TestCollisioniAssistente::fineProgramma() {
     radio.sleep();
     bool statoLed = true;
     uint32_t t = millis();

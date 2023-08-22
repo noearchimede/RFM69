@@ -35,16 +35,11 @@ Nel file Risultati_test_collisioni.md si trovano alcuni esempi di output.
 // di impostazioni nell'altro file prima di importare questo.
 // È anche possibile definire 'DEFINISCI_FUNZIONE_ESEGUI_TEST' per far si che 
 // invece di eseguire il test questo file lo "impacchetti" in una funzione chiamata
-// 'eseguiTest()'.
-// Infine, se esiste già un'istanza di 'RFM69' nel contesto in cui è importato
-// questo file, definire 'USA_RADIO_ESISTENTE' per non creare una seconda
-// istanza (la classe non funziona se ci sono due istanze). In tal caso tutte le
-// impostazioni inerenti alla connesseione hardware con la radio possono essere
-// tralasciate.
+// 'eseguiTest()'. Questo permette di eseguire il test da un file che #include
+// questo file.
 //
 //#define IMPOSTAZIONI_ESTERNE
 //#define DEFINISCI_FUNZIONE_ESEGUI_TEST
-//#define USA_RADIO_ESISTENTE <nome istanza RFM69>
 
 #ifndef IMPOSTAZIONI_ESTERNE
 
@@ -90,108 +85,145 @@ Nel file Risultati_test_collisioni.md si trovano alcuni esempi di output.
 #endif
 
 
-//------------------------------------------------------------------------------
-// ## Impostszioni che devono essere identiche sulle due radio ## //
-//------------------------------------------------------------------------------
 
-// Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
-// 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
-// a questo si aggiunge il preamble che è lungo per default 4 bytes
-const uint8_t lunghezzaMessaggi = LUNGHEZZA_MESSAGGI;
-// Tempo massimo di attesa per un ACK
-const uint8_t timeoutAck = TIMEOUT_ACK;
-
-
-//------------------------------------------------------------------------------
-//---------- Impostazioni del test, da regolare solo su questa radio -----------
-//------------------------------------------------------------------------------
-
-// Più è piccolo più il test sarà preciso (e lungo)
-const uint16_t tolleranza = TOLLERANZA;
-// Durata minima del test di una singola frequenza
-const uint32_t durataMinimaTest = DURATA_MINIMA_TEST;
-// Frequenza di trasmissione iniziale (messaggi al minuto)
-const uint16_t frequenzaTxIniziale = FREQUENZA_TX_INIZIALE;
-// Incremento della frequenza ad ogni test
-const uint16_t incrementoFrequenzaTx = FREQUENZA_TX_INCREMENTO;
-// Numero massimo di test
-const uint8_t nrTestMax = NR_TEST_MAX;
-
-
-// *****************************************************************************
-// *****************************************************************************
+// *********************  +-------------------------+  *************************
+// *********************  | DEFINIZIONE CLASSE TEST |  *************************
+// *********************  +-------------------------+  *************************
 
 
 
-// ### Variabili e costanti globali ### //
+class TestCollisioniMaster {
 
-// Le variabili non sono ordinate, cfr. l'implementazione per il loro significato
-uint32_t tAccensioneRx, tAccensioneTx;
-uint32_t tInizio;
-uint32_t microsInviaPrec;
-uint16_t messInviati = 0, messNonInviati = 0, messaggiRicevuti = 0;
-uint16_t indiceSuccesso = 0;
-uint8_t  nrElaborazioni = 0;
-uint16_t indiciSuccessoPrec[8];
-uint32_t messPerMin, messPerMinEffettivi;
-uint32_t tUltimoMessaggio = 0;
-uint32_t tUltimaStampa = 0;
+public:
 
-float deriv;
-uint8_t nrTest = 0;
-uint16_t riassunto[nrTestMax][5];
-enum class elemRiass {mpmPrevisti,mpmEffettivi,messTot,durata,successo};
-bool novita = false;
-bool statStabili = false;
-bool fineTest = false;
+    //----------------------------------------------------------------------
+    // ## Impostszioni che devono essere identiche sulle due radio ## //
+    //----------------------------------------------------------------------
+
+    // Lunghezza in bytes del contenuto dei messaggi. La lunghezza effettiva sarà
+    // 4 bytes in più (lunghezza [1 byte], intestazione [1], contenuto [...], crc [2]);
+    // a questo si aggiunge il preamble che è lungo per default 4 bytes
+    const uint8_t lunghezzaMessaggi = LUNGHEZZA_MESSAGGI;
+    // Tempo massimo di attesa per un ACK
+    const uint8_t timeoutAck = TIMEOUT_ACK;
 
 
-// ### Prototipi ### //
+    //----------------------------------------------------------------------
+    //------ Impostazioni del test, da regolare solo su questa radio -------
+    //----------------------------------------------------------------------
 
-// I prototipi rispettano l'ordine di apparizione delle relative implementazioni
-void funzioneSetup();
-void funzioneLoop();
-void invia();
-void leggi();
-void accendiLed(uint8_t);
-void spegniLed();
-void stampaNovita();
-void elaboraStatistiche();
-void salvaStatistiche();
-void imposta(uint32_t);
-bool numeroCasuale(uint32_t);
-void stampaRiassunto();
-void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
-void fineProgramma();
+    // Più è piccolo più il test sarà preciso (e lungo)
+    const uint16_t tolleranza = TOLLERANZA;
+    // Durata minima del test di una singola frequenza
+    const uint32_t durataMinimaTest = DURATA_MINIMA_TEST;
+    // Frequenza di trasmissione iniziale (messaggi al minuto)
+    const uint16_t frequenzaTxIniziale = FREQUENZA_TX_INIZIALE;
+    // Incremento della frequenza ad ogni test
+    const uint16_t incrementoFrequenzaTx = FREQUENZA_TX_INCREMENTO;
+    // Numero massimo di test
+    const uint8_t nrTestMax = NR_TEST_MAX;
 
 
-// ### Instanza della classe Radio ### //
+    // *********************************************************************
+    // *********************************************************************
 
-#ifdef USA_RADIO_ESISTENTE
-RFM69& radio = USA_RADIO_ESISTENTE;
-#else
+
+    // ### Constructor e istanza della classe Radio ### //
+
 #if defined(INTERFACCIA_SPI)
-RFM69 radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT);
+    TestCollisioniMaster() : radio(RFM69::creaInterfacciaSpi(PIN_SS), PIN_INTERRUPT) {}
 #elif defined(INTERFACCIA_SC18IS602B)
-RFM69 radio(RFM69::creaInterfacciaSC18IS602B(INDIRIZZO_I2C, NUMERO_SS), PIN_INTERRUPT);
-#endif
+    TestCollisioniMaster() : radio(RFM69::creaInterfacciaSC18IS602B(INDIRIZZO_I2C, NUMERO_SS), PIN_INTERRUPT);
 #endif
 
-// ### Esecuzione programma ### //
+    // istanza della radio usata per i test
+    RFM69 radio;
+    // Nota: una versione precedente di questo programma aveva un secondo #ifdef
+    // (disponibile soltanto se DEFINISCI_FUNZIONE_ESEGUI_TEST) usato per usare
+    // 'RFM69& radio' invece di 'RFM69 radio' (cioé per usare una reference), e
+    // in tal caso il constructor era TestColl...(RFM69& radio) e la funzione
+    // 'eseguiTest()' era definita come 'eseguiTest(RFM69& radio)'. Questo
+    // permetteva di usare un'istanza radio definita altrove. Rimosso perché
+    // sembrava inutile dopo l'ultima ristrutturazioen di questo programma.
+
+
+    // ### Variabili e costanti globali ### //
+
+    // Le variabili non sono ordinate, cfr. l'implementazione per il loro significato
+    uint32_t tAccensioneRx, tAccensioneTx;
+    uint32_t tInizio;
+    uint32_t microsInviaPrec;
+    uint16_t messInviati = 0, messNonInviati = 0, messaggiRicevuti = 0;
+    uint16_t indiceSuccesso = 0;
+    uint8_t  nrElaborazioni = 0;
+    uint16_t indiciSuccessoPrec[8];
+    uint32_t messPerMin, messPerMinEffettivi;
+    uint32_t tUltimoMessaggio = 0;
+    uint32_t tUltimaStampa = 0;
+
+    float deriv;
+    uint8_t nrTest = 0;
+    uint16_t riassunto[NR_TEST_MAX][5];
+    enum class elemRiass {mpmPrevisti,mpmEffettivi,messTot,durata,successo};
+    bool novita = false;
+    bool statStabili = false;
+    bool fineTest = false;
+
+
+    // ### Prototipi ### //
+
+    // I prototipi rispettano l'ordine di apparizione delle relative implementazioni
+    void funzioneSetup();
+    void funzioneLoop();
+    void invia();
+    void leggi();
+    void accendiLed(uint8_t);
+    void spegniLed();
+    void stampaNovita();
+    void elaboraStatistiche();
+    void salvaStatistiche();
+    void imposta(uint32_t);
+    bool numeroCasuale(uint32_t);
+    void stampaRiassunto();
+    void stampaLarghezzaFissa(uint32_t, uint8_t, char = ' ');
+    void fineProgramma();
+
+
+};
+
+
+
+// **********************  +----------------------+  ***************************
+// **********************  | ESECUZIONE PROGRAMMA |  ***************************
+// **********************  +----------------------+  ***************************
+
 
 #ifndef DEFINISCI_FUNZIONE_ESEGUI_TEST
 void setup() {
-    funzioneSetup();
+    TestCollisioniMaster esecutoreTest;
+    esecutoreTest.funzioneSetup();
+    while (true) {
+      esecutoreTest.funzioneLoop();
+    }
 }
 void loop() {
-    funzioneLoop();
 }
 #else
 void eseguiTest() {
-    funzioneSetup();
-    while(true) funzioneLoop();
+    TestCollisioniMaster esecutoreTest;
+    esecutoreTest.funzioneSetup();
+    while (true) {
+      esecutoreTest.funzioneLoop();
+    }
 }
 #endif
+
+
+
+// ********************  +--------------------------+  *************************
+// ********************  | IMPLEMENTAZIONE FUNZIONI |  *************************
+// ********************  +--------------------------+  *************************
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +231,7 @@ void eseguiTest() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void funzioneSetup() {
+void TestCollisioniMaster::funzioneSetup() {
 
     Serial.begin(115200);
 
@@ -259,7 +291,7 @@ void funzioneSetup() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void funzioneLoop() {
+void TestCollisioniMaster::funzioneLoop() {
 
     leggi();
     delay(2);
@@ -293,7 +325,7 @@ void funzioneLoop() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void invia() {
+void TestCollisioniMaster::invia() {
 
     // Decidi  caso se inviare o no, con una probabilità tale da avvicinarsi alla
     // frequenza di invio `messAlMinuto`.
@@ -333,7 +365,7 @@ void invia() {
 
 
 
-void leggi() {
+void TestCollisioniMaster::leggi() {
 
     // c'è un nuovo messaggio? se non c'è return
     if(!radio.nuovoMessaggio()) return;
@@ -365,7 +397,7 @@ void leggi() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void accendiLed(uint8_t led) {
+void TestCollisioniMaster::accendiLed(uint8_t led) {
     if(led) digitalWrite(led, HIGH);
     if(led == LED_TX) tAccensioneTx = millis();
     if(led == LED_RX) tAccensioneRx = millis();
@@ -375,7 +407,7 @@ void accendiLed(uint8_t led) {
 
 
 
-void spegniLed() {
+void TestCollisioniMaster::spegniLed() {
     if(millis() - tAccensioneTx > 50) digitalWrite(LED_TX, LOW);
     if(millis() - tAccensioneRx > 50) digitalWrite(LED_RX, LOW);
 }
@@ -388,7 +420,7 @@ void spegniLed() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void imposta(uint32_t mpm) {
+void TestCollisioniMaster::imposta(uint32_t mpm) {
     messPerMin = mpm;
 
     messaggiRicevuti = 0;
@@ -420,7 +452,7 @@ void imposta(uint32_t mpm) {
 
 
 
-void elaboraStatistiche() {
+void TestCollisioniMaster::elaboraStatistiche() {
 
     // Calcolo messaggi al minuto
     messPerMinEffettivi = ((uint32_t)(messInviati + messNonInviati)*60000)/(millis() - tInizio);
@@ -465,7 +497,7 @@ void elaboraStatistiche() {
 
 
 
-void salvaStatistiche()  {
+void TestCollisioniMaster::salvaStatistiche()  {
     // Frequenza prevista
     riassunto[nrTest][(int)elemRiass::mpmPrevisti] = messPerMin;
     // Frequenza effettiva
@@ -489,7 +521,7 @@ void salvaStatistiche()  {
 
 
 
-void fineProgramma() {
+void TestCollisioniMaster::fineProgramma() {
 
     Serial.println();
     Serial.print(F("Spengo l'altra radio.."));
@@ -539,7 +571,7 @@ void fineProgramma() {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void stampaNovita() {
+void TestCollisioniMaster::stampaNovita() {
 
     if(millis() - tUltimaStampa < 5000) return;
 
@@ -574,7 +606,7 @@ void stampaNovita() {
 
 
 
-void stampaRiassunto() {
+void TestCollisioniMaster::stampaRiassunto() {
     // Variabili globali usate:
     // - nrTest = Numero di test effettuati - 1
     // - Riassunto[nrTest][5] =  risultati ottenuti
@@ -780,7 +812,7 @@ void stampaRiassunto() {
 
 
 
-void stampaLarghezzaFissa(uint32_t numero, uint8_t larghezza, char riempimento) {
+void TestCollisioniMaster::stampaLarghezzaFissa(uint32_t numero, uint8_t larghezza, char riempimento) {
     char str[10]; // 10 è il numero massimo di cifre in un uint32_t
     itoa (numero, str, 10);
     int cifre = strlen(str);
