@@ -17,6 +17,8 @@ modalità di funzionamento.
 #include "RFM69.h"
 #include "RFM69_registri.h"
 
+#include <Arduino.h>
+
 
 
 // ### 1. Invio ### //

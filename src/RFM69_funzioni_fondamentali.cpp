@@ -16,6 +16,7 @@ Qui sono implementate funzioni come invia, leggi, controlla, e l'isr
 #include "RFM69.h"
 #include "RFM69_registri.h"
 
+#include <Arduino.h>
 
 
 // ### 1. Invia ###

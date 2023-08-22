@@ -20,6 +20,9 @@ Il file è suddiviso in 5 sezioni:
 #include "RFM69_registri.h"
 #include "RFM69_impostazioni.h"
 
+#include <Arduino.h>
+
+
 /// @cond 0
 
 // ### 1. Completamento delle impostazioni ### //

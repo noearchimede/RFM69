@@ -24,7 +24,11 @@
 #define RFM69_h
 
 
-#include <Arduino.h>
+#include <inttypes.h>
+
+// forward-declare HardwareSerial instead of including <Arduino.h>
+class HardwareSerial;
+
 
 class RFM69 {
 

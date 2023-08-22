@@ -9,6 +9,8 @@ della classe RFM69.
 
 #include "RFM69.h"
 
+#include <Arduino.h>
+
 
 // Constructor
 RFM69::Spi::Spi(uint8_t pinSlaveSelect, uint32_t frequenzaHz, BitOrder bitOrder, DataMode dataMode)
