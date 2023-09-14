@@ -234,7 +234,8 @@ public:
     }
 
     //! Restituisce un messaggio, se ce n'è uno da leggere
-    /*! Il messaggio è trasferito dalla radio al microcontrollore già nell'isr().
+    /*! Il messaggio a questo punto è già stato trasferito al microcontrolloer
+        dalla funzione controlla().
         Questa funzione restituisce all'utente il contenuto del buffer della classe
         senza accedere alla radio. Deve tuttavia utilizzarla se il messaggio ricevuto
         contiene una richiesta di ACK. In tal caso alla fine della funzione viene
@@ -421,6 +422,26 @@ public:
     Utili ma non indispensabili
     */
     //!@{
+
+    //! Segna l'ultimo messaggio come letto senza realmente leggerlo
+    /*! Questa funzione può essere utile per gestire messaggi senza contenuto,
+        ad esempio messaggi di cui solo il titolo è rilevante, o per scartare
+        messaggi che non sono rilevanti nel contesto in cui sono stati ricevuti
+        
+        @note Per i messaggi scartati da questa funzione l'ACK (se richiesto) è
+              comunque inviato
+
+        @note È necessario chiamare questa funzione per scartare un messaggio che
+              non si intende leggere perché la radio è messa in standby in
+              attesa della lettura di un messaggio per evitare che sia
+              sovreascritto da un messaggio successivo, e solo `leggi()` e
+              questa funzione sono in grado di ripristinare il funzionamento
+              normale.
+
+        @return Codice di errore definito nell'enum RFM69::Errore::ListaErrori
+    */
+    int scartaMessaggio();
+              
 
     //! Mette la radio in modalità `listen`
     /*! `listen` è una modalità particolare che consiste in realtà nella continua
@@ -773,6 +794,9 @@ public:
     */
     int inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza,
                     uint8_t intestazione, bool insisti = true);
+
+    // Segna l'ultimo messaggio come letto (usato in leggi() e scartaMessaggio())
+    void segnaMessaggioComeLetto();
 
     // Imposta la modalità di funzionamento
     /* Cambia la modalità della radio. Questa funzione è chiamata per ogni

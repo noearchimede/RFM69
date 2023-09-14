@@ -136,6 +136,16 @@ uint8_t RFM69::tempoRicezione() {
 }
 
 
+int RFM69::scartaMessaggio() {
+
+    // Nessun messaggio in entrata
+    if(!messaggioRicevuto) return Errore::leggiNessunMessaggio;
+    
+    segnaMessaggioComeLetto();
+
+    return Errore::ok;
+}
+
 
 
 // ### 3. ACK ### //

@@ -98,7 +98,36 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
 int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
 
     // Nessun messaggio in entrata
-    if(!messaggioRicevuto) return Errore::leggiNessunMessaggio;
+    if(!messaggioRicevuto) {
+        return Errore::leggiNessunMessaggio;
+    }
+
+    // Messaggio troppo lungo per questa radio
+    if(lungMaxMessEntrata < ultimoMessaggio.dimensione) {
+        segnaMessaggioComeLetto();
+        return Errore::messaggioTroppoLungo;
+    }
+    // Messaggio troppo lungo per l'array dell'utente
+    if(lunghezza < ultimoMessaggio.dimensione) {
+        segnaMessaggioComeLetto();
+        return Errore::leggiArrayTroppoCorta;
+    }
+
+    // Trascrivi messaggio
+    lunghezza = ultimoMessaggio.dimensione;
+    for(unsigned int i = 0; i < lunghezza; i++) {
+        messaggio[i] = buffer[i];
+    }
+
+    segnaMessaggioComeLetto();
+
+    return Errore::ok;
+}
+
+
+// nota: questa funzione serve anche per scartaMessaggio()
+void RFM69::segnaMessaggioComeLetto() {
+
     clear(messaggioRicevuto);
 
     // Questa chiamata a 'controlla' serve principalmente a uscire dallo standby
@@ -110,20 +139,7 @@ int RFM69::leggi(uint8_t messaggio[], uint8_t &lunghezza) {
     // effettivamente letto (e non sovrascritto da messaggi successivi).
     controlla();
 
-    // Messaggio troppo lungo per questa radio
-    if(lungMaxMessEntrata < ultimoMessaggio.dimensione) return Errore::messaggioTroppoLungo;
-    // Messaggio troppo lungo per l'array dell'utente
-    if(lunghezza < ultimoMessaggio.dimensione) return Errore::leggiArrayTroppoCorta;
-
-    // Trascrivi messaggio
-    lunghezza = ultimoMessaggio.dimensione;
-    for(unsigned int i = 0; i < lunghezza; i++) {
-        messaggio[i] = buffer[i];
-    }
-
-    return Errore::ok;
 }
-
 
 
 // ### 3. Ack ###
