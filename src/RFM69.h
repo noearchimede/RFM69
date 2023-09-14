@@ -32,24 +32,13 @@ class HardwareSerial;
 
 class RFM69 {
 
-public:
+    class Bus; //serve al constructor
 
-    //! @name Test
-    //!@{
-    //! Test della connessione con il dispositivo
-    /*! Questa funzione contatta la radio, richiede il codice della versione e
-        lo restituisce. Il valore atteso è 0x24.
-    */
-    uint8_t testConnessione();
-    //!@}
+public:
 
 
     //! @name Constructor, destructor ecc.
     //!@{
-
-//private:
-    class Bus; //serve al constructor
-public:
 
     //! Constructor: richiede l'utilizzo di una delle funzioni sottostanti
     /*! @param pinInterrupt   Numero del pin attraverso il quale la radio genera
@@ -148,6 +137,14 @@ public:
                 `inizializza(uint8_t)`
     */
     int inizializza(uint8_t lunghezzaMaxMessaggio, HardwareSerial& serial);
+
+
+    //! Test della connessione con il dispositivo
+    /*! Questa funzione contatta la radio, richiede il codice della versione e
+        lo restituisce. Il valore atteso è 0x24.
+    */
+    uint8_t testConnessione();
+
 
     //!@}
     /*! @name Funzioni fondamentali
@@ -731,7 +728,7 @@ public:
         };
     };
 
-//private:
+private:
 
     // All'inizio vale 0 (come tutte le variabili `static`); ogni volta che
     // il constructor di questa classe viene chiamato il suo valore aumenta di
