@@ -18,6 +18,15 @@ Qui sono implementate funzioni come invia, leggi, controlla, e l'isr
 
 #include <Arduino.h>
 
+// Attiva questo #define per attivare le funzioni di stampa sparse nel codice
+//#define DEBUG_RFM69
+
+#ifdef DEBUG_RFM69
+#define debug_print(X) Serial.print(millis()); Serial.println(X)
+#else
+#define debug_print(X)
+#endif
+
 
 // ### 1. Invia ###
 
@@ -261,12 +270,15 @@ void RFM69::isr() {
 //
 int RFM69::controlla() {
 
+    debug_print(":");
     int errore = Errore::ok; // returned alla fine
 
     // # 1. controlla timeout #
     if(stato == Stato::attesaAck) {
+        debug_print("[aak]");
         if(millis() - tempoUltimaTrasmissione > timeoutAck) {
             // a questo punto, ack non ancora ricevuto = ack non arriverà mai
+            debug_print("->tak");
             statoUltimoAck = StatoAck::nonRicevuto;
             stato = Stato::attesaAzione;
             interruzioneAutoModesAutorizzata = true;
@@ -275,8 +287,10 @@ int RFM69::controlla() {
     }
 
     if(stato == Stato::invioMessConAck || stato == Stato::invioMessSenzaAck) {
+        debug_print("[ime]");
         // usa arbitrariamente 100 ms come tempo massimo per trasmettere
         if(millis() - tempoUltimaTrasmissione > 100) {
+            debug_print("->ttx");
             errore = Errore::controllaTimeoutTx;
             stato = Stato::attesaAzione;
             interruzioneAutoModesAutorizzata = true;
@@ -294,8 +308,10 @@ int RFM69::controlla() {
     // modalitaDefaultAppenaPossibile richiede che la radio sia già in
     // stato "passivo"
     if(richiestaModalitaDefaultAppenaPossibile) {
+        debug_print("[rdf]");
         // la richiesta azione è tolta sotto, in 'tornaInModalitaDefault'
         if(stato == Stato::passivo) {
+            debug_print("->tdf");
             stato = Stato::attesaAzione;
             set(richiestaAzione.tornaInModalitaDefault);
         }
@@ -307,6 +323,7 @@ int RFM69::controlla() {
     // da leggere significa che il messaggio è stato letto, quindi esci
     // dallo standby
     if(stato == Stato::standbyAttendendoLettura && !messaggioRicevuto) {
+        debug_print("[mle]");
         interruzioneAutoModesAutorizzata = true;
         set(richiestaAzione.tornaInModalitaDefault);
         stato = Stato::attesaAzione;
@@ -323,6 +340,7 @@ int RFM69::controlla() {
         // prima scaricarlo, se è un messaggio normale bisogna leggerne
         // l'intestazione per sapere se è richiesto un ACK)
         if(richiestaAzione.scaricaMessaggio) {
+            debug_print("[aaz-sm]");
             clear(richiestaAzione.scaricaMessaggio );
 
             ultimoMessaggio.tempoRicezione = tempoUltimaEsecuzioneIsr;
@@ -342,9 +360,11 @@ int RFM69::controlla() {
         }
 
         if(richiestaAzione.verificaAck) {
+            debug_print("[aaz-va]");
             clear(richiestaAzione.verificaAck);
 
             if(ultimoMessaggio.intestazione.bit.ack) {
+                debug_print("->akr");
                 statoUltimoAck = StatoAck::ricevuto;
                 // statistiche
                 durataUltimaAttesaAck = ultimoMessaggio.tempoRicezione - tempoUltimaTrasmissione;
@@ -355,25 +375,33 @@ int RFM69::controlla() {
                 sommaAtteseAck += durataUltimaAttesaAck;
             }
             else {
+                debug_print("->anr");
                 statoUltimoAck = StatoAck::nonRicevuto;
             }
         }
 
         if(richiestaAzione.inviaAckOTermina) {
+            debug_print("[aaz-it]");
             clear(richiestaAzione.inviaAckOTermina);
 
             if(ultimoMessaggio.intestazione.bit.richiestaAck) {
+                debug_print("->iak");
                 inviaAck();
             }
-            else set(richiestaAzione.tornaInModalitaDefault);
+            else {
+                debug_print("->tmd");
+                set(richiestaAzione.tornaInModalitaDefault);
+            }
         }
 
         if(richiestaAzione.annunciaMessaggio) {
+            debug_print("[aaz-am]");
             clear(richiestaAzione.annunciaMessaggio);
 
             // controlla che non si tratti di un ack (inatteso, perché un ack
             // atteso non porta ad alzare la flag annunciaMessaggio)
             if(ultimoMessaggio.intestazione.bit.ack) {
+                debug_print("->akr");
                 ++ackInattesi;
             }
             else {
@@ -386,10 +414,13 @@ int RFM69::controlla() {
         // rimanda questa azione alla prossima esecuzione di 'controlla()' fino
         // a quando non lo sarà più
         if(richiestaAzione.tornaInModalitaDefault) {
+            debug_print("[aaz-td]");
             if(autoModesAttivo && !interruzioneAutoModesAutorizzata) {
+                debug_print("-!ama");
                 // non fare nulla e aspetta la prossima esecuzione di controlla()
             }
             else {
+                debug_print("->pas");
                 clear(richiestaAzione.tornaInModalitaDefault);
                 richiestaModalitaDefaultAppenaPossibile = false;
                 stato = Stato::passivo;
@@ -397,6 +428,7 @@ int RFM69::controlla() {
                 // dall'if sopra ma anche per la modalità ricezione!
                 disattivaAutoModes(); 
                 if(usaAutoModesPerRX && modalitaDefault == Modalita::rx) {
+                    debug_print(">>arx");
                     // metti la radio in modalità rx con un'impostazione autoModes tale che
                     // appena un messaggio è ricevuto correttamente (crcOk) la radio passa
                     // in standby (quindi non riceve più).
