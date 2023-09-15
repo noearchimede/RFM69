@@ -160,11 +160,29 @@ bool RFM69::ackInSospeso() {
     return false;
 }
 
+bool RFM69::ackInSospeso(uint8_t titolo) {
+    controlla();
+    if(ackPendentePerTitolo.leggi(titolo)) return true;
+    return false;
+}
 
 // Restituisce true se la radio ha ricevuto un ACK per l'ultimo messaggio inviato
 //
 bool RFM69::ricevutoAck() {
     if(statoUltimoAck == StatoAck::ricevuto) return true;
+    return false;
+}
+
+
+// Restituisce true se la radio ha ricevuto un ACK per l'ultimo messaggio inviato
+// con il titolo specificato
+bool RFM69::ricevutoAck(uint8_t titolo) {
+    Serial.println("test");
+    Serial.println(ackRicevutoPerTitolo.dati[0]);
+    Serial.println(ackPendentePerTitolo.dati[0]);
+    if(ackRicevutoPerTitolo.leggi(titolo)) {
+        return true;
+    }
     return false;
 }
 

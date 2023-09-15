@@ -78,6 +78,7 @@ int RFM69::inviaMessaggio(const uint8_t messaggio[], uint8_t lunghezza, uint8_t 
         autoModes(Modalita::tx, AMModInter::rx, AMEnterCond::packetSentRising, AMExitCond::packetSentRising);
         stato = Stato::invioMessConAck;
         statoUltimoAck = StatoAck::pendente;
+        impostaStatoAckPerTitolo(intest.bit.titolo, 1, 0);
     }
     else {
         // Imposta la radio in modo che esca da TX non appena il pacchetto è inviato
@@ -155,7 +156,7 @@ void RFM69::segnaMessaggioComeLetto() {
 
 
 
-void RFM69::inviaAck() {
+void RFM69::inviaAck(uint8_t titolo) {
 
     disattivaAutoModes();
     cambiaModalita(Modalita::standby);
@@ -166,6 +167,7 @@ void RFM69::inviaAck() {
     // Intestazione, segnala che il messaggio è un ACK
     Intestazione intestazione;
     intestazione.bit.ack = 1;
+    intestazione.bit.titolo = titolo;
     bus->scriviRegistro(RFM69_00_FIFO, intestazione.byte);
 
     // 'packetSentRising' non succede mai in modalità standby; "controlla()" si
@@ -237,6 +239,8 @@ void RFM69::isr() {
         // durante l'attesa di un ack)
         case Stato::attesaAck:
             statoUltimoAck = StatoAck::attesaVerifica;
+            // Nota: qui non è possibile modificare lo stato dell'ACK per ogni
+            // titolo perché il titolo del nuovo messaggio non è ancora noto
             set(richiestaAzione.scaricaMessaggio);
             set(richiestaAzione.verificaAck);
             // concludi la sequenza tx->rx usata per inviare il messaggio e riceve l'ack
@@ -270,7 +274,7 @@ void RFM69::isr() {
 //
 int RFM69::controlla() {
 
-    debug_print(":");
+    // debug_print(":");
     int errore = Errore::ok; // returned alla fine
 
     // # 1. controlla timeout #
@@ -280,6 +284,7 @@ int RFM69::controlla() {
             // a questo punto, ack non ancora ricevuto = ack non arriverà mai
             debug_print("->tak");
             statoUltimoAck = StatoAck::nonRicevuto;
+            impostaStatoAckPerTitolo(ultimoMessaggio.intestazione.bit.titolo, 0, 0);
             stato = Stato::attesaAzione;
             interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
@@ -296,6 +301,7 @@ int RFM69::controlla() {
             interruzioneAutoModesAutorizzata = true;
             set(richiestaAzione.tornaInModalitaDefault);
             statoUltimoAck = StatoAck::nonRicevuto;
+            impostaStatoAckPerTitolo(ultimoMessaggio.intestazione.bit.titolo, 0, 0);
         }
     }
 
@@ -366,6 +372,7 @@ int RFM69::controlla() {
             if(ultimoMessaggio.intestazione.bit.ack) {
                 debug_print("->akr");
                 statoUltimoAck = StatoAck::ricevuto;
+                impostaStatoAckPerTitolo(ultimoMessaggio.intestazione.bit.titolo, 0, 1);
                 // statistiche
                 durataUltimaAttesaAck = ultimoMessaggio.tempoRicezione - tempoUltimaTrasmissione;
                 if(durataUltimaAttesaAck > durataMassimaAttesaAck) {
@@ -377,12 +384,14 @@ int RFM69::controlla() {
             else {
                 debug_print("->anr");
                 statoUltimoAck = StatoAck::nonRicevuto;
+                impostaStatoAckPerTitolo(ultimoMessaggio.intestazione.bit.titolo, 0, 0);
                 // se il messaggio non è un ACK l'ACK non arriverà, però il
                 // messaggio potrebbe comunque essere interessante -> converti
                 // l'evento "ack ricevuto" a "messaggio ricevuto"
-                set(richiestaAzione.inviaAckOTermina);
-                set(richiestaAzione.annunciaMessaggio);
-                clear(richiestaAzione.tornaInModalitaDefault);
+//                set(richiestaAzione.inviaAckOTermina);
+//                set(richiestaAzione.annunciaMessaggio);
+//                clear(richiestaAzione.tornaInModalitaDefault);
+// TODO: ^^^ disattivato perché non testato, verificare prima di riattivare!
             }
         }
 
@@ -392,7 +401,7 @@ int RFM69::controlla() {
 
             if(ultimoMessaggio.intestazione.bit.richiestaAck) {
                 debug_print("->iak");
-                inviaAck();
+                inviaAck(ultimoMessaggio.intestazione.bit.titolo);
             }
             else {
                 debug_print("->tmd");

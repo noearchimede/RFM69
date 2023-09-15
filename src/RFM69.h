@@ -347,6 +347,24 @@ public:
     */
     bool ricevutoAck();
 
+    //! Restituisce true mentre si aspetta un ACK per un messaggio con il titolo specificato
+    /*! Simile ad ackInSospeso() ma specifico ai messaggi con un particolare
+    titolo.
+    */
+    bool ackInSospeso(uint8_t titolo);
+
+    //! Restituisce true se l'ultimo messaggio con il titolo specificato ha ricevuto un ACK
+    /*! Simile a ricevutoAck() ma specifico per i messaggi con un titolo
+    specifico. Il valore restituito da questa funzione può cambiare solo dopo
+    che un altro messaggio con lo stesso titolo è stato inviato (e il
+    rispettivo ACK è ricevuto o perso). Se arriva (o non arriva) un ACK per
+    un messaggio con titolo diverso il valore di questa funzione non
+    cambierà. Questo permette di delegare il controllo dei messaggi con un
+    particolare titolo a una sezione del programma mentre altre sezioni
+    rimangono libere di inviare i propri messaggi.
+    */
+    bool ricevutoAck(uint8_t titolo);
+
 
     //!@}
     /*! @name Funzioni di impostazione
@@ -756,11 +774,12 @@ private:
     };
 
     // Union per scrivere/leggere e trasmettere l'intestazione
+    static constexpr uint8_t nrBitPerTitolo = 6;
     union Intestazione {
         struct {
             uint8_t ack : 1;
             uint8_t richiestaAck : 1;
-            uint8_t titolo: 6;
+            uint8_t titolo: nrBitPerTitolo;
         } bit;          // scrittura e lettura
         uint8_t byte;   // trasmissione
 
@@ -846,8 +865,8 @@ private:
 
     // Scrive le impostazioni "high power" (per l'utilizzo del modulo con una potenza
     void highPowerSettings(bool attiva);
-    // Invia un ACK
-    void inviaAck();
+    // Invia un ACK per un messaggio col titolo 'titolo'
+    void inviaAck(uint8_t titolo);
 
     // # ISR #
     // ISR che reagisce ai segnali di interrupt della radio chiamando l'interrupt
@@ -953,6 +972,38 @@ private:
     // la radio lo sta aspettando o sta aspettando che un possibile ack sia
     // verificato
     enum class StatoAck {pendente, attesaVerifica, ricevuto, nonRicevuto} statoUltimoAck;
+
+    // array di bit (non bytes) con tanti elementi quanti i possibili titoli di
+    // messaggi.
+    struct BitArrayPerTitolo {
+        // constructor: inizializza tutto a zero
+        BitArrayPerTitolo() {
+            for(uint8_t i = 0; i < (1 << (nrBitPerTitolo-3)); ++i) dati[i] = 0;
+        }
+        // scrivi un bit
+        void scrivi(uint8_t titolo, bool valore) {
+            if(valore == 1) dati[titolo/8] |= 1 << titolo%8;
+            if(valore == 0) dati[titolo/8] &= 0 << titolo%8;
+        }
+        // leggi un bit
+        bool leggi(uint8_t titolo) {
+            return dati[titolo/8] & (1 << titolo%8);
+        }
+    private:
+        // dimensione: 2^nrBitPerTitolo / 8 = 2^nrBitPerTitolo / 2^3 = 2^(nrBitPerTitolo - 3)
+        uint8_t dati [1 << (nrBitPerTitolo-3)];
+    };
+    // array contenente lo stato (ricevuto/non ricevuto) dell'ultimo ACK
+    // indipendentemente per ogni possibile titolo
+    BitArrayPerTitolo ackRicevutoPerTitolo;
+    // array contenente lo stato pendente dell'ultimo ACK indipendentemente per
+    // ogni possibile titolo
+    BitArrayPerTitolo ackPendentePerTitolo;
+    // semplice helper per scrivere queste due variabili senza fare errori:
+    inline void impostaStatoAckPerTitolo(uint8_t titolo, bool pendente, bool ricevuto) {
+        ackPendentePerTitolo.scrivi(titolo, pendente);
+        ackRicevutoPerTitolo.scrivi(titolo, ricevuto);
+    }
 
 
     // Modalità in cui si trova attualmente la radio.
