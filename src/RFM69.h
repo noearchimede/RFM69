@@ -493,7 +493,7 @@ public:
     /*! @return Il tempo in millisecondi dall'inizio del programma a cui è stata
                 attivata l'`isr()` che segna la finem della ricezione del messaggio.
     */
-    uint8_t tempoRicezione();
+    uint32_t tempoRicezione();
 
     //! Imposta la potenza di trasmissione
     /*! Imposta la potenza di trasmissione della radio. Sono validi i valori interi
