@@ -377,6 +377,12 @@ int RFM69::controlla() {
             else {
                 debug_print("->anr");
                 statoUltimoAck = StatoAck::nonRicevuto;
+                // se il messaggio non è un ACK l'ACK non arriverà, però il
+                // messaggio potrebbe comunque essere interessante -> converti
+                // l'evento "ack ricevuto" a "messaggio ricevuto"
+                set(richiestaAzione.inviaAckOTermina);
+                set(richiestaAzione.annunciaMessaggio);
+                clear(richiestaAzione.tornaInModalitaDefault);
             }
         }
 
