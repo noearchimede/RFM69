@@ -226,6 +226,10 @@ void RFM69::impostaTimeoutAck(uint16_t tempoMs) {
     timeoutAck = tempoMs;
 }
 
+uint16_t RFM69::valoreTimeoutAck() {
+    return timeoutAck;
+}
+
 
 
 

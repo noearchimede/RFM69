@@ -484,6 +484,9 @@ public:
     */
     void impostaTimeoutAck(uint16_t tempoMs);
 
+    //! Restituisci l'impostazine timeoutAck attuale
+    uint16_t valoreTimeoutAck();
+
     //! Restituisce il valore RSSI per l'ultimo messaggio
     /*! @return Received Signal Strength Indicator (RSSI) per l'ultimo messaggio
                 ricevuto.
