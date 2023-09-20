@@ -457,6 +457,13 @@ public:
     */
     int scartaMessaggio();
               
+    /// Restituisce true se la radio è pronta per eseguire un novo compito
+    /*! Restituisce true se la radio è pronta per inviare, cambiare modalità, ...
+    Rispetto a un semplice controllo della variabile `stato` questa
+    funzione chiama 'controlla()' se necessario e offre la possiblità di
+    aspettare fino a `timeoutAspetta` ms che la radio sia pronta
+    */
+    bool radioPronta(bool aspetta);
 
     //! Mette la radio in modalità `listen`
     /*! `listen` è una modalità particolare che consiste in realtà nella continua
@@ -1054,14 +1061,6 @@ private:
     // NuovoMessaggio è una flag separata da 'stato' perché mentre c'è un nuovo
     // messaggio (già estratto dalla FIFO) si può usare la radio
     bool messaggioRicevuto = false;
-
-    // Restituisce true se la radio è pronta per eseguire un novo compito
-    // (inviare, cambiare modalità, ...) Rispetto a un semplice controllo della
-    // variabile `stato` questa funzione chiama 'controlla()' se necessario e
-    // offre la possiblità di aspettare fino a `timeoutAspetta` ms che la radio
-    // sia pronta
-    bool radioPronta(bool aspetta);
-
 
 
     // l'ISR imposta queste variabili, la funzione controlla() esegue le azioni
