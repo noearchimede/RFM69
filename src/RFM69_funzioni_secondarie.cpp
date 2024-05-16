@@ -329,7 +329,7 @@ void RFM69::stampaStatoSerial(HardwareSerial& Serial) {
         case Stato::invioMessSenzaAck : Serial.print("ims ");break;
         case Stato::attesaAck : Serial.print("aak ");break;
         case Stato::invioAck : Serial.print("iak ");break;
-        case Stato::standbyAttendendoLettura : Serial.print("sal");break;
+        case Stato::standbyAttendendoLettura : Serial.print("sal ");break;
     }
     if(messaggioRicevuto) Serial.print("mr ");
     Serial.print("- ");
